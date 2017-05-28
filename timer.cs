@@ -14,10 +14,7 @@ function startRoundTimer() {
 
 function roundTimer() { //package if need to do things per second
   cancel($CPB::RoundTimerSchedule);
-  for (%i = 0; %i < ClientGroup.getCount(); %i++) {
-    %cl = ClientGroup.getObject(%i);
-    %cl.bottomPrintTimer();
-  }
+  bottomPrintInfoAll();
   $CPB::CurrRoundTime--;
   if ($CPB::CurrRoundTime < 0) {
     endRound();
