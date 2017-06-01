@@ -10,6 +10,10 @@ if (!isObject($CPB::TowerGroup)) {
 $TOWER::DEATHALERTCPPRIORITY = 10;
 
 //Object properties:
+//Client
+//	tower
+//	isGuard
+//	isPrisoner
 //Tower#
 //	isDestroyed
 //	guardClient
@@ -30,6 +34,19 @@ $TOWER::DEATHALERTCPPRIORITY = 10;
 //	validateTower
 //	killTower
 //	SimSet::destroy
+
+package CPB_Game_Towers {
+	function GameConnection::onDrop(%this, %val) {
+		if (%this.isGuard) {
+			messageAdmins("<font:Palatino Linotype:36>!!! \c6Tower \c3" @ %this.tower @ "\c6's guard has just left the game!");
+		} else if (%this.bl_id !$= "" && %cl.isSelectedToBeGuard) {
+			serverCmdUnsetGuard($superAdmin, %this.name);
+		}
+
+		return parent::onDrop(%this, %val);
+	}
+};
+activatePackage(CPB_Game_Towers);
 
 function assignGuard(%cl, %towerNum) {
 	//randomly pick a tower to assign the client to
@@ -57,7 +74,7 @@ function assignGuard(%cl, %towerNum) {
 
 	%cl.isGuard = 1;
 	%cl.isPrisoner = 0;
-	%cl.tower = %towerNum;
+	%cl.tower = "Tower" @ %towerNum;
 	("Tower" @ %towerNum).guard = %cl;
 }
 
@@ -83,18 +100,20 @@ function serverCmdReplaceGuard(%cl, %towerNum, %name) {
 	if (isObject(%tower.guard)) {
 		%tower.guard.isGuard = 0;
 		%tower.guard.isPrisoner = 1;
-		//guard spawn as prisoner
+		%tower.guard.tower = "";
 	}
+
 	%tower.guard = %cl;
 	%cl.isGuard = 1;
 	%cl.isPrisoner = 0;
+	%cl.tower = "Tower" @ %towerNum;
 	//respawn client at tower
 	spawnGuard(%towerNum - 1, 0);
 }
 
 function removeGuard(%cl) {
 	if (!isObject(%cl)) {
-
+		return;
 	}
 
 	for (%i = 0; %i < 4; %i++) {
@@ -117,8 +136,9 @@ function killTower(%id) {
 	//setStatistic("Tower" @ %id + 1 @ "Destroyed", $Server::PrisonEscape::currTime);
 
 	//remove the guard's items
-	if (isObject(%cl.player))
+	if (isObject(%cl.player)) {
 		%cl.player.setDamageLevel(70);
+	}
 
 	//destroy the bricks but sequentially as to not lag everyone to death
 	%tower.destroy();
@@ -126,8 +146,10 @@ function killTower(%id) {
 	priorityCenterprintAll("<font:Impact:40>\c4Tower \c3" @ %id @ "\c4 has fallen!", 10, $TOWER::DEATHALERTCPPRIORITY);
 	schedule(80, 0, priorityCenterprintAll, "<font:Impact:35>\c4Tower \c3" @ %id @ "\c4 has fallen!", 10, $TOWER::DEATHALERTCPPRIORITY);
 
+	//chatlog death
 	%type = $DamageType::MurderBitmap[$DamageType::Tower];
-	messageAll('', "<bitmap:" @ %type @ "> " @ %id @ " [" @ getTimeString($Server::PrisonEscape::currTime-1) @ "]");
+	messageAll('', "<bitmap:" @ %type @ "> " @ %id @ " [" @ getTimeString($CPB::currRoundTime - 1) @ "]");
+	echo("Tower " @ %id @ " fell (Time: " @ getTimeString($CPB::currRoundTime) @ ")");
 }
 
 function validateTower(%id, %brick) {

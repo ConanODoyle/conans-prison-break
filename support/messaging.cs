@@ -3,6 +3,13 @@ $DONATOR::CHATMODIFIER = "<color:ffaaaa>";
 $PRISONER::CHATCOLOR = "ff8724";
 $GUARD::CHATCOLOR = "8ad88d";
 
+//Object properties:
+//Client
+//	lastMessage
+//	lastMessageTime
+//	cpPriority
+//	cpPrioritySchedule
+
 //Functions:
 //Packaged:
 //	serverCmdMessageSent
@@ -154,14 +161,14 @@ function GameConnection::priorityCenterprint(%cl, %cp, %time, %priority) {
 	%priority = %priority + 0; //makes %priority = 0 if it is anything but an integer
 	if (%cl.cppriority <= %priority) {
 		%cl.centerprint(%cp, %time);
-		%cl.cppriority = %priority;
+		%cl.cpPriority = %priority;
 		cancel(%cl.cpprioritySchedule);
-		%cl.cpprioritySchedule = %cl.schedule(%time * 1000, setCPPriority, 0);
+		%cl.cpPrioritySchedule = %cl.schedule(%time * 1000, setCPPriority, 0);
 	}
 }
 
 function GameConnection::setCPPriority(%cl, %priority) {
-	%cl.cppriority = %priority;
+	%cl.cpPriority = %priority;
 }
 
 function priorityCenterprintAll(%cp, %time, %priority) {

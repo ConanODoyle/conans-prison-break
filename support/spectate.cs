@@ -1,5 +1,10 @@
 $SPECTATE::CONTROLCPPRIORITY = 10;
 
+//Object properties:
+//Client
+//	isSpectating
+//	spectatingClientIDX
+
 //Functions:
 //Packaged:
 //	Observer::onTrigger
