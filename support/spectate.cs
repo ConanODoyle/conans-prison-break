@@ -10,15 +10,17 @@ $SPECTATE::CONTROLCPPRIORITY = 10;
 //	Observer::onTrigger
 //Created:
 //	spectateNextPlayer
+//	GameConnection::spectateObject
+//	Player::spectateObject
 
 package CPB_Support_Spectate {
 	Observer::onTrigger(%this, %obj, %trig, %state) {
 		%cl = %obj.getControllingClient();
 
 		if (%cl.isSpectating && !%state) {
-			if (%trig == 0) {
+			if (%trig == $LEFTCLICK) {
 				spectateNextPlayer(%cl, 1);
-			} else if (%trig == 4) {
+			} else if (%trig == $RIGHTCLICK) {
 				spectateNextPlayer(%cl, -1);
 			}
 			return;
@@ -60,4 +62,20 @@ function spectateNextPlayer(%cl, %num) {
 	%cl.setControlObject(%cl.camera);
 	%cl.camera.setControlObject(%cl.camera);
 	%cl.camera.setMode(Corpse, %targPlayer);
+}
+
+function GameConnection::spectateObject(%cl, %obj, %canControl) {
+	%cl.camera.setMode("Corpse", %obj);
+	%cl.setControlObject(%cl.camera);
+	if (%canControl $= "0" || %canControl $= "false") {
+		%cl.camera.setControlObject(%cl.dummyCamera);
+	} else {
+		%cl.camera.setControlObject(0);
+	}
+}
+
+function Player::spectateObject(%pl, %obj, %canControl) {
+	if (isObject(%cl = %pl.client)) {
+		%cl.spectateObject(%obj, %canControl);
+	}
 }

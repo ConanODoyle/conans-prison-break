@@ -31,9 +31,10 @@ package CPB_Support_Messaging {
 				return;
 			}
 
+			%finalMsg = getFormattedMessage(%cl, %msg);
 			for (%i = 0; %i < ClientGroup.getCount; %i++) {
 				if (%cl.canMessage((%targ = ClientGroup.getObject(%i).messageGroup))) {
-					messageClient(%targ, '', getFormattedMessage(%cl, %msg));
+					messageClient(%targ, '', %finalMsg);
 				}
 			}
 
@@ -111,14 +112,13 @@ function GameConnection::canMessage(%cl, %targ, %msg) {
 	}
 
 	if ($CPB::PHASE == $CPB::INGAME) {
-		%location = %cl.getLocation();
-		%isOutside = %cl.isOutside();
-
 		if (%cl.isAlive) {
 			if (%cl.isPrisoner && %targ.isPrisoner) return 1;
-			if (%isOutside && %targ.isOutside()) return 1;
 			if (!%targ.hasSpawnedOnce) return 1;
 			if (%targ.isDead) return 1;
+
+			%isOutside = %cl.isOutside();
+			if (%isOutside && %targ.isOutside()) return 1;
 		} else {
 			if (!%cl.hasSpawnedOnce) return 1;
 			if (%targ.isPrisoner) return 1;
@@ -127,6 +127,7 @@ function GameConnection::canMessage(%cl, %targ, %msg) {
 
 		return 0;
 	} else if ($CPB::PHASE == $CPB::LOBBY) {
+		%location = %cl.getLocation();
 		if (%location == %targ.getLocation()) return 1;
 		if (%targ.BL_ID == 4928) return 1;
 	} else {

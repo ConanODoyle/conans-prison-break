@@ -1,3 +1,6 @@
+$LEFTCLICK = 0;
+$RIGHTCLICK = 4;
+
 exec("./support/barber.cs");
 	exec("./data/hair.cs");
 exec("./support/bottomprint.cs");
