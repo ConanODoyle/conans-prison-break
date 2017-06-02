@@ -29,8 +29,7 @@ package CPB_Support_Spectate {
 };
 activatePackage(CPB_Support_Spectate);
 
-function spectateNextPlayer(%cl, %num)
-{
+function spectateNextPlayer(%cl, %num) {
 	if (isObject(%cl.player)) { //should never be called
 		%cl.setControlObject(%cl.player);
 		return;
@@ -45,11 +44,9 @@ function spectateNextPlayer(%cl, %num)
 	}
 
 	%cl.spectatingClientIDX = (%cl.spectatingClientIDX + %num) % %clientCount;
-	for (%i = 0; %i < %clientCount; %i++)
-	{
+	for (%i = 0; %i < %clientCount; %i++) {
 		%targ = ClientGroup.getObject(%cl.spectatingClientIDX);
-		if (isObject(%targPlayer = %targ.player)) 
-		{
+		if (isObject(%targPlayer = %targ.player)) {
 			break;
 		}
 		%cl.spectatingClientIDX = (%cl.spectatingClientIDX + %dir + %clientCount) % %clientCount;

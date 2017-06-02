@@ -27,7 +27,6 @@ $GUARD::CHATCOLOR = "8ad88d";
 package CPB_Support_Messaging {
 	function serverCmdMessageSent(%cl, %msg) {
 		if ($MessagingEnabled) {
-
 			if (CPB_SpamFilter(%cl, %msg)) {
 				return;
 			}

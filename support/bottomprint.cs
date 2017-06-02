@@ -20,7 +20,8 @@ function GameConnection::bottomPrintInfo(%cl) {
 			}
 		} else if (%cl.isGuard) {
 			if ($CPB::EWSActive) {
-				%info = "\c6" @ getNumPlayersOutside() SPC "Prisoners Outside ";
+				%color = "\c6";
+				%info = %color @ getNumPlayersOutside() SPC "Prisoners Outside ";
 			} else {
 				%info = "Satellite Dish Inactive";
 			}
