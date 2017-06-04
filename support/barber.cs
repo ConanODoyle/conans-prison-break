@@ -31,10 +31,14 @@ $Hair[28]	= "BunnHair";
 $Hair[29]	= "ShaggyHair";
 $Hair[30]	= "SaiyanHair";
 
+if(!isObject(CPB_HairSet)) {
+	new SimSet(CPB_HairSet);
+	missionCleanup.add(CPB_HairSet);
+}
+
 //Object properties:
 //Client
 //	customizingMode
-//	customizationMount
 //	isCustomizing
 //	lastCustomizeTime
 //Player
@@ -62,6 +66,9 @@ $Hair[30]	= "SaiyanHair";
 //	getBarberCenterprint
 //	getHairName
 //	Player::equipHair
+//	getHairCamPosition
+//	registerHair
+//	registerAllHairs
 
 package CPB_Support_Barber {
 	function GameConnection::onDeath(%cl, %sourceObj, %sourceClient, %damageType, %part) {
@@ -81,8 +88,8 @@ package CPB_Support_Barber {
 
 	function Observer::onTrigger(%this, %obj, %trig, %state) {
 		%cl = %obj.getControllingClient();
-		if (%cl.isCustomizing && getSimTime() - %cl.lastCustomizeTime > 1000) {
-			eval("toggle" @ %cl.customizingMode @ "Selection(" @ %cl @ ");");
+		if (%cl.isCustomizing && getSimTime() - %cl.lastCustomizeTime > 500 && %state) {
+			eval("toggle" @ %cl.customizingMode @ "Selection(" @ %cl @ ", " @ %trig @ ");");
 			return;
 		}
 		return parent::onTrigger(%this, %obj, %trig, %state);
@@ -191,14 +198,70 @@ function startBarber(%cl, %brick) {
 	%cl.lastCustomizeTime = getSimTime();
 
 	%cl.spectateObject(%pl, 0);
+
+	if ($HairData::Unlocked[%cl.bl_id] $= "") {
+		$HairData::Unlocked[%cl.bl_id] = "0";
+		messageClient(%cl, '', "\c2You got two free first hairdos!");
+		giveRandomHair(%cl);
+		giveRandomHair(%cl);
+	}
+
+	%index = $HairData::currentHair[%cl.bl_id] = $HairData::savedHair[%cl.bl_id] + 0;
+	centerPrint(%cl, "<br><br><br><br><br>\c6Plant Brick: Confirm \c7||\c6 Light: Exit" @ getBarberCenterprint(%cl, $HairData::Unlocked[%cl.bl_id], %index));
+
+	serverCmdUnUseTool(%cl);
+	%pl.playThread(0, sit);
 }
 
 function stopBarber(%cl) {
+	if (!isObject(%pl = %cl.player) || !%pl.isCustomizing || !%cl.isCustomizing) {
+		return;
+	}
 
+	%pl.canDismount = 1;
+	%pl.dismount();
+	if (!isObject(%pl.customizingBrick)) {
+		%pl.schedule(10, setTransform, %pl.chairBot.getPosition() SPC rotFromTransform(%pl.getTransform()));
+	}
+
+	%cl.isCustomizing = 0;
+	%pl.isCustomizing = 0;
+	%pl.chairBot.delete();
+
+	%cl.stopSpectatingObject();
+
+	%currentHairID = getWord($HairData::Unlocked[%cl.bl_id], $HairData::currentHair[%cl.bl_id]);
+	%pl.equipHair(getHairName(%currentHairID));
+
+	export("$HairData::*", "Add-ons/Gamemode_CPB/data/hair.cs");
+	centerPrint(%cl, "");
 }
 
-function toggleBarberSelection(%cl) {
+function toggleBarberSelection(%cl, %trig) {
+	%list = $HairData::Unlocked[%cl.bl_id];
+	%count = getWordCount(%list);
 
+	if (isObject(%pl = %cl.player)) {
+		if (%trig == 0) {
+			$HairData::currentHair[%cl.bl_id] += %count - 1;
+			$HairData::currentHair[%cl.bl_id] %= %count;
+		} else if (%trig == 4) {
+			$HairData::currentHair[%cl.bl_id] += 1;
+			$HairData::currentHair[%cl.bl_id] %= %count;
+		}
+
+		%currentHair = $HairData::currentHair[%cl.bl_id];
+		%currentHairID = getWord($HairData::Unlocked[%cl.bl_id], %currentHair);
+
+		if (%currentHair >= %count) {
+			messageAdmins("!!! - \c3" @ %cl.name @ "\c6's hair index is invalid!");
+			return;
+		}
+
+		%print = "<br><br><br><br><br>\c6Plant Brick: Confirm \c7||\c6 Light: Exit" @ getBarberCenterprint(%cl, %currentHair);
+		centerPrint(%cl, %print);
+		%pl.equipHair(getHairName(%currentHairID) @ "Hair");
+	}
 }
 
 
@@ -206,17 +269,17 @@ function toggleBarberSelection(%cl) {
 
 
 
-function getBarberCenterprint(%cl, %index) {
+function getBarberCenterprint(%cl, %unlockedIndex) {
 	%list = $HairData::Unlocked[%cl.bl_id];
-	%hairs = (%index + 1) @ " / " @ getWordCount(%list) + 0;
-	%currHairName = getHairName(getWord(%list, %index));
+	%hairs = (%unlockedIndex + 1) @ " / " @ getWordCount(%list) + 0;
+	%currHairName = getHairName(getWord(%list, %unlockedIndex));
 
 	%final = "<br><font:Arial Bold:24>\c3Left Click       <font:Palatino Linotype:24>\c3[\c6" @ %hairs @ "\c3]<font:Arial Bold:24>\c3       Right Click <br><font:Palatino Linotype:24><just:center>\c6" @ %currHairName @ " ";
 	return %final;
 }
 
 function getHairName(%id) {
-	return strReplace($Hair[%index], "Hair", "");
+	return strReplace($Hair[%id], "Hair", "");
 }
 
 function Player::equipHair(%pl, %hair) {
@@ -269,4 +332,85 @@ function getHairCamPosition(%pl, %obj) {
 
 	%aa = eulerRadToMatrix(%rotX SPC 0 SPC %rotZ); //this function should be called eulerToAngleAxis...
 	return %pos SPC %aa;
+}
+
+
+//////////////////// Hatmod Functions
+
+
+function isHair(%hat) {
+	return isObject(strReplace("Hat" @ %hat @ "Data", " ", "_"));
+}
+
+function registerHair(%name, %dir, %offset, %eyeOffset) {
+	if(isHat(%name)) {
+		echo("Error: Hair already exists! (" @ strReplace(%name, "_", " ") @ ")");
+		CPB_HairSet.add("Hat" @ %name @ "Data");
+		return 0;
+	}
+
+	%evalString =	"datablock ShapeBaseImageData(Hat" @ %name @ "Data) {" SPC
+						"shapeFile = \"" @ %dir @ "\";" SPC
+						"mountPoint = $HeadSlot;" SPC
+						"offset = \"" @ %offset @ "\";" SPC
+						"eyeOffset = \"" @ %eyeOffset @ "\";" SPC
+						"rotation = \"" @ eulerToMatrix("0 0 0") @ "\";" SPC
+						"scale = \"0.1 0.1 0.1\";" SPC
+						"doColorShift = false;" SPC
+						"hatName = \"" @ %name @ "\";" SPC
+					"};";
+
+	eval(%evalString);
+	CPB_HairSet.add("Hat" @ %name @ "Data");
+
+	return 1;
+}
+
+function registerAllHairs() {
+	echo("Searching for Hairs...");
+
+	if(isObject(CPB_HairSet))
+		CPB_HairSet.clear();
+
+	%loc = "Add-ons/Gamemode_CPB/support/hairs/*/*.dts";
+	for(%dir = findFirstFile(%loc); %dir !$= ""; %dir = findNextFile(%loc)) {
+		//echo("DIR:" SPC %dir);
+		%pos1 = strLastPos(%dir, "/")-1;
+		%pos2 = strLastPos(getSubStr(%dir, 0, %pos1), "/");
+		%name = getSubStr(%dir, 1+%pos2, %pos1-%pos2);
+		//echo("NAME:" SPC %name);
+
+		//echo("   Found hat:" SPC strReplace(%name, "_", " ") SPC "at dir" SPC %dir);
+
+		%configDir = getSubStr(%dir, 0, strLastPos(%dir, "/")+1) @ %name @ ".txt";
+		if(isFile(%configDir)) {
+			echo("   Reading file for calibration.");
+
+			%config = HatMod_GetProperties(%configDir);
+		} else
+			%config = HatMod_GetProperties("Default");
+
+		%offset = getField(%config, 0);
+		%minVer = getField(%config, 1);
+		%eyeOffset = getField(%config, 2);
+
+		if(%minVer > $HatMod::CurrentVersion) {
+			echo("");
+			warn("ERROR: Hat requires update to HatMod! (Required version" SPC %minVer @ ", current version" SPC $HatMod::CurrentVersion @ ")");
+			echo("");
+			continue;
+		}
+
+		if(HatMod_registerHat(%name, %dir, %offset, %eyeOffset)) {
+			echo("   Hat" SPC strReplace(%name, "_", " ") SPC "registered successfully.");
+			%count++;
+		}
+	}
+
+	echo("Hat search done. Found" SPC %count + 0 SPC "new hats.");
+}
+
+if (!$hasRegisteredHairsOnce) {
+	registerAllHairs();
+	$hasRegisteredHairsOnce = 1;
 }

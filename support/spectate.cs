@@ -12,6 +12,8 @@ $SPECTATE::CONTROLCPPRIORITY = 10;
 //	spectateNextPlayer
 //	GameConnection::spectateObject
 //	Player::spectateObject
+//	GameConnection::stopSpectatingObject
+//	Player::stopSpectatingObject
 
 package CPB_Support_Spectate {
 	Observer::onTrigger(%this, %obj, %trig, %state) {
@@ -77,5 +79,18 @@ function GameConnection::spectateObject(%cl, %obj, %canControl) {
 function Player::spectateObject(%pl, %obj, %canControl) {
 	if (isObject(%cl = %pl.client)) {
 		%cl.spectateObject(%obj, %canControl);
+	}
+}
+
+function GameConnection::stopSpectatingObject(%cl) {
+	%cl.camera.setMode("Observer");
+	%cl.setControlObject(%pl);
+	%cl.customizingMode = "";
+	%cl.player.setControlObject(%cl.player);
+}
+
+function Player::stopSpectatingObject(%pl) {
+	if (isObject(%cl = %pl.client)) {
+		%cl.stopSpectatingObject();
 	}
 }
