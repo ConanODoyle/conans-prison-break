@@ -1,3 +1,5 @@
+$CPB::EWSActive = 1;
+
 //Functions:
 //Created:
 //	GameConnection::bottomPrintInfo
