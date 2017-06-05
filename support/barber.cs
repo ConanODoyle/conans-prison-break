@@ -76,10 +76,15 @@ if(!isObject(CPB_HairSet)) {
 //	startBarber
 //	stopBarber
 //	toggleBarberSelection
+//	serverCmdGrantHair
 //	getBarberCenterprint
+//	getHairCamPosition
 //	getHairName
 //	Player::equipHair
-//	getHairCamPosition
+//	GameConnection::hasHair
+//	GameConnection::grantFreeHair
+//	GameConnection::giveHair
+//	GameConnection::giveRandomHair
 //	isHair
 //	registerHair
 //	registerAllHairs
@@ -311,15 +316,6 @@ function serverCmdGrantHair(%cl, %target, %hair) {
 //////////////////// Support functions
 
 
-function GameConnection::grantFreeHair(%cl) {
-	if ($HairData::Unlocked[%cl.bl_id] $= "") {
-		$HairData::Unlocked[%cl.bl_id] = "0";
-		messageClient(%cl, '', "\c2You got two free first hairdos!");
-		%cl.giveRandomHair();
-		%cl.giveRandomHair();
-	}
-}
-
 function getBarberCenterprint(%cl, %unlockedIndex) {
 	%list = $HairData::Unlocked[%cl.bl_id];
 	%hairs = (%unlockedIndex + 1) @ " / " @ getWordCount(%list) + 0;
@@ -329,18 +325,40 @@ function getBarberCenterprint(%cl, %unlockedIndex) {
 	return %final;
 }
 
-function getHairName(%id) {
-	return $Hair[%id];
+function getHairCamPosition(%pl, %obj) {
+	if (isObject(%obj) && %obj.getClassName() $= "fxDTSBrick") {
+		%id = %obj.getAngleID();
+		switch (%id) {
+			case 0: %vec = "0 2 2.2";
+			case 1: %vec = "-2 0 2.2";
+			case 2: %vec = "0 -2 2.2";
+			case 3: %vec = "2 0 2.2";
+		}
+		%start = %obj.getPosition();
+		%end = vectorAdd(%vec, %start);
+		
+		%pos = vectorAdd(%obj.getPosition(), %vec);
+	} else if (!isObject(%obj)) {
+		%pos = vectorAdd(%pl.getEyeTransform(), vectorAdd(vectorScale(%pl.getForwardVector(), 1.2), "0 0 0.5"));
+	} else {
+		messageAdmins("!!! \c7Invalid object specified in getHairCamPosition");
+		return;
+	}
+	%delta = vectorSub(getWords(vectorAdd(%pl.getEyeTransform(), "0 0 -0.4"), 0, 2), %pos);
+	%deltaX = getWord(%delta, 0);
+	%deltaY = getWord(%delta, 1);
+	%deltaZ = getWord(%delta, 2);
+	%deltaXYHyp = vectorLen(%deltaX SPC %deltaY SPC 0);
+
+	%rotZ = mAtan(%deltaX, %deltaY) * -1; 
+	%rotX = mAtan(%deltaZ, %deltaXYHyp);
+
+	%aa = eulerRadToMatrix(%rotX SPC 0 SPC %rotZ); //this function should be called eulerToAngleAxis...
+	return %pos SPC %aa;
 }
 
-function GameConnection::hasHair(%cl, %hairID) {
-	%list = $HairData::Unlocked[%cl.bl_id];
-	for (%i = 0; %i < getWordCount(%list); %i++) {
-		if (getWord(%list, %i) == %hairID) {
-			return 1;
-		}
-	}
-	return 0;
+function getHairName(%id) {
+	return $Hair[%id];
 }
 
 function Player::equipHair(%pl, %hair) {
@@ -365,6 +383,25 @@ function Player::equipHair(%pl, %hair) {
 		for (%i = 0; $accent[%i] !$= ""; %i++) {
 			%pl.hideNode(%node);
 		}
+	}
+}
+
+function GameConnection::hasHair(%cl, %hairID) {
+	%list = $HairData::Unlocked[%cl.bl_id];
+	for (%i = 0; %i < getWordCount(%list); %i++) {
+		if (getWord(%list, %i) == %hairID) {
+			return 1;
+		}
+	}
+	return 0;
+}
+
+function GameConnection::grantFreeHair(%cl) {
+	if ($HairData::Unlocked[%cl.bl_id] $= "") {
+		$HairData::Unlocked[%cl.bl_id] = "0";
+		messageClient(%cl, '', "\c2You got two free first hairdos!");
+		%cl.giveRandomHair();
+		%cl.giveRandomHair();
 	}
 }
 
@@ -404,38 +441,6 @@ function GameConnection::giveRandomHair(%cl) {
 	} else { //all hairs already owned
 		messageClient(%cl, '', "\c6You won a hairdo, but you already have all the hairs!");
 	}
-}
-
-function getHairCamPosition(%pl, %obj) {
-	if (isObject(%obj) && %obj.getClassName() $= "fxDTSBrick") {
-		%id = %obj.getAngleID();
-		switch (%id) {
-			case 0: %vec = "0 2 2.2";
-			case 1: %vec = "-2 0 2.2";
-			case 2: %vec = "0 -2 2.2";
-			case 3: %vec = "2 0 2.2";
-		}
-		%start = %obj.getPosition();
-		%end = vectorAdd(%vec, %start);
-		
-		%pos = vectorAdd(%obj.getPosition(), %vec);
-	} else if (!isObject(%obj)) {
-		%pos = vectorAdd(%pl.getEyeTransform(), vectorAdd(vectorScale(%pl.getForwardVector(), 1.2), "0 0 0.5"));
-	} else {
-		messageAdmins("!!! \c7Invalid object specified in getHairCamPosition");
-		return;
-	}
-	%delta = vectorSub(getWords(vectorAdd(%pl.getEyeTransform(), "0 0 -0.4"), 0, 2), %pos);
-	%deltaX = getWord(%delta, 0);
-	%deltaY = getWord(%delta, 1);
-	%deltaZ = getWord(%delta, 2);
-	%deltaXYHyp = vectorLen(%deltaX SPC %deltaY SPC 0);
-
-	%rotZ = mAtan(%deltaX, %deltaY) * -1; 
-	%rotX = mAtan(%deltaZ, %deltaXYHyp);
-
-	%aa = eulerRadToMatrix(%rotX SPC 0 SPC %rotZ); //this function should be called eulerToAngleAxis...
-	return %pos SPC %aa;
 }
 
 
