@@ -8,7 +8,7 @@ $CPB::EWSActive = 1;
 function GameConnection::bottomPrintInfo(%cl) {
 	%time = $CPB::CurrRoundTime;
 	%timeString = getTimeString(%time);
-	if ($CPB::PHASE == $CPB::GAME || $CPB::PHASE == $CPB::GWIN || $CPB::PHASE == $CPB::PWIN) {
+	if ($CPB::PHASE == $CPB::GAME) {
 		if (%cl.isPrisoner) {
 			if (%cl.isDead) {
 				%timeToRespawn = getNextRespawnTime();
@@ -29,6 +29,15 @@ function GameConnection::bottomPrintInfo(%cl) {
 			}
 		}
 		
+		%cl.bottomprint("<font:Arial Bold:24>\c6" @ %timeString @ " <br>" @ %info, 500, 0);
+	} else if ($CPB::PHASE == $CPB::GWIN || $CPB::PHASE == $CPB::PWIN) { 
+		if ($CPB::PHASE == $CPB::PWIN) {
+			%color = "<color:" @ $PRISONER::CHATCOLOR @ ">";
+			%info = %color @ "Prisoners Win!";
+		} else if ($CPB::PHASE == $CPB::GWIN) {
+			%color = "<color:" @ $GUARD::CHATCOLOR @ ">";
+			%info = %color @ "Guards Win!";
+		}
 		%cl.bottomprint("<font:Arial Bold:24>\c6" @ %timeString @ " <br>" @ %info, 500, 0);
 	} else {
 		%cl.bottomprint("CPB please wait for next round to start", -1, 0);
