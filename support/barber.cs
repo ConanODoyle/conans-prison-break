@@ -77,7 +77,7 @@ if(!isObject(CPB_HairSet)) {
 //	stopBarber
 //	toggleBarberSelection
 //	serverCmdGrantHair
-//	getBarberCenterprint
+//	getBarberCenterprint	//support
 //	getHairCamPosition
 //	getHairName
 //	Player::equipHair
@@ -85,7 +85,7 @@ if(!isObject(CPB_HairSet)) {
 //	GameConnection::grantFreeHair
 //	GameConnection::giveHair
 //	GameConnection::giveRandomHair
-//	isHair
+//	isHair	//datablock definitions
 //	registerHair
 //	registerAllHairs
 

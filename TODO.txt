@@ -6,3 +6,4 @@ Make sure bucket replaces hair and then re-adds it after de-equipping
 Completed moved files:
 chat.cs
 stun.cs
+barber.cs
