@@ -1,6 +1,7 @@
 Think up and write up better method to handle guard pre-round-planning. Slash commands OK.
 	Maybe TP to a room?
 EWS Color Flash when # of prisoners outside is high
+Make sure bucket replaces hair and then re-adds it after de-equipping
 
 Completed moved files:
 chat.cs
