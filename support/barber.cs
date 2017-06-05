@@ -1,4 +1,4 @@
-$HairCount = 43;
+$HairCount = 44;
 $Hair[0]	= "None";
 $Hair[1]	= "Comb-Over Hair";
 $Hair[2]	= "Corn Rows Hair";
