@@ -49,6 +49,8 @@ if(!isObject(CPB_HairSet)) {
 	missionCleanup.add(CPB_HairSet);
 }
 
+$ClientVariable[$ClientVariableCount++] = "isCustomizing";
+
 //Object properties:
 //Client
 //	customizingMode
