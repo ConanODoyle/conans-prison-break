@@ -2,7 +2,9 @@ if (!isObject($CPB::TowerGroup)) {
 	$CPB::TowerGroup = new ScriptObject(TowerGroup) {};
 	for (%i = 0; %i < 4; %i++) {
 		if (!isObject("Tower" @ %i)) {
-			TowerGroup.add(new SimSet("Tower" @ %i) {});
+			TowerGroup.add(new SimSet("Tower" @ %i) {
+				supportCount = 4;
+				});
 		}
 	}
 }
@@ -155,10 +157,22 @@ function killTower(%id) {
 function validateTower(%id, %brick) {
 	%tower = $Server::PrisonEscape::Towers.tower[%id];
 	%tower.remove(%brick);
-	if (%tower.getCount() <= %tower.origCount - 4) {
+	if (%tower.getCount() <= %tower.origCount - %tower.supportCount) {
 		killTower(%id);
 	}
 	validateGameWin();
+}
+
+function enableTowerSpotlights() {
+	for (%i = 0; %i < 4; %i++) {
+		startLightBeamLoop(("Tower" @ %towerNum).spotlightBot); //
+	}
+}
+
+function disableTowerSpotlights() {
+	for (%i = 0; %i < 4; %i++) {
+		clearLightBeam(("Tower" @ %towerNum).spotlightBot); //
+	}
 }
 
 function SimSet::destroy(%this) {

@@ -15,3 +15,5 @@ chat.cs
 stun.cs
 barber.cs / customization.cs
 globalcams.cs
+logo.cs
+spotlight.cs
