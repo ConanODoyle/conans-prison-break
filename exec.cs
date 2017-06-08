@@ -30,8 +30,8 @@ exec("./support/spectate.cs");
 exec("./support/stun.cs");
 exec("./support/timer.cs");
 
-exec("./game/buildings.cs");
 exec("./game/guards.cs");
 exec("./game/rounds.cs");
+exec("./game/structures.cs");
 exec("./game/towers.cs");
 exec("./game/playertypes/spotlight/server.cs");

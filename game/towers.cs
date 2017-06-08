@@ -1,5 +1,5 @@
 if (!isObject($CPB::TowerGroup)) {
-	$CPB::TowerGroup = new ScriptObject(TowerGroup) {};
+	$CPB::TowerGroup = new SimGroup(TowerGroup) {};
 	for (%i = 0; %i < 4; %i++) {
 		if (!isObject("Tower" @ %i)) {
 			TowerGroup.add(new SimSet("Tower" @ %i) {
@@ -33,8 +33,10 @@ $TOWER::DEATHALERTCPPRIORITY = 10;
 //	serverCmdReplaceGuard
 //	removeGuard
 //	spawnGuard
-//	validateTower
 //	killTower
+//	validateTower
+//	enableTowerSpotlights
+//	disableTowerSpotlights
 //	SimSet::destroy
 
 package CPB_Game_Towers {
