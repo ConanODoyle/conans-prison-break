@@ -56,6 +56,7 @@ $ClientVariable[$ClientVariableCount++] = "isCustomizing";
 //	customizingMode
 //	isCustomizing
 //	lastCustomizeTime
+//	hairTest
 //Player
 //	isCustomizing
 //	canDismount
@@ -102,7 +103,7 @@ package CPB_Support_Barber {
 
 	function GameConnection::onDrop(%cl) {
 		if (%cl.isCustomizing) {
-			stopPlayerHairCustomization(%cl.player);
+			stopBarber(%cl);
 		}
 		return parent::onDrop(%cl);
 	}
@@ -134,7 +135,7 @@ package CPB_Support_Barber {
 
 	function Armor::onDisabled(%this, %obj, %enabled) {
 		if (%obj.isCustomizing) {
-			stopPlayerHairCustomization(%obj);
+			stopBarber(%obj.client);
 		}
 		return parent::onDisabled(%this, %obj, %enabled);
 	}
@@ -142,7 +143,7 @@ package CPB_Support_Barber {
 	////////////////////
 
 	function serverCmdHat(%cl, %na, %nb, %nc, %nd, %ne) {
-		if (!%cl.hatTest) {
+		if (!%cl.hairTest) {
 			messageClient(%cl, '', "You need to go to the barber to change your hair!");
 			return;
 		}
@@ -167,7 +168,7 @@ package CPB_Support_Barber {
 
 	function serverCmdLight(%cl) {
 		if (%cl.isCustomizing && isObject(%cl.player)) {
-			stopPlayerHairCustomization(%cl.player);
+			stopBarber(%cl);
 			return;
 		}
 		return parent::serverCmdLight(%cl);

@@ -50,6 +50,9 @@ function _setPhaseLOBBY() {
 	cancelAllRoundSchedules();
 	despawnAll();
 
+	//show logo, reset guards selected
+	displayLogo(_LobbyLogoCam, _LobbyLogoCamTarget, LogoClosedShape, 1);
+
 	spawnAllLobby();
 	for (%i = 0; %i < ClientGroup.getCount(); %i++){
 		%cl = ClientGroup.getObject(%i);
@@ -76,6 +79,8 @@ function _setPhaseINTRO() {
 
 	clearCenterprintAll();
 	clearBottomprintAll();
+	spawnGenRoomKill();
+	spawnKillGround();
 }
 
 function _setPhaseGWIN() {

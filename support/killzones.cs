@@ -33,7 +33,7 @@ function spawnGenRoomKill()
 		$genKill.delete();
 	}
 
-	$genKill = new Trigger()
+	$genKill = new Trigger(killZones)
 	{
 		datablock = KillTrigger;
 		scale = %scale;
@@ -49,7 +49,7 @@ function spawnKillGround()
 {
 	if(isObject($killGround))
 		$killGround.delete();
-	$killGround = new Trigger()
+	$killGround = new Trigger(killZones)
 	{
 		datablock = KillTrigger;
 		scale = "300 300 1";
