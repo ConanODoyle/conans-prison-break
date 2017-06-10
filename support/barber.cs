@@ -1,4 +1,4 @@
-$HairCount = 44;
+$HairCount = 46;
 $Hair[0]	= "None";
 $Hair[1]	= "Comb-Over Hair";
 $Hair[2]	= "Corn Rows Hair";
@@ -43,6 +43,8 @@ $Hair[40]	= "Long Hair";
 $Hair[41]	= "JewFro Hair";
 $Hair[42]	= "Fat Hair";
 $Hair[43]	= "Dastardly Hair";
+$Hair[44]	= "Clown Hair";
+$Hair[45]	= "Important Hair";
 
 if(!isObject(CPB_HairSet)) {
 	new SimSet(CPB_HairSet);
@@ -90,6 +92,8 @@ $ClientVariable[$ClientVariableCount++] = "isCustomizing";
 //	GameConnection::giveRandomHair
 //	isHair	//datablock definitions
 //	registerHair
+//	Hatmod_getProperties
+//	strLastPos
 //	registerAllHairs
 
 package CPB_Support_Barber {
@@ -190,7 +194,7 @@ function serverCmdBarber(%cl) {
 		return;
 	}
 	%pl.setVelocity("0 0 0");
-	schedule(1, %pl, startBarber, %pl);
+	schedule(1, %pl, startBarber, %cl);
 }
 
 function startBarber(%cl, %brick) {
@@ -212,6 +216,12 @@ function startBarber(%cl, %brick) {
 	}
 
 	%mount.mountObject(%pl, 0);
+	%mount.setMaxSideSpeed(0);
+	%mount.setMaxForwardSpeed(0);
+	%mount.setMaxBackwardSpeed(0);
+	%mount.setMaxCrouchSideSpeed(0);
+	%mount.setMaxCrouchForwardSpeed(0);
+	%mount.setMaxCrouchBackwardSpeed(0);
 	%pl.canDismount = 0;
 
 	%pl.isCustomizing = 1;
@@ -220,7 +230,10 @@ function startBarber(%cl, %brick) {
 	%cl.lastCustomizeTime = getSimTime();
 
 	%cl.spectateObject(%pl, 0);
-	%cl.setControlObject(%pl);
+	%cl.camera.setMode(Observer);
+	%cl.camera.setControlObject(%pl);
+	%pl.setControlObject(%pl);
+	%cl.camera.setTransform(getHairCamPosition(%pl));
 
 	if ($HairData::Unlocked[%cl.bl_id] $= "") {
 		%cl.grantFreeHair();
@@ -249,12 +262,14 @@ function stopBarber(%cl) {
 	%pl.chairBot.delete();
 
 	%cl.stopSpectatingObject();
+	%cl.camera.setControlObject(0);
+	%cl.setControlObject(%pl);
 
 	%currentHairID = getWord($HairData::Unlocked[%cl.bl_id], $HairData::currentHair[%cl.bl_id]);
-	%pl.equipHair(getHairName(%currentHairID));
+	%pl.equipHair("Saved");
 
 	export("$HairData::*", "Add-ons/Gamemode_CPB/data/hair.cs");
-	centerPrint(%cl, "");
+	%cl.centerPrint("");
 }
 
 function toggleBarberSelection(%cl, %trig) {
@@ -365,26 +380,22 @@ function getHairName(%id) {
 }
 
 function Player::equipHair(%pl, %hair) {
+	%cl = %pl.client;
 	if ((%hair $= "" || %hair $= "None") && %pl.getMountedImage(2) != 0) {
 		%pl.unMountImage(2);
 	} else if (%hair $= "Saved") {
 		%list = $HairData::Unlocked[%cl.bl_id];
-		%hairs = (%unlockedIndex + 1) @ " / " @ getWordCount(%list) + 0;
-		%currHairName = getHairName(getWord(%list, %unlockedIndex));
+		%currHairName = getHairName(getWord(%list, $HairData::savedHair[%cl.bl_id]));
 		%pl.equipHair(%currHairName);
 	} else {
 		%pl.mountImage("Hat" @ stripchars(%hair, " -1234567890_+=.,;':?!@#$%&*()[]{}\"/<>") @ "Data", 2);
 
-		%i = -1;
-		while((%node = $hat[%i++]) !$= "")
-
 		for (%i = 0; $hat[%i] !$= ""; %i++) {
-			%pl.hideNode(%node);
+			%pl.hideNode($hat[%i]);
 		}
 
-		%i = -1;
 		for (%i = 0; $accent[%i] !$= ""; %i++) {
-			%pl.hideNode(%node);
+			%pl.hideNode($accent[%i]);
 		}
 	}
 }
@@ -416,8 +427,8 @@ function GameConnection::giveHair(%cl, %hairID) {
 }
 
 function GameConnection::giveRandomHair(%cl) {
-	%list = getIntegerList(0, $HairCount - 1);
-	%count = $HairCount;
+	%list = getIntegerList(1, $HairCount - 1);
+	%count = getWordCount(%list);
 	%ownedList = $HairData::Unlocked[%cl.bl_id];
 	%ownedCount = getWordCount($HairData::Unlocked[%cl.bl_id]);
 
@@ -427,12 +438,12 @@ function GameConnection::giveRandomHair(%cl) {
 
 	while (getWordCount(%list) > 0 && %loopCount < 1000) {
 		%idx = getRandom(0, %count - 1);
-		%hairID = getWord(%idx, %list);
+		%hairID = getWord(%list, %idx);
 
-		if (%cl.hasHair(%hairID)) {
+		if (!%cl.hasHair(%hairID)) {
 			break;
 		} else {
-			removeWord(%list, %idx);
+			%list = removeWord(%list, %idx);
 			%count--;
 		}
 		%loopCount++;
@@ -478,11 +489,74 @@ function registerHair(%name, %dir, %offset, %eyeOffset) {
 	return 1;
 }
 
+function HatMod_GetProperties(%configDir) {
+	%offset = "0 0 0";
+	%minVer = "0";
+	%eyeOffset = "0 0 -1000";
+
+	if(%configDir !$= "Default") {
+		%file = new fileObject();
+		%file.openForRead(%configDir);
+
+		while(!%file.isEOF()) {
+			%line = trim(%file.readLine());
+
+			if(%line $= "")
+				continue;
+
+			%firstWord = getWord(%line, 0);
+			%wordCount = getWordCount(%line);
+
+			switch$(%firstWord) {
+			case "offset":
+				%offset = getWords(%line, %wordCount-3, %wordCount-1);
+				%offset = strReplace(%offset, "\"", "");
+				%offset = strReplace(%offset, ";", "");
+				%offset = vectorAdd(%offset, "0 0 0"); //Forces it to be a 3d vector
+
+			case "minVer":
+				%minVer = getWord(%line, getWordCount(%line)-1);
+
+			case "eyeOffset":
+				%eyeOffset = getWords(%line, %wordCount-3, %wordCount-1);
+				%eyeOffset = strReplace(%eyeOffset, "\"", "");
+				%eyeOffset = strReplace(%eyeOffset, ";", "");
+				%eyeOffset = vectorAdd(%eyeOffset, "0 0 0"); //Forces it to be a 3d vector
+			}
+		}
+
+		%file.close();
+		%file.delete();
+	}
+
+	return %offset TAB %minVer TAB %eyeOffset;
+}
+
+function strLastPos(%str, %search, %offset) {
+	if(%offset > 0) {
+		%pos = %offset;
+	} else {
+		%str = getSubStr(%str, 0, strLen(%str) + %offset);
+		%pos = 0;
+	}
+
+	%lastPos = -1;
+
+	while((%pos = strPos(%str, %search, %pos+1)) > 0) {
+		%lastPos = %pos;
+		if(%break++ >= 500) { //Pretty sure strings have a max length shorter than this, should be fine
+			return -2;
+		}
+	}
+	return %lastPos;
+}
+
 function registerAllHairs() {
 	echo("Searching for Hairs...");
 
-	if(isObject(CPB_HairSet))
+	if(isObject(CPB_HairSet)) {
 		CPB_HairSet.clear();
+	}
 
 	%loc = "Add-ons/Gamemode_CPB/support/hairs/*/*.dts";
 	for(%dir = findFirstFile(%loc); %dir !$= ""; %dir = findNextFile(%loc)) {
@@ -505,7 +579,7 @@ function registerAllHairs() {
 		%offset = getField(%config, 0);
 		%eyeOffset = getField(%config, 2);
 
-		if(HatMod_registerHat(%name, %dir, %offset, %eyeOffset)) {
+		if(registerHair(%name, %dir, %offset, %eyeOffset)) {
 			echo("   Hat" SPC strReplace(%name, "_", " ") SPC "registered successfully.");
 			%count++;
 		}

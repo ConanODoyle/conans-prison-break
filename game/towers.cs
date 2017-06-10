@@ -131,6 +131,18 @@ function removeGuard(%cl) {
 	echo("Cannot find " @ %cl.name @ " in the list of guards!");
 }
 
+function resetTowerData(%id) {
+	%tower = ("Tower" @ %id);
+
+	%tower.isDestroyed = "";
+	%tower.guardClient = "";
+	%tower.spawn = "";
+	%tower.spotlightBot = "";
+	%tower.origBrickCount = "";
+	%tower.guardOption = "";
+	%tower.supportCount = "";
+}
+
 function killTower(%id) {
 	%id = %id % 4;
 	%tower = ("Tower" @ %id);

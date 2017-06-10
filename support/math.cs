@@ -8,7 +8,7 @@ function getIntegerList(%min, %max) {
 		return;
 	}
 
-	for (%i = %min, %i <= %max; %i++) {
+	for (%i = %min; %i <= %max; %i++) {
 		%ret = %ret SPC %i;
 	}
 	return trim(%ret);

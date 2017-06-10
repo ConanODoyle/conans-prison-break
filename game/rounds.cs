@@ -58,7 +58,7 @@ function _setPhaseLOBBY() {
 		%cl = ClientGroup.getObject(%i);
 		%cl.clearStatistics();
 		%cl.clearVariables();
-		commandToClient(%%cl, 'showBricks', 0);
+		commandToClient(%cl, 'showBricks', 0);
 		if (getRandom() < 0.1) {
 			%cl.giveRandomHair();
 		}

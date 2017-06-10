@@ -16,6 +16,10 @@ datablock StaticShapeData(LogoDishShape)
 //Functions:
 //Created:
 //	displayLogo
+//  applyLogoColors
+//  doLogoFadeIn
+//  doLogoFadeOut
+//  clearLogo
 
 function displayLogo(%camPos, %targetPos, %logo, %bg) {
     if (!isObject(%logo)) {
@@ -67,5 +71,58 @@ function displayLogo(%camPos, %targetPos, %logo, %bg) {
 
     $LogoShape.startFade(0, 0, 1);
     $LogoShape.setTransform(%camTransform);
-    doLogoFadeIn($LogoShape, 0.99);
+    applyLogoColors($LogoShape, 1);
+}
+
+function applyLogoColors(%item, %alpha) {
+    if (%alpha <= 0 || !isObject(%item)) {
+        %item.delete();
+        return;
+    }
+
+    %item.setNodeColor("outline", "0 0 0 " @ %alpha);
+    %item.setNodeColor("clothing", "0.9 0.479 0 " @ %alpha);
+    %item.setNodeColor("skin", "0.9 0.712 0.456 " @ %alpha);
+    %item.setNodeColor("bars", "0.5 0.5 0.5 " @ %alpha);
+    %item.setNodeColor("beams", "0.168 0.168 0.168 " @ %alpha);
+}
+
+function doLogoFadeOut(%item, %alpha) {
+    if (%alpha <= 0 || !isObject(%item)) {
+        %item.delete();
+        return;
+    }
+
+    %item.setNodeColor("outline", "0 0 0 " @ %alpha);
+    %item.setNodeColor("clothing", "0.9 0.479 0 " @ %alpha);
+    %item.setNodeColor("skin", "0.9 0.712 0.456 " @ %alpha);
+    %item.setNodeColor("bars", "0.5 0.5 0.5 " @ %alpha);
+    %item.setNodeColor("beams", "0.168 0.168 0.168 " @ %alpha);
+
+    schedule(10, %item, doLogoFadeOut, %item, %alpha-0.01);
+}
+
+function doLogoFadeIn(%item, %alpha) {
+    if (%alpha >= 1 || !isObject(%item)) {
+        return;
+    }
+    %item.unhideNode("ALL");
+
+    %item.setNodeColor("outline", "0 0 0 " @ %alpha);
+    %item.setNodeColor("clothing", "0.9 0.479 0 " @ %alpha);
+    %item.setNodeColor("skin", "0.96 0.762 0.486 " @ %alpha);
+    %item.setNodeColor("bars", "0.5 0.5 0.5 " @ %alpha);
+    %item.setNodeColor("beams", "0.168 0.168 0.168 " @ %alpha);
+
+    schedule(10, %item, doLogoFadeIn, %item, %alpha + 0.01);
+}
+
+function clearLogo() {
+    if (isObject($LogoShape)) {
+        $LogoShape.delete();
+    }
+    
+    if (isObject($LogoDish)) {
+        $LogoDish.delete();
+    } 
 }

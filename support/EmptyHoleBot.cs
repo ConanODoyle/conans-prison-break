@@ -8,4 +8,5 @@ datablock PlayerData(EmptyHoleBot : PlayerNoJet) {
 
 	maxStepHeight = 0;
 	slowdownMax = 80;
+	jumpForce = 0;
 };
