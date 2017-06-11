@@ -8,6 +8,8 @@ $SPECTATE::CONTROLCPPRIORITY = 10;
 //Functions:
 //Packaged:
 //	Observer::onTrigger
+//	SimObject::onCameraEnterOrbit
+//	SimObject::onCameraLeaveOrbit
 //Created:
 //	spectateNextPlayer
 //	GameConnection::spectateObject
@@ -19,16 +21,26 @@ package CPB_Support_Spectate {
 	function Observer::onTrigger(%this, %obj, %trig, %state) {
 		%cl = %obj.getControllingClient();
 
-		if (%cl.isSpectating && !%state) {
-			if (%trig == $LEFTCLICK) {
+		if (%cl.isSpectating) {
+			if (%trig == $LEFTCLICK && !%state) {
 				spectateNextPlayer(%cl, 1);
-			} else if (%trig == $RIGHTCLICK) {
+			} else if (%trig == $RIGHTCLICK && !%state) {
 				spectateNextPlayer(%cl, -1);
 			}
 			return;
 		}
 
 		return parent::onTrigger(%this, %obj, %trig, %state);
+	}
+
+	function SimObject::onCameraEnterOrbit(%obj) {
+		//removes the bottomprint counter
+		return;
+	}
+
+	function SimObject::onCameraLeaveOrbit(%obj) {
+		//removes the bottomprint counter
+		return;
 	}
 };
 activatePackage(CPB_Support_Spectate);
@@ -38,6 +50,7 @@ function spectateNextPlayer(%cl, %num) {
 		%cl.setControlObject(%cl.player);
 		return;
 	}
+	%cl.isSpectating = 1;
 
 	%clientCount = ClientGroup.getCount();
 
@@ -56,7 +69,7 @@ function spectateNextPlayer(%cl, %num) {
 		%cl.spectatingClientIDX = (%cl.spectatingClientIDX + %dir + %clientCount) % %clientCount;
 	}
 	
-	%cl.priorityCenterprint("<font:Consolas:18><just:left>\c6Left Click<just:right>\c6Right Click<font:Arial Bold:22> <br><just:left>\c3Next Player<just:right>\c3Prev Player ", 1000, $SPECTATE::CONTROLCPPRIORITY);
+	%cl.priorityCenterprint("<font:Consolas:18><just:left>\c6Left Click<just:right>\c6Right Click<font:Arial Bold:22> <br><just:left>\c3Next Player<just:right>\c3Prev Player ", -1, $SPECTATE::CONTROLCPPRIORITY);
 
 	if (!isObject(%targPlayer))
 		return;

@@ -240,7 +240,7 @@ function startBarber(%cl, %brick) {
 	}
 
 	%index = $HairData::currentHair[%cl.bl_id] = $HairData::savedHair[%cl.bl_id] + 0;
-	centerPrint(%cl, "<br><br><br><br><br>\c6Plant Brick: Confirm \c7||\c6 Light: Exit" @ getBarberCenterprint(%cl, $HairData::Unlocked[%cl.bl_id], %index));
+	centerPrint(%cl, "<br><br><br><br><br>\c6Plant Brick: Confirm \c7||\c6 Light: Exit" @ getBarberCenterprint(%cl, %index));
 
 	serverCmdUnUseTool(%cl);
 	%pl.playThread(0, sit);

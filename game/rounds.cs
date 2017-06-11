@@ -74,6 +74,12 @@ function _setPhaseLOBBY() {
 }
 
 function _setPhaseINTRO() {
+	if (!$CPB::hasCollectedBricks) {
+		messageAdmins("!!! \c6Cannot start intro - bricks not yet collected!");
+		return;
+	}
+	$CPB::hasCollectedBricks = 0;
+
 	cancelAllRoundSchedules();
 	$Stats::GameNum++;
 
@@ -81,6 +87,8 @@ function _setPhaseINTRO() {
 	clearBottomprintAll();
 	spawnGenRoomKill();
 	spawnKillGround();
+
+	//assignGuards();
 }
 
 function _setPhaseGWIN() {

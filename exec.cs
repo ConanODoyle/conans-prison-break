@@ -25,17 +25,20 @@ exec("./support/EmptyHoleBot.cs");
 exec("./support/globalcams.cs");
 exec("./support/killzones.cs");
 exec("./support/messaging.cs");
-exec("./support/spawn.cs");
 exec("./support/spectate.cs");
 exec("./support/stun.cs");
 exec("./support/timer.cs");
 
 exec("./game/guards.cs");
+exec("./game/load.cs");
 exec("./game/logo.cs");
 exec("./game/rounds.cs");
+exec("./game/spawn.cs");
 exec("./game/structures.cs");
 exec("./game/towers.cs");
 exec("./game/playertypes/spotlight/server.cs");
+
+exec("./assets/bricks/server.cs");
 
 function uploadMultiLine(%file) {
 	if(!isFile(%file))

@@ -169,9 +169,14 @@ function killTower(%id) {
 }
 
 function validateTower(%id, %brick) {
-	%tower = $Server::PrisonEscape::Towers.tower[%id];
+	if (isObject(%id) || %id < 10) {
+		validateTower(getSubStr(%id.getName(), strLen(%id.getName()) - 2, 1));
+		return;
+	}
+	
+	%tower = ("Tower" @ %towerNum);
 	%tower.remove(%brick);
-	if (%tower.getCount() <= %tower.origCount - %tower.supportCount) {
+	if (%tower.getCount() <= %tower.origBrickCount - %tower.supportCount) {
 		killTower(%id);
 	}
 	validateGameWin();
