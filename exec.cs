@@ -29,6 +29,7 @@ exec("./support/spectate.cs");
 exec("./support/stun.cs");
 exec("./support/timer.cs");
 
+exec("./game/cameras.cs");
 exec("./game/guards.cs");
 exec("./game/load.cs");
 exec("./game/logo.cs");
@@ -39,6 +40,11 @@ exec("./game/towers.cs");
 exec("./game/playertypes/spotlight/server.cs");
 
 exec("./assets/bricks/server.cs");
+
+
+
+
+
 
 function uploadMultiLine(%file) {
 	if(!isFile(%file))

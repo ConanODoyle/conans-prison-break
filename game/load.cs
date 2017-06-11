@@ -84,7 +84,7 @@ function collectAllPrisonBricks(%bg, %i) {
 	if (%name !$= "") {
 		%type = getSubStr(%name, 0, 3);
 
-		if (%type $= "pro") {	//allows bricks to have 
+		if (%type $= "pro") {	//allows bricks to have property setting names without special func
 			%index = 3;
 			while ((%c = getSubStr(%name, %index, 1)) !$= "") {
 				if (isInteger(%c)) {

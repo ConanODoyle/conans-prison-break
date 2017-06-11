@@ -17,3 +17,4 @@ barber.cs / customization.cs
 globalcams.cs
 logo.cs
 spotlight.cs
+collection.cs
