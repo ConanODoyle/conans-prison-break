@@ -52,6 +52,7 @@ if(!isObject(CPB_HairSet)) {
 }
 
 $ClientVariable[$ClientVariableCount++] = "isCustomizing";
+$ClientVariable[$ClientVariableCount++] = "customizingMode";
 
 //Object properties:
 //Client
@@ -95,6 +96,7 @@ $ClientVariable[$ClientVariableCount++] = "isCustomizing";
 //	Hatmod_getProperties
 //	strLastPos
 //	registerAllHairs
+
 
 package CPB_Support_Barber {
 	function GameConnection::onDeath(%cl, %sourceObj, %sourceClient, %damageType, %part) {
@@ -240,6 +242,7 @@ function startBarber(%cl, %brick) {
 	}
 
 	%index = $HairData::currentHair[%cl.bl_id] = $HairData::savedHair[%cl.bl_id] + 0;
+	%pl.equipHair("Saved");
 	centerPrint(%cl, "<br><br><br><br><br>\c6Plant Brick: Confirm \c7||\c6 Light: Exit" @ getBarberCenterprint(%cl, %index));
 
 	serverCmdUnUseTool(%cl);

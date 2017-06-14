@@ -1,6 +1,7 @@
 $LEFTCLICK = 0;
 $RIGHTCLICK = 4;
-$ClientVariableCount = 0;
+$ClientVariableCount = 0; //use to add client vars for resetting
+$CurrMap = "SkillPrison";
 
 //colortest http://i.imgur.com/Ofi3BvW.png
 
@@ -15,15 +16,16 @@ if (!isObject(FakeClient)) {
 	MissionCleanup.add(FakeClient);
 }
 
-exec("./support/math.cs");
+exec("./support/funclib.cs");
+exec("./game/spawn.cs"); //needs lowest package priority
 
 exec("./support/barber.cs");
-	exec("./data/hair.cs");
 exec("./support/bottomprint.cs");
 exec("./support/electrocute.cs");
 exec("./support/EmptyHoleBot.cs");
 exec("./support/globalcams.cs");
 exec("./support/killzones.cs");
+exec("./support/locations.cs");
 exec("./support/messaging.cs");
 exec("./support/spectate.cs");
 exec("./support/stun.cs");
@@ -34,10 +36,13 @@ exec("./game/guards.cs");
 exec("./game/load.cs");
 exec("./game/logo.cs");
 exec("./game/rounds.cs");
-exec("./game/spawn.cs");
 exec("./game/structures.cs");
 exec("./game/towers.cs");
 exec("./game/playertypes/spotlight/server.cs");
+
+exec("./data/hair.cs");
+exec("./data/items/server.cs");
+exec("./data/locations_skillPrison.cs");
 
 exec("./assets/bricks/server.cs");
 

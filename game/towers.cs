@@ -11,6 +11,10 @@ if (!isObject($CPB::TowerGroup)) {
 
 $TOWER::DEATHALERTCPPRIORITY = 10;
 
+$ClientVariable[$ClientVariableCount++] = "tower";
+$ClientVariable[$ClientVariableCount++] = "isGuard";
+$ClientVariable[$ClientVariableCount++] = "isPrisoner";
+
 //Object properties:
 //Client
 //	tower
@@ -38,6 +42,7 @@ $TOWER::DEATHALERTCPPRIORITY = 10;
 //	enableTowerSpotlights
 //	disableTowerSpotlights
 //	SimSet::destroy
+
 
 package CPB_Game_Towers {
 	function GameConnection::onDrop(%this, %val) {
@@ -173,7 +178,7 @@ function validateTower(%id, %brick) {
 		validateTower(getSubStr(%id.getName(), strLen(%id.getName()) - 2, 1));
 		return;
 	}
-	
+
 	%tower = ("Tower" @ %towerNum);
 	%tower.remove(%brick);
 	if (%tower.getCount() <= %tower.origBrickCount - %tower.supportCount) {

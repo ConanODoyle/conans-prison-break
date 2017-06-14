@@ -42,7 +42,7 @@ function _setPhaseGAME() {
 	startRoundTimer();
 	createKillZones();
 
-	priorityCenterprintAll("", 0, 11);
+	centerprintAll("", 0);
 	startStatisticsCollection($Stats::GameNum);
 }
 

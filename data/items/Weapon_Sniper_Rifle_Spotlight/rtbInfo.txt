@@ -1,0 +1,5 @@
+id: 4
+icon: skull-n-crossbones_16
+type: Weapons
+title: Sniper Rifle
+version: 1

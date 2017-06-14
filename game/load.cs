@@ -28,6 +28,7 @@ $CPB::CollectBricksSchedule = 0;
 //Created:
 //	resetSavedBrickData
 //	collectAllPrisonBricks
+//	various collection functions
 
 
 package CPB_Game_Load {
@@ -52,6 +53,7 @@ function resetSavedBrickData() {
 
 function collectAllPrisonBricks(%bg, %i) {
 	if (%i == 0) { 
+		messageAdmins("Initiating prison brick collection...");
 		resetSavedBrickData();
 	}
 
@@ -84,6 +86,7 @@ function collectAllPrisonBricks(%bg, %i) {
 	if (%name !$= "") {
 		%type = getSubStr(%name, 0, 3);
 
+		%firstName = getSubStr(%name, 0, strPos(%name, "_"));
 		if (%type $= "pro") {	//allows bricks to have property setting names without special func
 			%index = 3;
 			while ((%c = getSubStr(%name, %index, 1)) !$= "") {
@@ -104,7 +107,7 @@ function collectAllPrisonBricks(%bg, %i) {
 			SecurityCameras.add(%b);
 		} else if (strPos(strLwr(%name), "info") >= 0) {
 			InfoPopups.add(%b);
-		} else if (isFunction(%func = "collect" @ %name @ "Brick")) {
+		} else if (isFunction(%func = "collect" @ %firstName @ "Brick")) {
 			eval(%func @ "(" @ %b @ ")");
 		}
 	}
@@ -133,10 +136,10 @@ function collectTowerBrick(%b, %n) {
 	}
 }
 
-function collectTower0Brick(%b) { collectTowerBrick(%b, 0) }
-function collectTower1Brick(%b) { collectTowerBrick(%b, 1) }
-function collectTower2Brick(%b) { collectTowerBrick(%b, 2) }
-function collectTower3Brick(%b) { collectTowerBrick(%b, 3) }
+function collectTower0Brick(%b) { collectTowerBrick(%b, 0); }
+function collectTower1Brick(%b) { collectTowerBrick(%b, 1); }
+function collectTower2Brick(%b) { collectTowerBrick(%b, 2); }
+function collectTower3Brick(%b) { collectTowerBrick(%b, 3); }
 
 function collectIndicatorBrick(%b) { %b.setColor(4); } //generator indicator to green
 function collectBronsonDoorBrick(%b) { %b.setRaycasting(1); } //reset door to raycasting

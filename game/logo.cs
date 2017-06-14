@@ -8,6 +8,11 @@ datablock StaticShapeData(LogoOpenShape)
     shapeFile = "./shapes/logo/LogoOpen.dts";
 };
 
+datablock StaticShapeData(NewLogoShape)
+{
+    shapeFile = "./shapes/logo/newLogo.dts";
+};
+
 datablock StaticShapeData(LogoDishShape)
 {
     shapeFile = "./shapes/logo/LogoDish.dts";
@@ -80,11 +85,36 @@ function applyLogoColors(%item, %alpha) {
         return;
     }
 
-    %item.setNodeColor("outline", "0 0 0 " @ %alpha);
-    %item.setNodeColor("clothing", "0.9 0.479 0 " @ %alpha);
-    %item.setNodeColor("skin", "0.9 0.712 0.456 " @ %alpha);
-    %item.setNodeColor("bars", "0.5 0.5 0.5 " @ %alpha);
-    %item.setNodeColor("beams", "0.168 0.168 0.168 " @ %alpha);
+    if (%item.getDatablock().getName() !$= "NewLogoShape") {
+        %item.setNodeColor("outline", "0 0 0 " @ %alpha);
+        %item.setNodeColor("clothing", "0.9 0.479 0 " @ %alpha);
+        %item.setNodeColor("skin", "0.9 0.712 0.456 " @ %alpha);
+        %item.setNodeColor("bars", "0.5 0.5 0.5 " @ %alpha);
+        %item.setNodeColor("beams", "0.168 0.168 0.168 " @ %alpha);
+    } else {
+        %skinColor = "0.9 0.712 0.456 " @ %alpha;
+        %item.setNodeColor("cHeadSkin", %skinColor);
+        %item.setNodeColor("cChest", $GuardColor);
+        %item.setNodeColor("cLArm", $GuardColor);
+        %item.setNodeColor("cRArm", $GuardColor);
+        %item.setNodeColor("cPack", "0.2 0.2 0.2 1");
+        %item.setNodeColor("clHand", %skinColor);
+        %item.setNodeColor("cRHand", %skinColor);
+        %item.setNodeColor("cPants", "0.1 0.1 0.1 1");
+        %item.setNodeColor("cCopHat", $GuardColor);
+        %item.setNodeColor("pHeadSkin", %skinColor);
+        %item.setNodeColor("pLHand", %skinColor);
+        %item.setNodeColor("pRHand", %skinColor);
+        %item.setNodeColor("pPants", $PrisonerColor);
+        %item.setNodeColor("pChest", $PrisonerColor);
+        %item.setNodeColor("pLArmSlim", $PrisonerColor);
+        %item.setNodeColor("pRArmSlim", $PrisonerColor);
+        %item.setNodeColor("Cylinder", "0.3 0.3 0.3 1");
+        %item.setNodeColor("sniperBolt", "0.3 0.3 0.3 1");
+        %item.setNodeColor("sniperStock", "0.12 0.12 0.12 1");
+        %item.setNodeColor("sniperBarrel", "0.4 0.4 0.4 1");
+        %item.setNodeColor("sniperScope", "0 0 0 1");
+    }
 }
 
 function doLogoFadeOut(%item, %alpha) {

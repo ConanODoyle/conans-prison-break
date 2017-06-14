@@ -1,5 +1,8 @@
 $SPECTATE::CONTROLCPPRIORITY = 10;
 
+$ClientVariable[$ClientVariableCount++] = "isSpectating";
+$ClientVariable[$ClientVariableCount++] = "spectatingClientIDX";
+
 //Object properties:
 //Client
 //	isSpectating
@@ -16,6 +19,7 @@ $SPECTATE::CONTROLCPPRIORITY = 10;
 //	Player::spectateObject
 //	GameConnection::stopSpectatingObject
 //	Player::stopSpectatingObject
+
 
 package CPB_Support_Spectate {
 	function Observer::onTrigger(%this, %obj, %trig, %state) {

@@ -13,3 +13,17 @@ function getIntegerList(%min, %max) {
 	}
 	return trim(%ret);
 }
+
+function containsWord(%str, %word) {
+	if (getWordCount(%word) > 1) {
+		warn("Cannot look for multi-word phrase in string! (" @ %word @ ")");
+		return;
+	}
+
+	for (%i = 0; %i < getWordCount(%str); %i++) {
+		if (getWord(%str, %i) $= %word) {
+			return 1;
+		}
+	}
+	return 0;
+}

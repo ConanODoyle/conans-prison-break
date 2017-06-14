@@ -4,6 +4,7 @@ Think up and write up better method to handle guard pre-round-planning. Slash co
 EWS Color Flash when # of prisoners outside is high
 Make sure bucket replaces hair and then re-adds it after de-equipping
 Add client variable recording for clearing post-round
+Rename math.cs
 
 Modularizing-required files:
 killzone
@@ -18,3 +19,4 @@ globalcams.cs
 logo.cs
 spotlight.cs
 collection.cs
+locations.cs

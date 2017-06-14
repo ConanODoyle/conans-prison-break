@@ -13,7 +13,6 @@ $damageFlashColor = 45;
 $BUILDINGS::GENERATORALERTCPPRIORITY = 5;
 $BUILDINGS::EWSALERTCPPRIORITY = 5;
 
-
 //Functions:
 //Created:
 //	fxDTSBrick::disableSpotlights //event
@@ -22,6 +21,7 @@ $BUILDINGS::EWSALERTCPPRIORITY = 5;
 //	destroyEWS
 //	fxDTSBrick::killDelete
 //	fxDTSBrick::damage
+
 
 registerOutputEvent("fxDTSBrick", "disableSpotlights", "", 1);
 

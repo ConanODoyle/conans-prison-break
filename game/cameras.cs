@@ -1,3 +1,11 @@
+$CAMERAS::INFOCPPRIORITY = 1;
+
+//Object properties:
+//Player
+//	isInCamera
+//	canLeaveCamera
+//	isPreviewingCameras
+
 //Functions:
 //Packaged:
 //	Observer::onTrigger
@@ -36,23 +44,22 @@ package CPB_Game_Cameras {
 		return parent::onTrigger(%this, %obj, %trig, %state);
 	}
 
-	function serverCmdLight(%cl)
-	{
-		if (%cl.player.isInCamera && %cl.player.canLeaveCamera)
-		{
-			if (isObject(%cl.player))
+	function serverCmdLight(%cl) {
+		if (%cl.player.isInCamera && %cl.player.canLeaveCamera) {
+			if (isObject(%cl.player)) {
 				%cl.setControlObject(%cl.player);
+			}
 			%cl.player.isInCamera = 0;
 			if (%cl.player.isPreviewingCameras) {
 				SecurityCameras.getObject(%cl.currCamera).endDoorToggleLoop();
 			}
 			%cl.player.isPreviewingCameras = 0;
 			%cl.player.canLeaveCamera = 1;
-			centerprint(%cl, "");
+			%cl.priorityCenterprint(%cl, "", $CAMERAS::INFOCPPRIORITY);
 			return;
-		}
-		else
+		} else {
 			return parent::serverCmdLight(%cl);
+		}
 	}
 };
 activatePackage(CPB_Game_Cameras);
@@ -184,7 +191,7 @@ function fxDTSBrick::previewCameras(%this, %cl) {
 
 	messageClient(%cl,'',"\c2Camera in Free Mode \c6- Use Light key to exit the cameras");
 
-	%cl.centerprint(getFormattedCameraCenterprint(SecurityCameras.getObject(%cl.currCamera), %cl.currCamera));
+	%cl.priorityCenterprint(getFormattedCameraCenterprint(SecurityCameras.getObject(%cl.currCamera), %cl.currCamera), -1, $CAMERAS::INFOCPPRIORITY);
 }
 
 function getFormattedCameraCenterprint(%b, %index) {
