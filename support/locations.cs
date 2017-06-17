@@ -19,6 +19,10 @@ package CPB_Support_Locations {
 };
 activatePackage(CPB_Support_Locations);
 
+
+////////////////////
+
+
 function getLocation(%obj) {
 	if (!isObject(%obj)) {
 		return "Dead";
@@ -40,8 +44,11 @@ function GameConnection::isOutside(%cl) {
 		return 0;
 	}
 
-	%loc = getLocation(%pl)
-	if (%loc $= "Outside" || %loc $= "Yard");
+	%loc = getLocation(%pl);
+	if (%loc $= "Outside" || %loc $= "Yard") {
+		return 1;
+	}
+	return 0;
 }
 
 function collectPlayerLocations(%i) {

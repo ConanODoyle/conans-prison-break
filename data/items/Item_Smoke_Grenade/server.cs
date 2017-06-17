@@ -298,7 +298,7 @@ function createSmokeSphereAt(%pos) {
 
 function createSmokeScreenAt(%pos, %time) {
 	%shape = createSmokeSphereAt(%pos);
-	%shape.setScale("7 7 7");
+	%shape.setScale("7.2 7.2 7.2");
 	%shape.startFade(0, 0, 1);
 	smokeShape_fadeIn(%shape, 0);
 	%smokeScreenEmitter = new ParticleEmitterNode(Smoke)

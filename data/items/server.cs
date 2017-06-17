@@ -23,13 +23,13 @@ datablock ParticleData(goldenParticleA)
 	spinRandomMin = 280.0;
 	spinRandomMax = 281.0;
 
-	colors[0]	  = "0.6 1 0.4 0";
-	colors[1]	  = "0.6 1 0.4 1";
-	colors[2]	  = "0.6 1 0.4 0";
+	colors[0]	  = "1 1 0 0";
+	colors[1]	  = "1 1 0 1";
+	colors[2]	  = "1 1 0 0";
 
-	sizes[0]		= 2;
-	sizes[1]		= 5;
-	sizes[2]		= 3;
+	sizes[0]		= 1.5;
+	sizes[1]		= 3.3;
+	sizes[2]		= 1.8;
 
 	times[0]		= 0.0;
 	times[1]		= 0.3;

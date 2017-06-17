@@ -27,3 +27,12 @@ function containsWord(%str, %word) {
 	}
 	return 0;
 }
+
+function getRandomVector() {
+	%angle = getRandom(0, 314159 * 2) / 10000;
+	%z = (getRandom() - 0.5) * 2;
+	%s = mSqrt(1 - (%z * %z));
+	%x = %s * mCos(%angle);
+	%y = %s * mSin(%angle);
+	return %x SPC %y SPC %z;
+}

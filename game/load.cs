@@ -56,6 +56,7 @@ function collectAllPrisonBricks(%bg, %i) {
 		messageAdmins("Initiating prison brick collection...");
 		resetSavedBrickData();
 	}
+	cancel($CPB::CollectBricksSchedule);
 
 	if (%i >= %bg.getCount()) {
 		messageAdmins("<font:Palatino Linotype:18>!!! \c5Tower Bricks saved to Towers from " @ %bg);
@@ -112,7 +113,7 @@ function collectAllPrisonBricks(%bg, %i) {
 		}
 	}
 
-	$CPB::CollectBricksSchedule = schedule(0, 0, collectPrisonBricks, %bg, %i + 1);
+	$CPB::CollectBricksSchedule = schedule(0, 0, collectAllPrisonBricks, %bg, %i + 1);
 }
 
 function collectTowerBrick(%b, %n) {

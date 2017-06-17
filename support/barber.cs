@@ -458,6 +458,7 @@ function GameConnection::giveRandomHair(%cl) {
 	} else { //all hairs already owned
 		messageClient(%cl, '', "\c6You won a hairdo, but you already have all the hairs!");
 	}
+	export("$HairData::*", "Add-ons/Gamemode_CPB/data/hair.cs");
 }
 
 
