@@ -42,6 +42,7 @@ $ClientVariable[$ClientVariableCount++] = "isPrisoner";
 //	enableTowerSpotlights
 //	disableTowerSpotlights
 //	SimSet::destroy
+//	GameConnection::setTower
 
 
 package CPB_Game_Towers {
@@ -225,4 +226,17 @@ function SimSet::destroy(%this) {
 	serverPlay3D("brickBreakSound", %brick.getPosition());
 
 	%this.schedule(1, destroy);
+}
+
+registerOutputEvent(GameConnection, "setTower", "list 1 1 2 2 3 3 4 4", 1 );
+
+function GameConnection::setTower(%cl, %tower) {
+	%cl.tower = ("Tower" @ %tower);
+	if (isObject(%cl.tower.guard)) {
+		messageClient(%cl.tower.guard, '', "\c6You have been replaced by \c3" @ %cl.name @ "\c6 at tower \c5" @ %tower);
+		messageClient(%cl, '', "\c3" @ %cl.tower.guard.name @ "\c6 has been removed from tower \c5" @ %tower);
+		%cl.tower.guard.tower = "";
+	}
+	%cl.tower.guard = %cl;
+	%cl.tower.guardOption = %cl.guardClass;
 }

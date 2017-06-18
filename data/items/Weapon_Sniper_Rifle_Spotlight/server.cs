@@ -1,6 +1,3 @@
-$CPB::Classes::Stun = 1;
-$CPB::Classes::Shrapnel = 2;
-
 $STUNBLINDRADIUS = 10;
 $STUNBLINDBONUS = 0.4;
 $STUNDISTANCE = 2;
@@ -204,6 +201,22 @@ datablock ExplosionData(SniperRifleSpotlightExplosion)
 	lightEndRadius = 0;
 	lightStartColor = "0 0 0";
 	lightEndColor = "0 0 0";
+};
+
+datablock DebrisData(SniperRifleSpotlightDebris)
+{
+	shapeFile = "./bullet.dts";
+	lifetime = 8.0;
+	minSpinSpeed = -400.0;
+	maxSpinSpeed = 200.0;
+	elasticity = 0.2;
+	friction = 0.6;
+	numBounces = 5;
+	staticOnMaxBounce = true;
+	snapOnMaxBounce = false;
+	fade = true;
+
+	gravModifier = 2;
 };
 
 
@@ -481,10 +494,10 @@ function SniperRifleSpotlightImage::onFire(%this, %obj, %slot)
 	}
 
 		
-	if (%cl.tower.option $= $CPB::Classes::Stun) {
+	if (%cl.tower.guardOption $= $CPB::Classes::Stun) {
 		%projectile = SniperRifleSpotlightProjectile;
 		%stun = 1;
-	} else if (%cl.tower.option $= $CPB::Classes::Shrapnel) {
+	} else if (%cl.tower.guardOption $= $CPB::Classes::Shrapnel) {
 		%projectile = SniperShrapnelSpotlightProjectile;
 	} else {
 		%projectile = SniperRifleSpotlightProjectile;
@@ -507,7 +520,7 @@ function SniperRifleSpotlightImage::onFire(%this, %obj, %slot)
 	%gunVel = VectorScale(%projectile.muzzleVelocity, getWord(%obj.getScale(), 2));
 	%muzzleVelocity = VectorAdd(VectorScale(%muzzlevector, %gunVel), VectorScale(%objectVelocity, %inheritFactor));
 
-	%p = new Projectile(""){
+	%p = new Projectile(){
 		dataBlock = %projectile;
 		initialVelocity = %muzzleVelocity;
 		initialPosition = %initPos;
@@ -756,7 +769,6 @@ function spawnStunExplosion(%pos, %obj) {
 			}
 			%dist = VectorLen(vectorSub(%pl.getHackPosition(), %pos));
 			if (%dist <= $STUNDISTANCE) {
-				talk(mCeil((($STUNDISTANCE - %dist) / $STUNDISTANCE) * $STUNMAX));
 				stun(%pl, mCeil((($STUNDISTANCE - %dist) / $STUNDISTANCE) * $STUNMAX));
 			}
 		}

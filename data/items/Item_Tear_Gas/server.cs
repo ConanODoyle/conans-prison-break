@@ -381,7 +381,7 @@ function tearGasGrenadeImage::onAbortCharge(%this, %obj, %slot)
 	%obj.playthread(2, activate);
 }
 
-$tearGasShotRechargeTime = 3;
+$tearGasShotRechargeTime = 2;
 
 function rechargeTearGasShots(%obj) {
 	if (isObject(%obj)) {

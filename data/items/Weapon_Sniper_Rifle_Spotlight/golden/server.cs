@@ -201,7 +201,7 @@ function SniperRifleSpotlightGoldenImage::onFire(%this,%obj,%slot)
 	%gunVel = VectorScale(%projectile.muzzleVelocity, getWord(%obj.getScale(), 2));
 	%muzzleVelocity = VectorAdd(VectorScale(%muzzlevector, %gunVel), VectorScale(%objectVelocity, %inheritFactor));
 
-	%p = new Projectile(""){
+	%p = new Projectile(){
 		dataBlock = %projectile;
 		initialVelocity = %muzzleVelocity;
 		initialPosition = %initPos;

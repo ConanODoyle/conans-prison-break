@@ -17,7 +17,7 @@ function getIntegerList(%min, %max) {
 function containsWord(%str, %word) {
 	if (getWordCount(%word) > 1) {
 		warn("Cannot look for multi-word phrase in string! (" @ %word @ ")");
-		return;
+		return 0;
 	}
 
 	for (%i = 0; %i < getWordCount(%str); %i++) {
