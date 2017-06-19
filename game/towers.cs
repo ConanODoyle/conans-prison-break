@@ -228,9 +228,14 @@ function SimSet::destroy(%this) {
 	%this.schedule(1, destroy);
 }
 
-registerOutputEvent(GameConnection, "setTower", "list 1 1 2 2 3 3 4 4", 1 );
+registerOutputEvent(fxDTSBrick, "setTower", "list 1 1 2 2 3 3 4 4", 1);
 
-function GameConnection::setTower(%cl, %tower) {
+function fxDTSBrick::setTower(%b, %tower, %cl) {
+	if (%cl.guardClass $= "") {
+		messageClient(%cl, '', "You cannot pick a tower without picking a class first!");
+		return;
+    }
+	
 	%cl.tower = ("Tower" @ %tower);
 	if (isObject(%cl.tower.guard)) {
 		messageClient(%cl.tower.guard, '', "\c6You have been replaced by \c3" @ %cl.name @ "\c6 at tower \c5" @ %tower);
@@ -239,4 +244,7 @@ function GameConnection::setTower(%cl, %tower) {
 	}
 	%cl.tower.guard = %cl;
 	%cl.tower.guardOption = %cl.guardClass;
+
+	messageClient(%cl, '', "\c6You have been assigned to Tower \c5" @ %tower);
+	%cl.pickedTowerBrick = %b;
 }
