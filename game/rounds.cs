@@ -18,6 +18,7 @@ $CPB::SelectedGuards = "";
 //	_setPhaseINTRO
 //	_setPhaseGWIN
 //	_setPhasePWIN
+//	doIntro
 
 function setPhase(%phase) {
 	if ($CPB["::" @ %phase] $= "") {
@@ -37,6 +38,7 @@ function _setPhaseOFF() {
 }
 
 function _setPhaseGAME() {
+	resetAllClientsFOV();
 	cancelAllRoundSchedules();
 
 	startRoundTimer();
@@ -89,7 +91,9 @@ function _setPhaseINTRO() {
 	spawnGenRoomKill();
 	spawnKillGround();
 
-	//assignGuards();
+	if (lockInGuards()) {
+		doIntro();
+	}
 }
 
 function _setPhaseGWIN() {
@@ -104,4 +108,10 @@ function _setPhasePWIN() {
 	stopDataCollection();
 	bottomPrintInfoAll();
 	$CPB::LastRoundWinners = "Prisoners";
+}
+
+function doIntro() {
+	setAllCamerasView(_IntroCam1.getPosition(), _IntroCam1Target.getPosition(), 1, 90);
+
+	schedule(2000, 0, setAllCamerasView, _IntroCam2.getPosition(), _IntroCam2Target.getPosition(), 1, 90);
 }

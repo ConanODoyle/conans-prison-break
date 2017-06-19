@@ -3,10 +3,11 @@
 //	setAllCamerasView
 //	setCameraViewLoop
 //	returnAllPlayerControl
+//	resetAllClientsFOV
 //	setAllCameraControlPlayers
 //	setAllCameraControlSelf
 
-function setAllCamerasView(%camPos, %targetPos, %nocontrol, %FOV){
+function setAllCamerasView(%camPos, %targetPos, %nocontrol, %FOV) {
 	//calculate the position and rotation of camera
 	%pos = %camPos;
 	%delta = vectorSub(%targetPos, %pos);
@@ -25,8 +26,8 @@ function setAllCamerasView(%camPos, %targetPos, %nocontrol, %FOV){
 	setCameraViewLoop(%camTransform, 0, %nocontrol, %FOV);
 }
 
-function setCameraViewLoop(%transform, %i, %nocontrol, %FOV){
-	if (%i >= ClientGroup.getCount()){
+function setCameraViewLoop(%transform, %i, %nocontrol, %FOV) {
+	if (%i >= ClientGroup.getCount()) {
 		return;
 	}
 
@@ -38,7 +39,7 @@ function setCameraViewLoop(%transform, %i, %nocontrol, %FOV){
 
 	%camera.setFlyMode();
 	%camera.mode = "Observer";
-	if (!%nocontrol) {
+	if (%nocontrol) {
 		%camera.setControlObject(%cl.dummyCamera);
 	}
 
@@ -51,10 +52,8 @@ function setCameraViewLoop(%transform, %i, %nocontrol, %FOV){
 	schedule(0, 0, setCameraViewLoop, %transform, %i+1, %nocontrol, %FOV);
 }
 
-function returnAllPlayerControl()
-{
-	for(%i = 0; %i < ClientGroup.getCount(); %i++)
-	{
+function returnAllPlayerControl() {
+	for(%i = 0; %i < ClientGroup.getCount(); %i++) {
 		%cl = ClientGroup.getObject(%i);
 		if (isObject(%cl.player)) {
 			%cl.setControlObject(%cl.player);
@@ -62,10 +61,16 @@ function returnAllPlayerControl()
 	}
 }
 
-function setAllCameraControlPlayers()
-{
-	for(%i = 0; %i < ClientGroup.getCount(); %i++)
-	{
+function resetAllClientsFOV() {
+	for(%i = 0; %i < ClientGroup.getCount(); %i++) {
+		if (%cl.originalFOV !$= "") {
+			%cl.setControlCameraFOV(%cl.originalFOV);
+		}
+	}
+}
+
+function setAllCameraControlPlayers() {
+	for(%i = 0; %i < ClientGroup.getCount(); %i++) {
 		%cl = ClientGroup.getObject(%i);
 		if (isObject(%cl.player)) {
 			%cl.camera.setControlObject(%cl.player);
@@ -74,8 +79,7 @@ function setAllCameraControlPlayers()
 }
 
 function setAllCameraControlSelf() {
-	for(%i = 0; %i < ClientGroup.getCount(); %i++)
-	{
+	for(%i = 0; %i < ClientGroup.getCount(); %i++) {
 		%cl = ClientGroup.getObject(%i);
 		if (isObject(%cl.player)) {
 			%cl.camera.setControlObject(0);

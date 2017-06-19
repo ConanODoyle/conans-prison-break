@@ -28,6 +28,21 @@ function containsWord(%str, %word) {
 	return 0;
 }
 
+function removeWord(%str, %word) {
+	if (getWordCount(%word) > 1) {
+		warn("Cannot remove multi-word phrase in string! (" @ %word @ ")");
+		return %str;
+	}
+
+	%ret = "";
+	for (%i = 0; %i < getWordCount(%str); %i++) {
+		if ((%w = getWord(%str, %i)) !$= %word) {
+			%ret = trim(%ret SPC %w);
+		}
+	}
+	return %ret;
+}
+
 function getRandomVector() {
 	%angle = getRandom(0, 314159 * 2) / 10000;
 	%z = (getRandom() - 0.5) * 2;

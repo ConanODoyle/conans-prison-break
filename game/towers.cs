@@ -10,16 +10,19 @@ if (!isObject($CPB::TowerGroup)) {
 }
 
 $TOWER::DEATHALERTCPPRIORITY = 10;
+$CPB::GUARDCOUNT = 4;
 
 $ClientVariable[$ClientVariableCount++] = "tower";
 $ClientVariable[$ClientVariableCount++] = "isGuard";
 $ClientVariable[$ClientVariableCount++] = "isPrisoner";
+$ClientVariable[$ClientVariableCount++] = "isSelectedToBeGuard";
 
 //Object properties:
 //Client
 //	tower
 //	isGuard
 //	isPrisoner
+//	isSelectedToBeGuard
 //Tower#
 //	isDestroyed
 //	guardClient
@@ -42,7 +45,11 @@ $ClientVariable[$ClientVariableCount++] = "isPrisoner";
 //	enableTowerSpotlights
 //	disableTowerSpotlights
 //	SimSet::destroy
-//	GameConnection::setTower
+//	fxDTSBrick::setTower
+//	fxDTSBrick::clearTower
+//	serverCmdSetGuard
+//	serverCmdUnsetGuard
+//	lockInGuards
 
 
 package CPB_Game_Towers {
@@ -229,9 +236,13 @@ function SimSet::destroy(%this) {
 }
 
 registerOutputEvent(fxDTSBrick, "setTower", "list 1 1 2 2 3 3 4 4", 1);
+registerOutputEvent(fxDTSBrick, "clearTower", "", 1);
 
 function fxDTSBrick::setTower(%b, %tower, %cl) {
-	if (%cl.guardClass $= "") {
+	if (!%cl.isSelectedToBeGuard) {
+		messageClient(%cl, '', "You cannot pick a tower if you are not a selected guard!");
+		return;
+	} else if (%cl.guardClass $= "") {
 		messageClient(%cl, '', "You cannot pick a tower without picking a class first!");
 		return;
     }
@@ -247,4 +258,65 @@ function fxDTSBrick::setTower(%b, %tower, %cl) {
 
 	messageClient(%cl, '', "\c6You have been assigned to Tower \c5" @ %tower);
 	%cl.pickedTowerBrick = %b;
+}
+
+function fxDTSBrick::clearTower(%b, %cl) {
+	%cl.pickedTowerBrick.setEventEnabled("ALL", 1);
+	%cl.tower.guardOption = "";
+	%cl.tower.guard = "";
+	%cl.tower = "";
+}
+
+function serverCmdUnsetGuard(%cl, %name) {
+	if ($CPB::PHASE != $CPB::LOBBY || !%cl.isAdmin) {
+		return;
+	}
+
+	fxDTSBrick::clearTower(0, %cl);
+	%cl.isSelectedToBeGuard = 0;
+	%cl.isGuard = 0;
+	if (isObject(%cl.player)) {
+		%cl.player.delete();
+	}
+	spawnDeadLobby();
+	$CPB::SelectedGuards = removeWord($CPB::SelectedGuards, %cl.bl_id);
+	updateInfoBoard();
+}
+
+function serverCmdSetGuard(%cl, %name) {
+	if ($CPB::PHASE != $CPB::LOBBY || !%cl.isAdmin) {
+		return;
+	}
+
+	%cl.isSelectedToBeGuard = 1;
+	%cl.isGuard = 1;
+	if (isObject(%cl.player)) {
+		%cl.player.delete();
+	}
+	%cl.createPlayer(_GuardClassesRoom);
+	$CPB::SelectedGuards = trim($CPB::SelectedGuards SPC %cl.bl_id);
+	updateInfoBoard();
+}
+
+function lockInGuards() {
+	if ($CPB::PHASE != $CPB::LOBBY || !%cl.isAdmin) {
+		return;
+	} else if (getWordCount($CPB::SelectedGuards) != $CPB::GUARDCOUNT) {
+		messageAdmins("!!! \c6Cannot lock in guards - not enough guards selected!");
+		return;
+	}
+
+	for (%i = 0; %i < getWordCount($CPB::SelectedGuards); %i++) {
+		%cl = findClientByBL_ID(getWord($CPB::SelectedGuards, %i));
+		if (!isObject(%cl)) {
+			messageAdmins("!!! \c6Cannot lock in guards - a guard does not exist!");
+			return;
+		}
+		if (%isTaken[%cl.tower.getName()]) {
+			messageAdmins("!!! \c6Cannot lock in guards - two guards share one tower!");
+			return
+		}
+		%isTaken[%cl.tower.getName()] = 1;
+	}
+	return 1;
 }

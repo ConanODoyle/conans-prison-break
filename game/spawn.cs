@@ -4,7 +4,8 @@
 //Created:
 //	despawnAll
 //	GameConnection::clearVariables
-
+//	spawnDeadLobby
+//	spawnAllLobby
 
 package CPB_Game_Spawn {
 	function GameConnection::onDeath(%cl, %sourceObj, %sourceCl, %damageType, %damLoc) {
@@ -61,5 +62,22 @@ function GameConnection::clearVariables(%cl) {
 	//other vars
 	for (%i = 0; %i < $ClientVariableCount; %i++) {
 		eval(%cl @ "." @ $ClientVariable[%i] @ " = \"\";");
+	}
+}
+
+function spawnDeadLobby() {
+	for (%i = 0; %i < ClientGroup.getCount(); %i++) {
+		if (!isObject(%pl = (%cl = ClientGroup.getObject(%i)).player)) {
+			%cl.createPlayer(LobbySpawnPoints.getObject(getRandom(0, LobbySpawnPoints.getCount() - 1)).getTransform());
+		}
+	}
+}
+
+function spawnAllLobby() {
+	for (%i = 0; %i < ClientGroup.getCount(); %i++) {
+		if (isObject(%pl = (%cl = ClientGroup.getObject(%i)).player)) {
+			%pl.delete();
+		}
+		%cl.createPlayer(LobbySpawnPoints.getObject(getRandom(0, LobbySpawnPoints.getCount() - 1)).getTransform());
 	}
 }
