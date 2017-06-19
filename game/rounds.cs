@@ -85,6 +85,7 @@ function _setPhaseINTRO() {
 
 	clearCenterprintAll();
 	clearBottomprintAll();
+	clearAllDroppedItems();
 	spawnGenRoomKill();
 	spawnKillGround();
 

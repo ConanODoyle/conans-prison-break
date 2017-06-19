@@ -24,6 +24,7 @@ exec("./support/bottomprint.cs");
 exec("./support/electrocute.cs");
 exec("./support/EmptyHoleBot.cs");
 exec("./support/globalcams.cs");
+exec("./support/items.cs 
 exec("./support/killzones.cs");
 exec("./support/locations.cs");
 exec("./support/messaging.cs");
