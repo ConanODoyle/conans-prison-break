@@ -11,21 +11,6 @@ $CPB::EWSActive = 1;
 function GameConnection::bottomPrintInfo(%cl) {
 	%time = $CPB::CurrRoundTime;
 	%timeString = getTimeString(%time);
-	if (%cl.isGuard && %cl.tower.guardOption == $CPB::Classes::LMG) {
-		%pl = %cl.player;
-		if (isObject(%pl)) {
-			if (%pl.LMGHeat <= $LMGMaxHeat / 3) {
-				%pl.heatColor = "\c6";
-			} else if (%pl.LMGHeat <= $LMGMaxHeat / 4 * 3) {
-				%pl.heatColor = "\c3";
-			} else {
-				%pl.heatColor = "\c0";
-			}
-		} else {
-			%pl.heatColor = "\c0";
-		}
-		%timeString = %timeString @  "<just:right><font:impact:24><color:fff000>Heat <font:impact:28>" @ %pl.heatColor @ (%pl.LMGHeat + 0) @ "/" @ $LMGMaxHeat;
-	}
 
 	if ($CPB::PHASE == $CPB::GAME) {
 		if (%cl.isPrisoner) {
@@ -45,6 +30,22 @@ function GameConnection::bottomPrintInfo(%cl) {
 				%info = %color @ getNumPlayersOutside() SPC "Prisoners Outside ";
 			} else {
 				%info = "Satellite Dish Inactive";
+			}
+
+			if (%cl.tower.guardOption == $CPB::Classes::LMG) {
+				%pl = %cl.player;
+				if (isObject(%pl)) {
+					if (%pl.LMGHeat <= $LMGMaxHeat / 3) {
+						%pl.heatColor = "\c6";
+					} else if (%pl.LMGHeat <= $LMGMaxHeat / 4 * 3) {
+						%pl.heatColor = "\c3";
+					} else {
+						%pl.heatColor = "\c0";
+					}
+				} else {
+					%pl.heatColor = "\c0";
+				}
+				%timeString = %timeString @  "<just:right><font:impact:24><color:fff000>Heat <font:impact:28>" @ %pl.heatColor @ (%pl.LMGHeat + 0) @ "/" @ $LMGMaxHeat;
 			}
 		}
 		

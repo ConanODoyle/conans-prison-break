@@ -4,7 +4,7 @@ $CPB::LOBBY	= 1;	$CPB::PHASE["1"] = "LOBBY";
 $CPB::INTRO	= 2;	$CPB::PHASE["2"] = "INTRO";
 $CPB::PWIN	= 3;	$CPB::PHASE["3"] = "PWIN";
 $CPB::GWIN	= 4;	$CPB::PHASE["4"] = "GWIN";
-
+	
 $CPB::LastRoundWinners = ""; //"Prisoners" or "Guards"
 $CPB::SelectedGuards = "";
 
@@ -19,6 +19,8 @@ $CPB::SelectedGuards = "";
 //	_setPhaseGWIN
 //	_setPhasePWIN
 //	doIntro
+//	checkPrisonerWinCondition
+
 
 function setPhase(%phase) {
 	if ($CPB["::" @ %phase] $= "") {
@@ -115,4 +117,20 @@ function doIntro() {
 	setAllCamerasView(_IntroCam1.getPosition(), _IntroCam1Target.getPosition(), 1, 90);
 
 	schedule(2000, 0, setAllCamerasView, _IntroCam2.getPosition(), _IntroCam2Target.getPosition(), 1, 90);
+}
+
+function checkPrisonerWinCondition() {
+	for (%i = 0; %i < $CPB::GUARDCOUNT; %i++) {
+		if (!("Tower" @ %i).guard.isDead) {
+			return 0;
+		}
+	}
+	setPhase("PWIN");
+	return 1;
+}
+
+function endRound() {
+	if (!checkPrisonerWinCondition()) {
+		setPhase("GWIN");
+	}
 }

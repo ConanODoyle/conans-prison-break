@@ -39,6 +39,10 @@ package CPB_Game_Spawn {
 		}
 		%cl.player = 0;
 		%cl.isDead = 1;
+
+		if (%cl.isGuard) {
+			checkPrisonerWinCondition();
+		}
 	}
 
 	function Observer::onTrigger(%this, %obj, %trig, %state) {

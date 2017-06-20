@@ -232,7 +232,7 @@ function PrisonSoapImage::onFire(%this, %obj, %slot) {
 	};
 	%i.setCollisionTimeout(%obj);
 	%i.mountImage(PrisonSoapPickupImage, 0);
-	%i.setVelocity(VectorScale(%obj.getMuzzleVector(%slot), 50.0 * getword(%obj.getScale(), 2)));
+	%i.setVelocity(VectorScale(%obj.getMuzzleVector(%slot), 80.0 * getword(%obj.getScale(), 2)));
 	%i.schedulePop();
 	//%ret = Parent::onFire(%this, %obj, %slot);
 
