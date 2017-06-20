@@ -50,12 +50,15 @@ $ClientVariable[$ClientVariableCount++] = "isSelectedToBeGuard";
 //	serverCmdSetGuard
 //	serverCmdUnsetGuard
 //	lockInGuards
+//	spawnGuard
+//	spawnAllGuards
 
 
 package CPB_Game_Towers {
 	function GameConnection::onDrop(%this, %val) {
-		if (%this.isGuard) {
+		if (%this.isGuard && isObject(%this.tower)) {
 			messageAdmins("<font:Palatino Linotype:36>!!! \c6Tower \c3" @ %this.tower @ "\c6's guard has just left the game!");
+
 		} else if (%this.bl_id !$= "" && %cl.isSelectedToBeGuard) {
 			serverCmdUnsetGuard($superAdmin, %this.name);
 		}
@@ -249,14 +252,14 @@ function fxDTSBrick::setTower(%b, %tower, %cl) {
 	
 	%cl.tower = ("Tower" @ %tower);
 	if (isObject(%cl.tower.guard)) {
-		messageClient(%cl.tower.guard, '', "\c6You have been replaced by \c3" @ %cl.name @ "\c6 at tower \c5" @ %tower);
-		messageClient(%cl, '', "\c3" @ %cl.tower.guard.name @ "\c6 has been removed from tower \c5" @ %tower);
+		messageClient(%cl.tower.guard, '', "\c6You have been replaced by \c3" @ %cl.name @ "\c6 at \c5Tower " @ %tower);
+		messageClient(%cl, '', "\c3" @ %cl.tower.guard.name @ "\c6 has been removed from \c5Tower " @ %tower);
 		%cl.tower.guard.tower = "";
 	}
 	%cl.tower.guard = %cl;
 	%cl.tower.guardOption = %cl.guardClass;
 
-	messageClient(%cl, '', "\c6You have been assigned to Tower \c5" @ %tower);
+	messageClient(%cl, '', "\c6You have been assigned to \c5Tower " @ %tower);
 	%cl.pickedTowerBrick = %b;
 }
 
@@ -319,4 +322,25 @@ function lockInGuards() {
 		%isTaken[%cl.tower.getName()] = 1;
 	}
 	return 1;
+}
+
+function spawnGuard(%tower) {
+	%tower = ("Tower" @ %tower);
+	if (!isObject(%tower)) {
+		warn("Cannot spawn guard - no guard at tower " @ %tower @ "!");
+		return 0;
+	}
+
+	if (isObject(%pl = %tower.guard.player)) {
+		%pl.delete();
+	}
+	%tower.guard.createPlayer(%tower.spawn.getTransform());
+	messageAll('', "\c3" @ %tower.guard.name @ "\c4 has been spawned at \c5Tower " @ %tower);
+	return 1;
+}
+
+function spawnAllGuards() {
+	for (%i = 0; %i < $CPB::GUARDCOUNT; %i++) {
+		spawnGuard(%i);
+	}
 }

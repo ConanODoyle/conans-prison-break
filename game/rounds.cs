@@ -46,6 +46,7 @@ function _setPhaseGAME() {
 
 	centerprintAll("", 0);
 	startStatisticsCollection($Stats::GameNum);
+	spawnAllGuards();
 }
 
 function _setPhaseLOBBY() {

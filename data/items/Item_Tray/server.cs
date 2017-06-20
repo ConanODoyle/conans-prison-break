@@ -111,7 +111,7 @@ datablock ShapeBaseImageData(PrisonTrayImage)
 
 	stateName[2]					= "Fire";
 	stateScript[2]					= "onFire";
-	stateTimeoutValue[2]			= 0.4;
+	stateTimeoutValue[2]			= 0.3;
 	stateTransitionOnTimeout[2]		= "PostFire";
 
 	stateName[3]					= "PostFire";	
@@ -121,7 +121,7 @@ datablock ShapeBaseImageData(PrisonTrayImage)
 
 	stateName[4]					= "ReFire";
 	stateScript[4]					= "onReFire";
-	stateTimeoutValue[4]			= 0.4;
+	stateTimeoutValue[4]			= 0.3;
 	stateTransitionOnTimeout[4]		= "PostFire";
 	stateTransitionOnTriggerUp[4] 	= "Ready";
 };
@@ -182,7 +182,10 @@ function PrisonTrayImage::onFire(%this, %obj, %slot)
 
 		%targetVector = vectorNormalize(vectorSub(%obj.getPosition(), %hit.getHackPosition()));
 		%angle = mACos(vectorDot(%hit.getForwardVector(), %targetVector));
-		if (%angle < 1.7) {
+		if (!%obj.hasTape) {
+			centerprint(%obj.client, "You need \c4Tape \c0to attach trays to other people!", 2);
+			return;
+		} else if (%angle < 1.7) {
 			centerprint(%obj.client, "You must be facing a back you can attach this to!", 2);
 			return;
 		}
@@ -219,11 +222,6 @@ function PrisonTrayImage::onReFire(%this, %obj, %slot) {
 			messageClient(%obj.client,'MsgItemPickup','',%obj.currtool,0);
 			serverCmdUnUseTool(%obj.client);
 			%obj.unMountImage(0);
-
-
-			setStatistic("TraysPutOnOthersBack", getStatistic("TraysPutOnOthersBack", %obj.client) + 1, %obj.client);
-			setStatistic("TraysPutOnOwnBack", getStatistic("TraysPutOnOwnBack", %hit.client) + 1, %hit.client);
-			setStatistic("TraysPutOnBack", getStatistic("TraysPutOnOthersBack") + 1);
 		}
 	} else if (%obj.isGivingTray) {
 		%obj.client.centerprint("Tray attaching canceled", 2);
@@ -245,7 +243,10 @@ function PrisonTrayImage::onReFire(%this, %obj, %slot) {
 
 			%targetVector = vectorNormalize(vectorSub(%obj.getPosition(), %hit.getHackPosition()));
 			%angle = mACos(vectorDot(%hit.getForwardVector(), %targetVector));
-			if (%angle < 1.7) {
+			if (!%obj.hasTape) {
+				centerprint(%obj.client, "You need \c4Tape \c0to attach trays to other people!", 2);
+				return;
+			} else if (%angle < 1.7) {
 				centerprint(%obj.client, "You must be facing a back you can attach this to!", 2);
 				return;
 			}
@@ -267,7 +268,7 @@ function PrisonTrayImage::onReFire(%this, %obj, %slot) {
 	}
 }
 
-$timeToAttachTray = 10;
+$timeToAttachTray = 10; //multiply by 0.3 to get time to attach tray
 
 function checkTrayAttached(%player, %target) {
 	%target.client.centerprint("\c6" @ %player.client.name @ " is attaching a tray to you...<br>" @ getColoredBars(%player.progress, $timeToAttachTray), 2);
@@ -380,10 +381,6 @@ package PrisonItems
 					%gold = %col.client.isDonator == 0 ? PrisonTrayProjectile.getID() : PrisonTrayGoldenProjectile.getID();
 					%col.unMountImage(1);
 					//statistics
-					setStatistic("TraysOnBackUsed", getStatistic("TraysOnBackUsed", %col.client) + 1, %col.client);
-					setStatistic("TraysOnBackUsed", getStatistic("TraysOnBackUsed") + 1);
-					setStatistic("TraysOnBackDestroyed", getStatistic("TraysOnBackDestroyed", %obj.sourceObject.client) + 1, %obj.sourceObject.client);
-
 					%sound = getRandom(1, 3);
 					%sound = "trayDeflect" @ %sound @ "Sound";
 					serverPlay3D(%sound, %col.getHackPosition());
@@ -397,6 +394,12 @@ package PrisonItems
 					};
 					MissionCleanup.add(%proj);
 					%proj.explode();
+
+					if (%obj.stun) {
+						spawnStunExplosion(%pos, %obj);
+					} else if (%obj.shrapnel > 0) {
+						spawnShrapnel(%obj.getDatablock(), %pos, %obj);
+					}
 					%obj.delete();
 					return;
 				}
@@ -409,10 +412,6 @@ package PrisonItems
 				{
 					%gold = %col.client.isDonator == 0 ? PrisonTrayProjectile.getID() : PrisonTrayGoldenProjectile.getID();
 					//statistics
-					setStatistic("TraysUsed", getStatistic("TraysUsed", %col.client) + 1, %col.client);
-					setStatistic("TraysUsed", getStatistic("TraysUsed") + 1);
-					setStatistic("TraysDestroyed", getStatistic("TraysDestroyed", %obj.sourceObject.client) + 1, %obj.sourceObject.client);
-
 					%col.tool[%col.currtool] = 0;
 					%col.weaponCount--;
 					messageClient(%col.client,'MsgItemPickup','',%col.currtool,0);
@@ -432,6 +431,12 @@ package PrisonItems
 					};
 					MissionCleanup.add(%proj);
 					%proj.explode();
+
+					if (%obj.stun) {
+						spawnStunExplosion(%pos, %obj);
+					} else if (%obj.shrapnel > 0) {
+						spawnShrapnel(%obj.getDatablock(), %pos, %obj);
+					}
 					%obj.delete();
 					return;
 				}
@@ -447,10 +452,6 @@ package PrisonItems
 						{
 							%gold = %col.tool[%i].getName() $= "PrisonBucketItem" ? PrisonBucketProjectile : PrisonBucketGoldProjectile;
 							//statistics
-							setStatistic("BucketsUsed", getStatistic("BucketsUsed", %col.client) + 1, %col.client);
-							setStatistic("BucketsUsed", getStatistic("BucketsUsed") + 1);
-							setStatistic("BucketsDestroyed", getStatistic("BucketsDestroyed", %obj.sourceObject.client) + 1, %obj.sourceObject.client);
-
 							%col.tool[%i] = 0;
 							%col.weaponCount--;
 							messageClient(%col.client,'MsgItemPickup','',%i,0);
@@ -458,7 +459,6 @@ package PrisonItems
 							%sound = getRandom(1, 3);
 							%sound = "trayDeflect" @ %sound @ "Sound";
 							serverPlay3D(%sound, %col.getHackPosition());
-
 
 							%col.unmountImage(2);
 							%col.client.applyBodyParts();
@@ -475,10 +475,13 @@ package PrisonItems
 							};
 							MissionCleanup.add(%proj);
 							%proj.explode();
-							%obj.delete();
 
-							stun(%col, 3);
-							%col.unMountImage(0);
+							if (%obj.stun) {
+								spawnStunExplosion(%pos, %obj);
+							} else if (%obj.shrapnel > 0) {
+								spawnShrapnel(%obj.getDatablock(), %pos, %obj);
+							}
+							%obj.delete();
 
 							return;
 						}

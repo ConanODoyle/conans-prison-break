@@ -499,6 +499,7 @@ function SniperRifleSpotlightImage::onFire(%this, %obj, %slot)
 		%stun = 1;
 	} else if (%cl.tower.guardOption $= $CPB::Classes::Shrapnel) {
 		%projectile = SniperShrapnelSpotlightProjectile;
+		%shrapnel = 1;
 	} else {
 		%projectile = SniperRifleSpotlightProjectile;
 	}
@@ -528,6 +529,7 @@ function SniperRifleSpotlightImage::onFire(%this, %obj, %slot)
 		sourceSlot = %slot;
 		client = %obj.client;
 		stun = %stun;
+		shrapnel = 1;
 	};
 	MissionCleanup.add(%p);
 
@@ -558,9 +560,8 @@ package SniperRifleSpotlight
 			aimSpotlight(%obj);
 		}
 
-		if (%db.shrapnelCount > 0) {
-			talk("Doing Shrapnel");
-			spawnShrapnel(%db, %pos, %obj);
+		if (%obj.shrapnel > 0) {
+			spawnShrapnel(%obj.getDatablock(), %pos, %obj);
 		}
 
 		if (%obj.stun) {
@@ -780,22 +781,6 @@ function spawnStunExplosion(%pos, %obj) {
 		client = %obj.client;
 	};
 	%p.explode();
-}
-
-function testShrapnel(%pos) {
-	for (%i = 0; %i < 10; %i++) {
-		%p = new Projectile() {
-			datablock = gunProjectile;
-			initialPosition = %pos;
-			initialVelocity = vectorScale(getRandomVector(), ShrapnelProjectile.muzzleVelocity);
-			originPoint = %pos;
-			client = fcn(Conan);
-			sourceObject = fpn(Conan);
-			scale = "1 1 1";
-			sourceSlot = 0;
-		};
-		MissionCleanup.add(%p);
-	}
 }
 
 // Member Fields:
