@@ -2,7 +2,7 @@
 //	StunImage
 
 //Object properties:
-//Client
+//Player
 //	isStunned
 
 //Functions:
@@ -41,21 +41,22 @@ datablock ShapeBaseImageData(StunImage)
 ////////////////////
 
 
-if (isPackage(EventElectrocute))
-	deactivatePackage(EventElectrocute);
+if (isPackage(CPB_Support_Stun)) {
+	deactivatePackage(CPB_Support_Stun);
+}
 
-package EventElectrocute {
+package CPB_Support_Stun {
 	function Observer::onTrigger(%this, %obj, %trig, %state) {
 		%cl = %obj.getControllingClient();
 		
-		if (%cl.isStunned){
+		if (%cl.player.isStunned){
 			return;
 		}
 		
 		Parent::onTrigger(%this, %obj, %trig, %state);
 	}
 };
-activatePackage(EventElectrocute);
+schedule(5000, 0, activatePackage, "CPB_Support_Stun");
 
 
 ////////////////////
@@ -94,7 +95,7 @@ function stun(%pl, %time) {
 		if (%pl.isDead || %pl.isSpectating || %pl.isDisabled()) {
 			%cl.setControlObject(%cl.camera);
 		} else {
-			%cl.isStunned = 0;
+			%pl.isStunned = 0;
 
 			%pl.dismount();
 			%pl.unmountImage(3);
@@ -105,7 +106,7 @@ function stun(%pl, %time) {
 			%pl.playThread(3, root);
 		}
 		return;
-	} else if (!%cl.isStunned && isObject(%cl.player)) {
+	} else if (!%pl.isStunned && isObject(%cl.player)) {
 		%pl.setControlObject(%cl.camera);
 		%pl.setVelocity(vectorAdd(%pl.getVelocity(), getRandom() * 2 SPC getRandom() * 2 SPC "3"));
 		%pl.mountImage(stunImage, 3);
@@ -118,7 +119,7 @@ function stun(%pl, %time) {
 		%pl.setVelocity(vectorAdd("0 0 5", %pl.getVelocity()));
 	}
 
-	%cl.isStunned = 1;
+	%pl.isStunned = 1;
 
 	%pl.stunLoop = schedule(1000, %pl, stun, %pl, %time - 1);
 }
@@ -138,7 +139,7 @@ function electrocute(%pl, %time)
 		if (%pl.isDead || %pl.isSpectating || %pl.isDisabled()) {
 			%cl.setControlObject(%cl.camera);
 		} else {
-			%cl.isStunned = 0;
+			%pl.isStunned = 0;
 
 			%cl.applyBodyColors();
 			%cl.camera.setMode(Observer);
@@ -148,7 +149,7 @@ function electrocute(%pl, %time)
 		return;
 	}
 
-	%cl.isStunned = 1;
+	%pl.isStunned = 1;
 
 	%pl.setNodeColor("ALL", "1 1 1 1");
 	%pl.schedule(100, setNodeColor, "ALL", "0 0 0 1");

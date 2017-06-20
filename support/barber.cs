@@ -51,16 +51,12 @@ if(!isObject(CPB_HairSet)) {
 	missionCleanup.add(CPB_HairSet);
 }
 
-$ClientVariable[$ClientVariableCount++] = "isCustomizing";
-$ClientVariable[$ClientVariableCount++] = "customizingMode";
-
 //Object properties:
 //Client
-//	customizingMode
-//	isCustomizing
-//	lastCustomizeTime
 //	hairTest
 //Player
+//	customizingMode
+//	lastCustomizeTime
 //	isCustomizing
 //	canDismount
 //	chairBot
@@ -108,7 +104,7 @@ package CPB_Support_Barber {
 	}
 
 	function GameConnection::onDrop(%cl) {
-		if (%cl.isCustomizing) {
+		if (%cl.player.isCustomizing) {
 			stopBarber(%cl);
 		}
 		return parent::onDrop(%cl);
@@ -116,8 +112,8 @@ package CPB_Support_Barber {
 
 	function Observer::onTrigger(%this, %obj, %trig, %state) {
 		%cl = %obj.getControllingClient();
-		if (%cl.isCustomizing && getSimTime() - %cl.lastCustomizeTime > 500 && %state) {
-			eval("toggle" @ %cl.customizingMode @ "Selection(" @ %cl @ ", " @ %trig @ ");");
+		if (%cl.player.isCustomizing && getSimTime() - %cl.player.lastCustomizeTime > 500 && %state) {
+			eval("toggle" @ %cl.player.customizingMode @ "Selection(" @ %cl @ ", " @ %trig @ ");");
 			return;
 		}
 		return parent::onTrigger(%this, %obj, %trig, %state);
@@ -163,7 +159,7 @@ package CPB_Support_Barber {
 	}
 
 	function serverCmdPlantBrick(%cl) {
-		if (%cl.isCustomizing) {
+		if (%cl.player.isCustomizing) {
 			%currentHair = $HairData::currentHair[%cl.bl_id];
 			%cl.centerPrint("<br><br><br><br><br>\c2 Hairdo saved!" @ getBarberCenterprint(%cl, %currentHair));
 			$HairData::savedHair[%cl.bl_id] = $HairData::currentHair[%cl.bl_id];
@@ -173,7 +169,7 @@ package CPB_Support_Barber {
 	}
 
 	function serverCmdLight(%cl) {
-		if (%cl.isCustomizing && isObject(%cl.player)) {
+		if (%cl.player.isCustomizing && isObject(%cl.player)) {
 			stopBarber(%cl);
 			return;
 		}
@@ -227,9 +223,8 @@ function startBarber(%cl, %brick) {
 	%pl.canDismount = 0;
 
 	%pl.isCustomizing = 1;
-	%cl.isCustomizing = 1;
-	%cl.customizingMode = "Barber";
-	%cl.lastCustomizeTime = getSimTime();
+	%pl.customizingMode = "Barber";
+	%pl.lastCustomizeTime = getSimTime();
 
 	%cl.spectateObject(%pl, 0);
 	%cl.camera.setMode(Observer);
@@ -250,7 +245,7 @@ function startBarber(%cl, %brick) {
 }
 
 function stopBarber(%cl) {
-	if (!isObject(%pl = %cl.player) || !%pl.isCustomizing || !%cl.isCustomizing) {
+	if (!isObject(%pl = %cl.player) || !%pl.isCustomizing) {
 		return;
 	}
 
@@ -260,7 +255,6 @@ function stopBarber(%cl) {
 		%pl.schedule(10, setTransform, %pl.chairBot.getPosition() SPC rotFromTransform(%pl.getTransform()));
 	}
 
-	%cl.isCustomizing = 0;
 	%pl.isCustomizing = 0;
 	%pl.chairBot.delete();
 

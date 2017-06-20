@@ -13,6 +13,8 @@ $ClientVariable[$ClientVariableCount++] = "spectatingClientIDX";
 //	Observer::onTrigger
 //	SimObject::onCameraEnterOrbit
 //	SimObject::onCameraLeaveOrbit
+//	GameConnection::onDeath
+//	GameConnection::createPlayer
 //Created:
 //	spectateNextPlayer
 //	GameConnection::spectateObject
@@ -45,6 +47,18 @@ package CPB_Support_Spectate {
 	function SimObject::onCameraLeaveOrbit(%obj) {
 		//removes the bottomprint counter
 		return;
+	}
+
+	function GameConnection::onDeath(%cl, %sourceObj, %sourceCl, %damageType, %damLoc) {
+		%cl.isSpectating = 0;
+		%cl.deadToSpectateSchedule = schedule(1000, %cl, eval, %cl @ ".isSpectating = 1;");
+		return parent::onDeath(%cl, %sourceObj, %sourceCl, %damageType, %damLoc);
+	}
+
+	function GameConnection::createPlayer(%cl, %t) {
+		%cl.isSpectating = 0;
+		cancel(%cl.deadToSpectateSchedule);
+		return parent::createPlayer(%cl, %t);
 	}
 };
 activatePackage(CPB_Support_Spectate);
