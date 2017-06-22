@@ -1,5 +1,5 @@
 $STUNBLINDRADIUS = 10;
-$STUNBLINDBONUS = 0.4;
+$STUNBLINDBONUS = 0.2;
 $STUNDISTANCE = 2;
 $STUNMAX = 3;
 
@@ -304,7 +304,7 @@ datablock ProjectileData(SniperShrapnelSpotlightProjectile : SniperRifleSpotligh
 	directDamageType = $DamageType::ShrapnelSniper;
 	radiusDamageType = $DamageType::ShrapnelSniper;
 
-	shrapnelCount = 5;
+	shrapnelCount = 8;
 	shrapnelScale = "1 1 1";
 };
 
@@ -566,6 +566,14 @@ package SniperRifleSpotlight
 
 		if (%obj.stun) {
 			spawnStunExplosion(%pos, %obj);
+		} else if (%db.getID() == ShrapnelProjectile.getID()) {
+			%p = new Projectile() {
+				datablock = arrowProjectile;
+				initialPosition = %pos;
+				client = %obj.client;
+			};
+			%p.explode();
+			serverPlay3D(bulletHitSound, %pos);
 		}
 
 		return parent::onCollision(%db, %obj, %col, %fade, %pos, %normal);

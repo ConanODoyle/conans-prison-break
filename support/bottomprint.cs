@@ -22,14 +22,14 @@ function GameConnection::bottomPrintInfo(%cl) {
 				%locCount = $Live_PC[%loc];
 				%totalP = $Live_PAlive;
 				
-				%info = "\c6[\c1" @ %loc @ "\c6: " @ %loc @ "/" @ %totalP @ "] ";
+				%info = "<font:Arial Bold:34>\c6[\c1" @ %loc @ "\c6: " @ %loc @ "/" @ %totalP @ "] ";
 			}
 		} else if (%cl.isGuard) {
 			if ($CPB::EWSActive) {
-				%color = "\c6";
-				%info = %color @ getNumPlayersOutside() SPC "Prisoners Outside ";
+				%color = "<font:Consolas:24>\c6";
+				%info = %color @ "[" @ getNumPlayersOutside() SPC "Prisoners Outside] ";
 			} else {
-				%info = "Satellite Dish Inactive";
+				%info = "<font:Arial Bold:34>Satellite Dish Inactive";
 			}
 
 			if (%cl.tower.guardOption == $CPB::Classes::LMG) {
@@ -37,7 +37,7 @@ function GameConnection::bottomPrintInfo(%cl) {
 				if (isObject(%pl)) {
 					if (%pl.LMGHeat <= $LMGMaxHeat / 3) {
 						%pl.heatColor = "\c6";
-					} else if (%pl.LMGHeat <= $LMGMaxHeat / 4 * 3) {
+					} else if (%pl.LMGHeat <= $LMGMaxHeat - 10) {
 						%pl.heatColor = "\c3";
 					} else {
 						%pl.heatColor = "\c0";
@@ -49,16 +49,16 @@ function GameConnection::bottomPrintInfo(%cl) {
 			}
 		}
 		
-		%cl.bottomprint("<font:Arial Bold:34>\c6" @ %timeString @ " <br><font:Arial Bold:34>" @ %info, 500, 0);
+		%cl.bottomprint("<font:Arial Bold:34><just:center>\c6" @ %timeString @ " <br><just:center><font:Arial Bold:34>" @ %info, 500, 0);
 	} else if ($CPB::PHASE == $CPB::GWIN || $CPB::PHASE == $CPB::PWIN) { 
 		if ($CPB::PHASE == $CPB::PWIN) {
 			%color = "<color:" @ $PRISONER::CHATCOLOR @ ">";
-			%info = %color @ "Prisoners Win!";
+			%info = %color @ "<font:Arial Bold:34>Prisoners Win!";
 		} else if ($CPB::PHASE == $CPB::GWIN) {
 			%color = "<color:" @ $GUARD::CHATCOLOR @ ">";
-			%info = %color @ "Guards Win!";
+			%info = %color @ "<font:Arial Bold:34>Guards Win!";
 		}
-		%cl.bottomprint("<font:Arial Bold:34>\c6" @ %timeString @ " <br><font:Arial Bold:34>" @ %info, 500, 0);
+		%cl.bottomprint("<font:Arial Bold:34>\c6" @ %timeString @ " <br>" @ %info, 500, 0);
 	} else {
 		%cl.bottomprint("CPB please wait for next round to start", -1, 0);
 	}
@@ -69,6 +69,3 @@ function bottomPrintInfoAll() {
 		ClientGroup.getObject(%i).bottomPrintInfo();
 	}
 }
-	
-	
-	

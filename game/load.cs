@@ -23,6 +23,7 @@ $CPB::CollectBricksSchedule = 0;
 //Object properties:
 //fxDTSBrick
 //	tower (tower object);
+//	isSupport
 
 //Functions:
 //Created:

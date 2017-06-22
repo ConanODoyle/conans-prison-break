@@ -1,7 +1,7 @@
 exec("./Item_Tray/server.cs");
 exec("./Item_Bucket/server.cs");
 exec("./Weapon_Sniper_Rifle_Spotlight/server.cs");
-exec("./Weapon_LMG//server.cs");
+exec("./Weapon_LMG/server.cs");
 exec("./Item_Smoke_Grenade/server.cs");
 exec("./Item_Tear_Gas/server.cs");
 exec("./Item_Tear_Gas/Item_Gasmask.cs");

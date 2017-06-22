@@ -137,10 +137,6 @@ function chiselGoldenImage::onCharge(%this, %obj, %slot) {
 }
 
 function chiselGoldenImage::onFire(%this, %obj, %slot) {
-	//statistics
-	setStatistic("ChiselAttacks", getStatistic("ChiselAttacks", %obj.client) + 1, %obj.client);
-	setStatistic("ChiselAttacks", getStatistic("ChiselAttacks") + 1);
-
 	%obj.playthread(2, spearThrow);
 	Parent::onFire(%this, %obj, %slot);
 }

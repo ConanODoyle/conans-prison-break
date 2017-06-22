@@ -7,7 +7,7 @@ datablock ItemData(LightMachinegunGoldenItem)
 	className = "Weapon"; // For inventory system
 
 	 // Basic Item Properties
-	shapeFile = "./lmg.dts";
+	shapeFile = "./lmgv2.dts";
 	rotate = false;
 	mass = 1;
 	density = 0.2;
@@ -35,7 +35,7 @@ datablock ItemData(LightMachinegunGoldenItem)
 datablock ShapeBaseImageData(LightMachinegunGoldenImage)
 {
     // Basic Item properties
-    shapeFile = "./lmg.dts";
+    shapeFile = "./lmgv2.dts";
     emap = true;
 
     // Specify mount point & offset for 3rd person, and eye offset
@@ -64,8 +64,8 @@ datablock ShapeBaseImageData(LightMachinegunGoldenImage)
     casing = GunShellDebris;
     shellExitDir        = "1.0 0.1 1.0";
     shellExitOffset     = "0 0 0";
-    shellExitVariance   = 10.0;	
-    shellVelocity       = 5.0;
+    shellExitVariance   = 40.0;	
+    shellVelocity       = 3.0;
 
     //melee particles shoot from eye node for consistancy
     melee = false;
@@ -365,41 +365,3 @@ function LightMachinegunGoldenImage::onLoadCheck(%this,%obj,%slot)
 		releaseHeat(%obj);
 	}
 }
-
-$LMGMaxHeat = 70;
-$LMGHeatRechargeTime = 800;
-
-function releaseHeat(%obj) {
-	if (isEventPending(%obj.heatSchedule) || %obj.isFiring) {
-		return;
-	}
-
-	if (%obj.LMGHeat > 0) {
-		%obj.LMGHeat--;
-		%obj.heatSchedule = schedule($LMGHeatRechargeTime, %obj, releaseHeat, %obj);
-	}
-}
-
-function LightMachinegunProjectile::Damage(%this, %obj, %col, %fade, %pos, %normal)
-{
-	if (%this.directDamage <= 0.0)
-	{
-		return;
-	}
-	%damageType = $DamageType::Direct;
-	if (%this.DirectDamageType)
-	{
-		%damageType = %this.DirectDamageType;
-	}
-	%scale = getWord(%obj.getScale(), 2);
-	%directDamage = mClampF(%this.directDamage, -100.0, 100) * %scale;
-	if (%col.getDatablock().getName() $= "BuffArmor")
-	{
-		%col.Damage(%obj, %pos, %directDamage, %damageType);
-	}
-	else
-	{
-		%col.Damage(%obj, %pos, %directDamage, %damageType);
-	}
-}
-

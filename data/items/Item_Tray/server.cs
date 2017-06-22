@@ -372,6 +372,7 @@ package PrisonItems
 	{
 		if (%data.getName() !$= "chiselProjectile")
 		{
+			%db = %obj.getDatablock();
 			if (%col.hasTrayOnBack)
 			{
 				%targetVector = vectorNormalize(vectorSub(%obj.getPosition(), %col.getHackPosition()));
@@ -379,26 +380,31 @@ package PrisonItems
 				if (%angle < 0.76)
 				{
 					%gold = %col.client.isDonator == 0 ? PrisonTrayProjectile.getID() : PrisonTrayGoldenProjectile.getID();
-					%col.unMountImage(1);
-					//statistics
+					
 					%sound = getRandom(1, 3);
 					%sound = "trayDeflect" @ %sound @ "Sound";
 					serverPlay3D(%sound, %col.getHackPosition());
 
-					%proj = new Projectile()
-					{
-						dataBlock = %gold;
-						initialPosition = %col.getHackPosition();
-						initialVelocity = %col.getEyeVector();
-						client = %col.client;
-					};
-					MissionCleanup.add(%proj);
-					%proj.explode();
+					if ((%db.getID() == ShrapnelProjectile.getID() && %col.backBlockedShrapnel > 2) || %db.getID() != ShrapnelProjectile.getID()) {
+						%col.unMountImage(1);
+						%proj = new Projectile()
+						{
+							dataBlock = %gold;
+							initialPosition = %col.getHackPosition();
+							initialVelocity = %col.getEyeVector();
+							client = %col.client;
+						};
+						MissionCleanup.add(%proj);
+						%proj.explode();
+						%col.backBlockedShrapnel = 0;
+					} else {
+						%col.backBlockedShrapnel++;
+					}
 
 					if (%obj.stun) {
 						spawnStunExplosion(%pos, %obj);
 					} else if (%obj.shrapnel > 0) {
-						spawnShrapnel(%obj.getDatablock(), %pos, %obj);
+						spawnShrapnel(%db, %pos, %obj);
 					}
 					%obj.delete();
 					return;
@@ -411,31 +417,35 @@ package PrisonItems
 				if (%angle < 0.73)
 				{
 					%gold = %col.client.isDonator == 0 ? PrisonTrayProjectile.getID() : PrisonTrayGoldenProjectile.getID();
-					//statistics
-					%col.tool[%col.currtool] = 0;
-					%col.weaponCount--;
-					messageClient(%col.client,'MsgItemPickup','',%col.currtool,0);
-					serverCmdUnUseTool(%col.client);
-					%col.unMountImage(0);
 
 					%sound = getRandom(1, 3);
 					%sound = "trayDeflect" @ %sound @ "Sound";
 					serverPlay3D(%sound, %col.getHackPosition());
 
-					%proj = new Projectile()
-					{
-						dataBlock = %gold;
-						initialPosition = %col.getHackPosition();
-						initialVelocity = %col.getEyeVector();
-						client = %col.client;
-					};
-					MissionCleanup.add(%proj);
-					%proj.explode();
+					if ((%db.getID() == ShrapnelProjectile.getID() && %col.blockedShrapnel > 2) || %db.getID() != ShrapnelProjectile.getID()) {
+						%col.tool[%col.currtool] = 0;
+						%col.weaponCount--;
+						messageClient(%col.client,'MsgItemPickup','',%col.currtool,0);
+						serverCmdUnUseTool(%col.client);
+						%col.unMountImage(0);
+						%proj = new Projectile()
+						{
+							dataBlock = %gold;
+							initialPosition = %col.getHackPosition();
+							initialVelocity = %col.getEyeVector();
+							client = %col.client;
+						};
+						MissionCleanup.add(%proj);
+						%proj.explode();
+						%col.blockedShrapnel = 0;
+					} else {
+						%col.blockedShrapnel++;
+					}
 
 					if (%obj.stun) {
 						spawnStunExplosion(%pos, %obj);
 					} else if (%obj.shrapnel > 0) {
-						spawnShrapnel(%obj.getDatablock(), %pos, %obj);
+						spawnShrapnel(%db, %pos, %obj);
 					}
 					%obj.delete();
 					return;
@@ -451,35 +461,40 @@ package PrisonItems
 						if (strPos(%col.tool[%i].getName(), "PrisonBucket") >= 0)
 						{
 							%gold = %col.tool[%i].getName() $= "PrisonBucketItem" ? PrisonBucketProjectile : PrisonBucketGoldProjectile;
-							//statistics
-							%col.tool[%i] = 0;
-							%col.weaponCount--;
-							messageClient(%col.client,'MsgItemPickup','',%i,0);
-
+							
 							%sound = getRandom(1, 3);
 							%sound = "trayDeflect" @ %sound @ "Sound";
 							serverPlay3D(%sound, %col.getHackPosition());
 
-							%col.unmountImage(2);
-							%col.client.applyBodyParts();
-							%col.client.applyBodyColors();
-							%col.unhideNode("headskin");
-							%col.isWearingBucket = 0;
+							if ((%db.getID() == ShrapnelProjectile.getID() && %col.headBlockedShrapnel > 2) || %db.getID() != ShrapnelProjectile.getID()) {
+								%col.tool[%i] = 0;
+								%col.weaponCount--;
+								messageClient(%col.client,'MsgItemPickup','',%i,0);
 
-							%proj = new Projectile()
-							{
-								dataBlock = PrisonBucketProjectile;
-								initialPosition = %col.getHackPosition();
-								initialVelocity = %col.getEyeVector();
-								client = %col.client;
-							};
-							MissionCleanup.add(%proj);
-							%proj.explode();
+								%col.unmountImage(2);
+								%col.client.applyBodyParts();
+								%col.client.applyBodyColors();
+								%col.unhideNode("headskin");
+								%col.isWearingBucket = 0;
+
+								%proj = new Projectile()
+								{
+									dataBlock = %gold;
+									initialPosition = %col.getHackPosition();
+									initialVelocity = %col.getEyeVector();
+									client = %col.client;
+								};
+								MissionCleanup.add(%proj);
+								%proj.explode();
+								%col.headBlockedShrapnel = 0;
+							} else {
+								%col.headBlockedShrapnel++;
+							}
 
 							if (%obj.stun) {
 								spawnStunExplosion(%pos, %obj);
 							} else if (%obj.shrapnel > 0) {
-								spawnShrapnel(%obj.getDatablock(), %pos, %obj);
+								spawnShrapnel(%db, %pos, %obj);
 							}
 							%obj.delete();
 

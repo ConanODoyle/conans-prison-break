@@ -24,7 +24,7 @@ exec("./support/bottomprint.cs");
 exec("./support/electrocute.cs");
 exec("./support/EmptyHoleBot.cs");
 exec("./support/globalcams.cs");
-exec("./support/items.cs 
+exec("./support/items.cs");
 exec("./support/killzones.cs");
 exec("./support/locations.cs");
 exec("./support/messaging.cs");
@@ -32,7 +32,9 @@ exec("./support/spectate.cs");
 exec("./support/stun.cs");
 exec("./support/timer.cs");
 
+exec("./game/breakables.cs");
 exec("./game/cameras.cs");
+exec("./game/classes.cs");
 exec("./game/guards.cs");
 exec("./game/load.cs");
 exec("./game/logo.cs");
@@ -206,4 +208,12 @@ function fixWindParticles()
 		if(%db.getClassName() $= "ParticleData")
 			%db.windCoefficient = mClampF(3 / (%db.sizes[0]+%db.sizes[1]+%db.sizes[2]),0.4,1.3);
 	}
+}
+
+function serverCmdFFB(%cl) {
+	return serverCmdNDConfirmFillBricks(%cl);
+}
+
+function serverCmdFSC(%cl) {
+	return serverCmdNDConfirmSuperCut(%cl);
 }

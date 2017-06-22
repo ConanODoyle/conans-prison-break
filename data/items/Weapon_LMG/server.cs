@@ -41,7 +41,7 @@ datablock ProjectileData(TTLittleRecoilProjectile)
 AddDamageType("LMG",   '<bitmap:add-ons/Weapon_Package_Tier2/ci_lmg1> %1',    '%2 <bitmap:add-ons/Weapon_Package_Tier2/ci_lmg1> %1',0.75,1);
 datablock ProjectileData(LightMachinegunProjectile)
 {
-   projectileShapeName = "add-ons/Weapon_Gun/bullet.dts";
+   projectileShapeName = "Add-ons/Weapon_Gun/bullet.dts";
    directDamage        = 15;
    directDamageType    = $DamageType::LMG;
    radiusDamageType    = $DamageType::LMG;
@@ -99,7 +99,7 @@ datablock ItemData(LightMachinegunItem)
 	className = "Weapon"; // For inventory system
 
 	 // Basic Item Properties
-	shapeFile = "./lmg.dts";
+	shapeFile = "./lmgv2.dts";
 	rotate = false;
 	mass = 1;
 	density = 0.2;
@@ -127,7 +127,7 @@ datablock ItemData(LightMachinegunItem)
 datablock ShapeBaseImageData(LightMachinegunImage)
 {
     // Basic Item properties
-    shapeFile = "./lmg.dts";
+    shapeFile = "./lmgv2.dts";
     emap = true;
 
     // Specify mount point & offset for 3rd person, and eye offset
@@ -156,8 +156,8 @@ datablock ShapeBaseImageData(LightMachinegunImage)
     casing = LMGCasing;
     shellExitDir        = "1.0 0.1 1.0";
     shellExitOffset     = "0 0 0";
-    shellExitVariance   = 10.0;	
-    shellVelocity       = 5.0;
+    shellExitVariance   = 50.0;	
+    shellVelocity       = 3.0;
 
     //melee particles shoot from eye node for consistancy
     melee = false;
@@ -312,11 +312,11 @@ function LightMachinegunImage::onFire(%this,%obj,%slot)
 	
 	if(vectorLen(%obj.getVelocity()) < 0.1 && (getSimTime() - %obj.lastShotTime) > 1000)
 	{
-		%spread = 0.00056 * (%obj.LMGHeat / $LMGMaxHeat);
+		%spread = 0.00026 + 0.002 * (%obj.LMGHeat / $LMGMaxHeat);
 	}
 	else
 	{
-		%spread = 0.00085 * (%obj.LMGHeat / $LMGMaxHeat);
+		%spread = 0.00026 + 0.002 * (%obj.LMGHeat / $LMGMaxHeat);
 	}
 
 	%projectile = LightMachinegunProjectile;
@@ -427,19 +427,27 @@ function LightMachinegunImage::onLoadCheck(%this,%obj,%slot)
 	}
 }
 
-if ($LMGMaxHeat $= "") {
-	$LMGMaxHeat = 40;
-}
+
+$LMGMaxHeat = 70;
+$LMGHeatRechargeTime = 900;
+$LMGHeatRechargeScaling = 20;
+$LMGHeatRechargeScalingMax = 600;
 
 function releaseHeat(%obj) {
 	if (isEventPending(%obj.heatSchedule) || %obj.isFiring) {
+		%obj.scalingRecharge = 0;
 		return;
 	}
 
 	if (%obj.LMGHeat > 0) {
 		%obj.LMGHeat--;
-		%obj.heatSchedule = schedule(1000, %obj, releaseHeat, %obj);
+		%obj.heatSchedule = schedule($LMGHeatRechargeTime - %obj.scalingRecharge, %obj, releaseHeat, %obj);
+		%obj.scalingRecharge += $LMGHeatRechargeScaling;
+		%obj.scalingRecharge = ($LMGHeatRechargeScalingMax < %obj.scalingRecharge ? $LMGHeatRechargeScalingMax : %obj.scalingRecharge);
+	} else {
+		%obj.scalingRecharge = 0;
 	}
+	%obj.client.bottomPrintInfo();
 }
 
 function LightMachinegunProjectile::Damage(%this, %obj, %col, %fade, %pos, %normal)
@@ -457,7 +465,7 @@ function LightMachinegunProjectile::Damage(%this, %obj, %col, %fade, %pos, %norm
 	%directDamage = mClampF(%this.directDamage, -100.0, 100) * %scale;
 	if (%col.getDatablock().getName() $= "BuffArmor")
 	{
-		%col.Damage(%obj, %pos, 5, %damageType);
+		%col.Damage(%obj, %pos, %directDamage, %damageType);
 	}
 	else
 	{
