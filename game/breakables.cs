@@ -50,7 +50,7 @@ package CPB_Game_Breakables {
 
 	function ChiselProjectile::onCollision(%data, %obj, %col, %fade, %pos, %normal) {
 		if (%col.getClassName() $= "FxDTSBrick") {
-			if ((%type = %b.type) || (%type = isBreakableBrick(%col, %obj.sourceObject)) {
+			if ((%type = %b.type) || (%type = isBreakableBrick(%col, %obj.sourceObject))) {
 				%obj.type = %type;
 				%obj.client.incScore(1);
 				%col.damage();

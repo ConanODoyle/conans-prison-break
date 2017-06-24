@@ -64,7 +64,6 @@ datablock ParticleData(goldenParticleB)
 	times[2]		= 1.0;
 };
 
-
 datablock ParticleEmitterData(goldenEmitter)
 {
 	ejectionPeriodMS = 280;
@@ -102,7 +101,7 @@ datablock ParticleData(goldenParticleProjectileB : goldenParticleB)
 
 datablock ParticleEmitterData(projectileGoldenEmitter)
 {
-	ejectionPeriodMS = 5  ;
+	ejectionPeriodMS = 6;
 	periodVarianceMS = 5;
 
 	ejectionOffset = 0;
