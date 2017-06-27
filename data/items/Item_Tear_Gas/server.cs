@@ -339,7 +339,7 @@ datablock ShapeBaseImageData(tearGasGrenadeImage)
 
 function tearGasGrenadeImage::onMount(%this, %obj, %slot) {
 	if (!%obj.hasSeenTearGasMessage) {
-		messageClient(%obj.client, '', "<font:Arial Bold:24>\c3Use tear gas to blind, hurt, and slow prisoners who walk through it! Lasts" @ mFloor($tearGasTime / 1000) @ "seconds.");
+		messageClient(%obj.client, '', "<font:Arial Bold:24>\c3Use tear gas to blind, hurt, and slow prisoners who walk through it! Lasts " @ mFloor($tearGasTime / 1000) @ " seconds.");
 	}
 	%obj.hasSeenTearGasMessage = 1;
 	return parent::onMount(%this, %obj, %slot);

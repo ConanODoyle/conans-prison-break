@@ -1,3 +1,10 @@
+datablock AudioProfile(TapeSound)
+{
+	filename = "./Bandage.wav";
+	description = AudioClosest3d;
+	preload = true;
+};
+
 datablock AudioProfile(trayDeflect1Sound)
 {
    filename    = "./tray1.wav";
@@ -111,7 +118,7 @@ datablock ShapeBaseImageData(PrisonTrayImage)
 
 	stateName[2]					= "Fire";
 	stateScript[2]					= "onFire";
-	stateTimeoutValue[2]			= 0.3;
+	stateTimeoutValue[2]			= 0.4;
 	stateTransitionOnTimeout[2]		= "PostFire";
 
 	stateName[3]					= "PostFire";	
@@ -121,7 +128,7 @@ datablock ShapeBaseImageData(PrisonTrayImage)
 
 	stateName[4]					= "ReFire";
 	stateScript[4]					= "onReFire";
-	stateTimeoutValue[4]			= 0.3;
+	stateTimeoutValue[4]			= 0.4;
 	stateTransitionOnTimeout[4]		= "PostFire";
 	stateTransitionOnTriggerUp[4] 	= "Ready";
 };
@@ -201,6 +208,7 @@ function PrisonTrayImage::onFire(%this, %obj, %slot)
 
 		%obj.isGivingTray = 1;
 		%obj.givingTrayTarget = %hit;
+		%obj.playAudio(1, TapeSound);
 
 		checkTrayAttached(%obj, %hit);
 	}
@@ -211,6 +219,7 @@ function PrisonTrayImage::onReFire(%this, %obj, %slot) {
 		%obj.playThread(1, activate);
 		%obj.progress++;
 		if (checkTrayAttached(%obj, %hit) == 1) {
+			%obj.stopAudio(1);
 			%obj.progress = 0;
 			%obj.isGivingTray = 0;
 			%obj.givingTrayTarget = 0;
@@ -224,6 +233,7 @@ function PrisonTrayImage::onReFire(%this, %obj, %slot) {
 			%obj.unMountImage(0);
 		}
 	} else if (%obj.isGivingTray) {
+		%obj.stopAudio(1);
 		%obj.client.centerprint("Tray attaching canceled", 2);
 		if (isObject(%obj.givingTrayTarget)) {
 			%obj.givingTrayTarget.client.centerprint("Tray attaching canceled", 2);
@@ -268,12 +278,12 @@ function PrisonTrayImage::onReFire(%this, %obj, %slot) {
 	}
 }
 
-$timeToAttachTray = 10; //multiply by 0.3 to get time to attach tray
+$timeToAttachTray = 5; //multiply by 0.4 to get time to attach tray
 
 function checkTrayAttached(%player, %target) {
 	%target.client.centerprint("\c6" @ %player.client.name @ " is attaching a tray to you...<br>" @ getColoredBars(%player.progress, $timeToAttachTray), 2);
 	%player.client.centerprint("\c6Attaching tray to " @ %target.client.name @ "...<br>" @ getColoredBars(%player.progress, $timeToAttachTray), 2);
-	return %player.progress/$timeToAttachTray;
+	return %player.progress / $timeToAttachTray;
 }
 
 function getColoredBars(%count, %max) {

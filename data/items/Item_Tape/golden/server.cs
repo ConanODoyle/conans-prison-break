@@ -13,7 +13,7 @@ datablock ItemData(GoldenTapeItem)
 	emap = true;
 
 	//gui stuff
-	uiName = "GoldenTape";
+	uiName = "Golden Tape";
 	iconName = "";
 	doColorShift = true;
 	colorshiftColor = "1 1 1 1";
@@ -31,8 +31,8 @@ datablock ShapeBaseImageData(GoldenTapeImage)
 	// Basic Item properties
 	shapeFile = "./Tape.dts";
 	emap = true;
-	rotation = eulerToMatrix("0 90 0");
-	offset = "0 0.2 0";
+	rotation = eulerToMatrix("0 0 0");
+	offset = "0 0 0";
 
 	// Specify mount point & offset for 3rd person, and eye offset
 	// for first person rendering.
@@ -99,6 +99,6 @@ datablock ShapeBaseImageData(GoldenTapeImage)
 
 function GoldenTapeImage::onReady(%this, %obj, %slot) {
 	if (isObject(%obj.client)) {
-		%obj.client.centerprint("\c6<font:Palatino Linotype:32>\c3Allows you to GoldenTape trays onto other player's backs.<br>\c6 Click their back while holding a tray to use!", 5);
+		%obj.client.centerprint("\c6<font:Palatino Linotype:32>\c3Allows you to tape trays onto other player's backs.<br>\c6 Click their back while holding a tray to use!", 5);
 	}
 }

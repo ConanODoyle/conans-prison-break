@@ -60,6 +60,7 @@ function collectAllPrisonBricks(%bg, %i) {
 	cancel($CPB::CollectBricksSchedule);
 
 	if (%i >= %bg.getCount()) {
+		echo(%i);
 		messageAdmins("<font:Palatino Linotype:18>!!! \c5Tower Bricks saved to Towers from " @ %bg);
 		messageAdmins("<font:Palatino Linotype:18>!!! \c5--T1 bc: " @ Tower0.getCount());
 		messageAdmins("<font:Palatino Linotype:18>!!! \c5--T2 bc: " @ Tower1.getCount());
@@ -73,12 +74,15 @@ function collectAllPrisonBricks(%bg, %i) {
 		Tower2.origBrickCount = Tower2.getCount();
 		Tower3.origBrickCount = Tower3.getCount();
 		$CPB::hasCollectedBricks = 1;
-		return;
+		return 0;
+	}
+
+	if (%i > 13300) {
+		echo("passed count check");
 	}
 
 	%b = %bg.getObject(%i);
 	%db = %b.getDatablock().getName();
-	%name = getSubStr(%b.getName(), 1, strLen(%b.getName()));
 	%b.damage = 0;
 
 	if (%b.getDatablock().isOpen) { //close open doors
@@ -86,6 +90,7 @@ function collectAllPrisonBricks(%bg, %i) {
 	}
 
 	if (%name !$= "") {
+		%name = getSubStr(%b.getName(), 1, strLen(%b.getName()));
 		%type = getSubStr(%name, 0, 3);
 
 		%firstName = getSubStr(%name, 0, strPos(%name, "_"));
@@ -110,11 +115,12 @@ function collectAllPrisonBricks(%bg, %i) {
 		} else if (strPos(strLwr(%name), "info") >= 0) {
 			InfoPopups.add(%b);
 		} else if (isFunction(%func = "collect" @ %firstName @ "Brick")) {
-			eval(%func @ "(" @ %b @ ")");
+			eval(%func @ "(" @ %b @ ");");
 		}
 	}
 
 	$CPB::CollectBricksSchedule = schedule(0, 0, collectAllPrisonBricks, %bg, %i + 1);
+	return 1;
 }
 
 function collectTowerBrick(%b, %n) {

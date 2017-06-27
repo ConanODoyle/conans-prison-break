@@ -1,5 +1,5 @@
 $STUNBLINDRADIUS = 10;
-$STUNBLINDBONUS = 0.2;
+$STUNBLINDBONUS = 0.4;
 $STUNDISTANCE = 2;
 $STUNMAX = 3;
 
@@ -745,10 +745,10 @@ datablock ExplosionData(StunBulletExplosion)
 	explosionScale = "0.7 0.7 0.7";
 
 	shakeCamera = true;
-	camShakeFreq = "10.0 11.0 10.0";
-	camShakeAmp = "3.0 3.0 3.0";
-	camShakeDuration = 5.5;
-	camShakeRadius = 10.0;
+	camShakeFreq = "6.0 8.0 6.0";
+	camShakeAmp = "8.0 8.0 8.0";
+	camShakeDuration = 35.5;
+	camShakeRadius = 15.0;
 
 	// Dynamic light
 	lightStartRadius = 1;

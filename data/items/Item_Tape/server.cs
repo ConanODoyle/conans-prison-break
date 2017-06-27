@@ -13,7 +13,7 @@ datablock ItemData(TapeItem)
 	emap = true;
 
 	//gui stuff
-	uiName = "Tape";
+	uiName = "Tape ";
 	iconName = "";
 	doColorShift = true;
 	colorshiftColor = "1 1 1 1";
@@ -31,8 +31,8 @@ datablock ShapeBaseImageData(TapeImage)
 	// Basic Item properties
 	shapeFile = "./Tape.dts";
 	emap = true;
-	rotation = eulerToMatrix("0 90 0");
-	offset = "0 0.2 0";
+	rotation = eulerToMatrix("0 0 0");
+	offset = "0 0 0";
 
 	// Specify mount point & offset for 3rd person, and eye offset
 	// for first person rendering.

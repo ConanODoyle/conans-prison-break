@@ -9,11 +9,15 @@ if (!isObject(DroppedItems)) {
 
 package CPB_Support_Items {
 	function collectAllPrisonBricks(%bg, %i) {
+		%ret = parent::collectAllPrisonBricks(%bg, %i);
+		if (!%ret) {
+			return %ret;
+		}
+		
 		%b = %bg.getObject(%i);
 		if (isObject(%b.oneUseItem)) {
 			%b.setItem(%b.oneUseItem.getID());
 		}
-		parent::collectAllPrisonBricks(%bg, %i);
 	}
 	
 	function Armor::onCollision(%this, %obj, %col, %pos) { //check parameters

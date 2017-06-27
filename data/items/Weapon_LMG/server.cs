@@ -202,7 +202,7 @@ datablock ShapeBaseImageData(LightMachinegunImage)
 	stateScript[2]                  = "onFire";
 	stateEjectShell[2]       	  = true;
 	stateEmitter[2]					= gunFlashEmitter;
-	stateEmitterTime[2]				= 0.05;
+	stateEmitterTime[2]				= 0.03;
 	stateEmitterNode[2]				= "muzzleNode";
 	stateWaitForTimeout[2]			= true;
 
@@ -429,9 +429,10 @@ function LightMachinegunImage::onLoadCheck(%this,%obj,%slot)
 
 
 $LMGMaxHeat = 70;
-$LMGHeatRechargeTime = 900;
-$LMGHeatRechargeScaling = 20;
-$LMGHeatRechargeScalingMax = 600;
+$LMGHtRchgTime = 900;
+$LMGHtRchgScaling = 20;
+$LMGHtRchgScalingMax = 600;
+$LMGHtRchgScalingMaxHtPrct = 30;
 
 function releaseHeat(%obj) {
 	if (isEventPending(%obj.heatSchedule) || %obj.isFiring) {
@@ -441,9 +442,10 @@ function releaseHeat(%obj) {
 
 	if (%obj.LMGHeat > 0) {
 		%obj.LMGHeat--;
-		%obj.heatSchedule = schedule($LMGHeatRechargeTime - %obj.scalingRecharge, %obj, releaseHeat, %obj);
-		%obj.scalingRecharge += $LMGHeatRechargeScaling;
-		%obj.scalingRecharge = ($LMGHeatRechargeScalingMax < %obj.scalingRecharge ? $LMGHeatRechargeScalingMax : %obj.scalingRecharge);
+		%obj.heatSchedule = schedule($LMGHtRchgTime - %obj.scalingRecharge, %obj, releaseHeat, %obj);
+		%obj.scalingRecharge += $LMGHtRchgScaling + ($LMGHtRchgScalingMaxHtPrct * ($LMGMaxHeat - %obj.LMGHeat) / $LMGMaxHeat);
+		%obj.scalingRecharge = ($LMGHtRchgScalingMax < %obj.scalingRecharge ? $LMGHtRchgScalingMax : %obj.scalingRecharge);
+		messageClient(%obj.client, '', %obj.scalingRecharge);
 	} else {
 		%obj.scalingRecharge = 0;
 	}

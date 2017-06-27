@@ -114,7 +114,7 @@ datablock ShapeBaseImageData(LightMachinegunGoldenImage)
 	stateScript[2]                  = "onFire";
 	stateEjectShell[2]       	  = true;
 	stateEmitter[2]					= gunFlashEmitter;
-	stateEmitterTime[2]				= 0.05;
+	stateEmitterTime[2]				= 0.03;
 	stateEmitterNode[2]				= "muzzleNode";
 	stateWaitForTimeout[2]			= true;
 
