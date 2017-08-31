@@ -5,6 +5,7 @@ EWS Color Flash when # of prisoners outside is high
 Make sure bucket replaces hair and then re-adds it after de-equipping
 Add client variable recording for clearing post-round
 Update kill ci directories
+Some package that covers serverCmdDropTool doesnt check if tool exists before running, results in console spam
 
 Modularizing-required files:
 killzone

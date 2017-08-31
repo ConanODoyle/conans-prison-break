@@ -24,6 +24,7 @@ $damageFlashColor = 45;
 //Object properties:
 //fxDTSBrick
 //	hasOriginalColorData
+//	origColorID
 
 //Functions:
 //Packaged:
@@ -31,7 +32,7 @@ $damageFlashColor = 45;
 //	ChiselProjectile::onCollision
 //Created:
 //	fxDTSBrick::damage
-//	isBreakableBrick
+//	getBrickType
 //	fxDTSBrick::killDelete
 
 
@@ -50,7 +51,7 @@ package CPB_Game_Breakables {
 
 	function ChiselProjectile::onCollision(%data, %obj, %col, %fade, %pos, %normal) {
 		if (%col.getClassName() $= "FxDTSBrick") {
-			if ((%type = %b.type) || (%type = isBreakableBrick(%col, %obj.sourceObject))) {
+			if ((%type = %b.type) || (%type = getBrickType(%col, %obj.sourceObject))) {
 				%obj.type = %type;
 				%obj.client.incScore(1);
 				%col.damage();
@@ -66,8 +67,9 @@ activatePackage(CPB_Game_Breakables);
 
 
 function fxDTSBrick::damage(%b, %damage, %player) {
-	if(isEventPending(%b.recolorSchedule))
+	if(isEventPending(%b.recolorSchedule)) {
 		cancel(%b.recolorSchedule);
+	}
 
 	if(!%b.hasOriginalColorData) {
 		%b.origColorID = %b.getColorID();
@@ -112,7 +114,7 @@ function fxDTSBrick::damage(%b, %damage, %player) {
 	%b.recolorSchedule = %b.schedule(50, setColor, %b.origColorID);
 }
 
-function isBreakableBrick(%b, %player) {
+function getBrickType(%b, %player) {
 	%db = %b.getDatablock().getName();
 	
 	if (%b.isSupport) {

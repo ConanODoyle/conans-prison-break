@@ -18,6 +18,10 @@ if (!isObject(LobbySpawnPoints)) {
 	new SimSet(LobbySpawnPoints) {};
 }
 
+if (!isObject(GeneratorWindows)) {
+	new SimSet(GeneratorWindows) {};
+}
+
 $CPB::CollectBricksSchedule = 0;
 
 //Object properties:
@@ -155,6 +159,10 @@ function collectGeneratorDoorsBrick(%b) { %b.setRaycasting(1); } //generator doo
 function collectGeneratorDoorBrick(%b) { //lock generator doors
 	%b.setEventEnabled("2", 0);
 	%b.setEventEnabled("0 1", 1);
+}
+
+function collectGeneratorWindowBrick(%b) { //lock generator doors
+	GeneratorWindows.add(%b);
 }
 
 function collectGarageDoorBrick(%b) { %b.door(4); } //close garage doors

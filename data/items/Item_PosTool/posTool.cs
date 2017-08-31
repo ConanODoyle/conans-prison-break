@@ -183,6 +183,17 @@ function roundVectorToBrickGrid(%pos) {
 	return %x SPC %y SPC %z;
 }
 
+function serverCmdOffsetLocations(%cl, %x, %y, %z) {
+	if (!%cl.isSuperAdmin) {
+		return;
+	}
+
+	for (%i = 0; %i < $locationNum; %i++) {
+		$location[%i @ "::pos0"] = vectorAdd($location[%i @ "::pos0"], %x SPC %y SPC %z);
+		$location[%i @ "::pos1"] = vectorAdd($location[%i @ "::pos1"], %x SPC %y SPC %z);
+	}
+	export("$location*", "Add-ons/gamemode_ppe/locations.cs");
+}
 
 
 

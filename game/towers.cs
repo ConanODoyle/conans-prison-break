@@ -47,6 +47,7 @@ $ClientVariable[$ClientVariableCount++] = "isSelectedToBeGuard";
 //	SimSet::destroy
 //	fxDTSBrick::setTower
 //	fxDTSBrick::clearTower
+//	getClosestTower
 
 
 package CPB_Game_Towers {
@@ -164,7 +165,7 @@ function killTower(%id) {
 
 	//remove the guard's items
 	if (isObject(%cl.player)) {
-		%cl.player.setDamageLevel(70);
+		%cl.player.clearTools();
 	}
 
 	//destroy the bricks but sequentially as to not lag everyone to death
@@ -263,4 +264,19 @@ function fxDTSBrick::clearTower(%b, %cl) {
 	%cl.tower.guardOption = "";
 	%cl.tower.guard = "";
 	%cl.tower = "";
+}
+
+function getClosestTower(%pos) {
+	for (%i = 0; %i < 4; %i++) {
+		%tower = ("Tower" @ %i);
+		if (%tower.isDestroyed) {
+			continue;
+		} else {
+			if (%dist = vectorDist(%pos, %tower.spawn.getPosition()) < %closestDist || %closestDist $= "") {
+				%closestDist = %dist;
+				%closestTower = %tower;
+			}
+		}
+	}
+	return %closestTower;
 }

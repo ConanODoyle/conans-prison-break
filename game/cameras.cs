@@ -142,7 +142,7 @@ function fxDTSBrick::doorToggleLoop(%this, %time) {
 		if (strPos(%name, "left") >= 0 || (!%this.nextTurnRight && strPos(%name, "right") < 0 && strPos(%name, "left") < 0)) {
 			%this.door(2);
 			%this.nextTurnRight = 1;
-		} else {//if (strPos(%name, "right") < 0 || !%this.nextTurnRight) {
+		} else {
 			%this.door(3);
 			%this.nextTurnRight = 0;
 		}
@@ -161,7 +161,6 @@ function fxDTSBrick::endDoorToggleLoop(%this) {
 		}
 	}
 }
-
 
 function fxDTSBrick::previewCameras(%this, %cl) {
 	if (getSimTime() - %cl.lastUsedCameraTime < 2000 || %cl.player.isInCamera) {

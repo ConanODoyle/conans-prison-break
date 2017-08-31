@@ -1,0 +1,3 @@
+Title: Shepherd Dog Bot
+Author: Conan
+A German Shepherd bot and playertype.

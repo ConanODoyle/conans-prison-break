@@ -40,7 +40,7 @@ function serverCmdSetGuard(%cl, %name) {
 	updateInfoBoard();
 }
 
-function lockInGuards() {
+function validateGuardSelection() {
 	if ($CPB::PHASE != $CPB::LOBBY || !%cl.isAdmin) {
 		return;
 	} else if (getWordCount($CPB::SelectedGuards) != $CPB::GUARDCOUNT) {

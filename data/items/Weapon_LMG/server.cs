@@ -445,7 +445,6 @@ function releaseHeat(%obj) {
 		%obj.heatSchedule = schedule($LMGHtRchgTime - %obj.scalingRecharge, %obj, releaseHeat, %obj);
 		%obj.scalingRecharge += $LMGHtRchgScaling + ($LMGHtRchgScalingMaxHtPrct * ($LMGMaxHeat - %obj.LMGHeat) / $LMGMaxHeat);
 		%obj.scalingRecharge = ($LMGHtRchgScalingMax < %obj.scalingRecharge ? $LMGHtRchgScalingMax : %obj.scalingRecharge);
-		messageClient(%obj.client, '', %obj.scalingRecharge);
 	} else {
 		%obj.scalingRecharge = 0;
 	}

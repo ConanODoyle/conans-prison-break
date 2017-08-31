@@ -747,7 +747,7 @@ datablock ExplosionData(StunBulletExplosion)
 	shakeCamera = true;
 	camShakeFreq = "6.0 8.0 6.0";
 	camShakeAmp = "8.0 8.0 8.0";
-	camShakeDuration = 35.5;
+	camShakeDuration = 25.5;
 	camShakeRadius = 15.0;
 
 	// Dynamic light
@@ -777,7 +777,7 @@ function spawnStunExplosion(%pos, %obj) {
 				%pl.setWhiteOut((($STUNBLINDRADIUS - %dist) / $STUNBLINDRADIUS) + $STUNBLINDBONUS);
 			}
 			%dist = VectorLen(vectorSub(%pl.getHackPosition(), %pos));
-			if (%dist <= $STUNDISTANCE) {
+			if (%dist <= $STUNDISTANCE && %pl.getDatablock().getID() != BuffArmor.getID()) {
 				stun(%pl, mCeil((($STUNDISTANCE - %dist) / $STUNDISTANCE) * $STUNMAX));
 			}
 		}

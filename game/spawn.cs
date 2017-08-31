@@ -1,11 +1,27 @@
+$CPB::RespawnWaveTime = 60 * 1.5;
+
+//Object properties:
+//GameConnection
+//	isDead
+
 //Functions:
 //Packaged:
 //	GameConnection::onDeath
+//	roundTimer
+//	Observer::onTrigger
+//	GameConnection::createPlayer
 //Created:
 //	despawnAll
 //	GameConnection::clearVariables
 //	spawnDeadLobby
 //	spawnAllLobby
+//	spawnAllPrisoners
+//	respawnPrisonersInfirmary
+//	getPrisonerCellSpawnPoint
+//	resetPrisionerSpawnPointCounts
+//	getInfirmarySpawnPoint
+//	resetInfirmarySpawnPointCounts
+//	getNextRespawnTime
 
 package CPB_Game_Spawn {
 	function GameConnection::onDeath(%cl, %sourceObj, %sourceCl, %damageType, %damLoc) {
@@ -42,6 +58,13 @@ package CPB_Game_Spawn {
 
 		if (%cl.isGuard) {
 			checkPrisonerWinCondition();
+		}
+	}
+
+	function roundTimer() {
+		parent::roundTimer();
+		if ($CPB::CurrRoundTime % $CPB::RespawnWaveTime == 0 && $CPB::CurrRoundTime < $CPB::RoundTime) {
+			respawnPrisonersInfirmary();
 		}
 	}
 
@@ -94,14 +117,89 @@ function spawnAllLobby() {
 	}
 }
 
-function spawnDeadPrisonersInfirmary() {
-	%iSCount = InfirmarySpawnPoints.getCount();
+function spawnAllPrisoners() {
 	for (%i = 0; %i < ClientGroup.getCount(); %i++) {
 		%cl = ClientGroup.getObject(%i);
+		commandToClient(%cl, 'showBricks', 0);
+		%b = getPrisonerCellSpawnPoint();
 		if (!isObject(%cl.player) && %cl.isPrisoner) {
-			%cl.createPlayer(InfirmarySpawnPoints.getObject(getRandom(0, %iSCount)).getTransform());
+			%cl.createPlayer(%b.getTransform());
 			%count++;
 		}
 	}
 	return %count;
+}
+
+function respawnPrisonersInfirmary() {
+	%iSCount = InfirmarySpawnPoints.getCount();
+	for (%i = 0; %i < ClientGroup.getCount(); %i++) {
+		%cl = ClientGroup.getObject(%i);
+		if (!isObject(%cl.player) && %cl.isPrisoner) {
+			%cl.createPlayer(getInfirmarySpawnPoint().getTransform());
+			%count++;
+		}
+	}
+	return %count;
+}
+
+function getPrisonerCellSpawnPoint() {
+	%count = PrisonerSpawnPoints.getCount();
+	%start = getRandom(0, %count - 1);
+	for (%i = 0; %i < %count; %i++)	{
+		%index = (%i + %start) % %count;
+		%brick = PrisonerSpawnPoints.getObject(%index);
+		if (%brick.spawnCount < 2) {
+			break;
+		}
+		%brick = "";
+	}
+	if (isObject(%brick)) {
+		%brick.spawnCount++;
+		return %brick;
+	} else {
+		echo("Can't find a spawnpoint with less than 2 spawns! Resetting...");
+		resetPrisonerSpawnPointCounts();
+		return PrisonerSpawnPoints.getObject(%start);
+	}
+}
+
+function resetPrisonerCellSpawnPointCounts() {
+	for (%i = 0; %i < PrisonerSpawnPoints.getCount(); %i++) {
+		PrisonerSpawnPoints.getObject(%i).spawnCount = 0;
+	}
+}
+
+function getInfirmarySpawnPoint() {
+	%count = InfirmarySpawnPoints.getCount();
+	%start = getRandom(0, %count - 1);
+	for (%i = 0; %i < %count; %i++)	{
+		%index = (%i + %start) % %count;
+		%brick = InfirmarySpawnPoints.getObject(%index);
+		if (%brick.spawnCount < 1) {
+			break;
+		}
+		%brick = "";
+	}
+	if (isObject(%brick)) {
+		%brick.spawnCount++;
+		return %brick;
+	} else {
+		echo("Can't find an infirmary spawnpoint with less than 1 spawn! Resetting...");
+		resetInfirmarySpawnPointCounts();
+		return InfirmarySpawnPoints.getObject(%start);
+	}
+}
+
+function resetInfirmarySpawnPointCounts() {
+	for (%i = 0; %i < InfirmarySpawnPoints.getCount(); %i++) {
+		InfirmarySpawnPoints.getObject(%i).spawnCount = 0;
+	}
+}
+
+function getNextRespawnTime() {
+	if ($CPB::PHASE != $CPB::GAME) {
+		return -1;
+	}
+
+	return ($CPB::CurrRoundTime + $CPB::RespawnWaveTime - 1) % $CPB::RespawnWaveTime;
 }

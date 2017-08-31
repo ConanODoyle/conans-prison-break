@@ -113,6 +113,7 @@ datablock ShapeBaseImageData(PrisonTrayImage)
 	stateSound[0]					= weaponSwitchSound;
 
 	stateName[1]					= "Ready";
+	stateScript[1]					= "onReady";
 	stateAllowImageChange[1]		= true;
 	stateTransitionOnTriggerDown[1] = "Fire";
 
@@ -176,6 +177,20 @@ function PrisonTrayImage::onUnMount(%this, %obj, %slot)
 	return parent::onUnMount(%this, %obj, %slot);
 }
 
+function PrisonTrayImage::onReady(%this, %obj, %slot) {
+	if (%obj.isGivingTray) {
+		talk("stopping audio");
+		%obj.stopAudio(1);
+		%obj.client.centerprint("Tray attaching canceled", 2);
+		if (isObject(%obj.givingTrayTarget)) {
+			%obj.givingTrayTarget.client.centerprint("Tray attaching canceled", 2);
+		}
+		%player.progress = 0;
+		%obj.isGivingTray = 0;
+		%obj.givingTrayTarget = 0;
+	}
+}
+
 function PrisonTrayImage::onFire(%this, %obj, %slot)
 {
 	%obj.playThread(1, activate);
@@ -233,6 +248,7 @@ function PrisonTrayImage::onReFire(%this, %obj, %slot) {
 			%obj.unMountImage(0);
 		}
 	} else if (%obj.isGivingTray) {
+		talk("stopping audio");
 		%obj.stopAudio(1);
 		%obj.client.centerprint("Tray attaching canceled", 2);
 		if (isObject(%obj.givingTrayTarget)) {
@@ -278,7 +294,7 @@ function PrisonTrayImage::onReFire(%this, %obj, %slot) {
 	}
 }
 
-$timeToAttachTray = 5; //multiply by 0.4 to get time to attach tray
+$timeToAttachTray = 6; //multiply by 0.4 to get time to attach tray
 
 function checkTrayAttached(%player, %target) {
 	%target.client.centerprint("\c6" @ %player.client.name @ " is attaching a tray to you...<br>" @ getColoredBars(%player.progress, $timeToAttachTray), 2);

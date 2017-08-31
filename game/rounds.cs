@@ -19,7 +19,6 @@ $CPB::SelectedGuards = "";
 //	_setPhaseGWIN
 //	_setPhasePWIN
 //	doIntro
-//	checkPrisonerWinCondition
 
 
 function setPhase(%phase) {
@@ -49,6 +48,7 @@ function _setPhaseGAME() {
 	centerprintAll("", 0);
 	startStatisticsCollection($Stats::GameNum);
 	spawnAllGuards();
+	spawnAllPrisoners();
 }
 
 function _setPhaseLOBBY() {
@@ -83,7 +83,6 @@ function _setPhaseINTRO() {
 		messageAdmins("!!! \c6Cannot start intro - bricks not yet collected!");
 		return;
 	}
-	$CPB::hasCollectedBricks = 0;
 
 	cancelAllRoundSchedules();
 	$Stats::GameNum++;
@@ -96,6 +95,7 @@ function _setPhaseINTRO() {
 
 	if (lockInGuards()) {
 		doIntro();
+		$CPB::hasCollectedBricks = 0;
 	}
 }
 
@@ -119,18 +119,6 @@ function doIntro() {
 	schedule(2000, 0, setAllCamerasView, _IntroCam2.getPosition(), _IntroCam2Target.getPosition(), 1, 90);
 }
 
-function checkPrisonerWinCondition() {
-	for (%i = 0; %i < $CPB::GUARDCOUNT; %i++) {
-		if (!("Tower" @ %i).guard.isDead) {
-			return 0;
-		}
-	}
-	setPhase("PWIN");
-	return 1;
-}
-
 function endRound() {
-	if (!checkPrisonerWinCondition()) {
-		setPhase("GWIN");
-	}
+	checkWinConditions();
 }
