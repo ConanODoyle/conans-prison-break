@@ -1,4 +1,5 @@
 $CPB::EWSActive = 1;
+$CPB::EWSAlertThreshold = 6;
 
 //Functions:
 //Created:
@@ -26,13 +27,32 @@ function GameConnection::bottomPrintInfo(%cl) {
 			}
 		} else if (%cl.isGuard) {
 			if ($CPB::EWSActive) {
+				cancel(%cl.EWSAlertBottomprintSched);
+
 				%color = "<font:Consolas:24>\c6";
-				%info = %color @ "[" @ getNumPlayersOutside() SPC "Prisoners Outside] ";
+				%prisonersOutside = getNumPrisonersOutside();
+
+				if (%prisonersOutside > $CPB::EWSAlertThreshold) {
+					if (!%lastColor) {
+						%lastColor = "\c6";
+					}
+
+					if (%lastColor $= "\c6") {
+						%color = "<font:Consolas:24>\c0";
+						%lastColor = "\c0";
+					} else {
+						%color = "<font:Consolas:24>\c6";
+						%lastColor = "\c6";
+					}
+					%cl.EWSAlertBottomprintSched = %cl.schedule(500, bottomPrintInfo);
+				}
+
+				%info = %color @ "[" @ %prisonersOutside SPC "Prisoners Outside] ";
 			} else {
 				%info = "<font:Arial Bold:34>Satellite Dish Inactive";
 			}
 
-			if (%cl.tower.guardOption == $CPB::Classes::LMG) {
+			if (%cl.tower.guardOption == $CPB::Classes::LMG || %cl.isLMGGuard) {
 				%pl = %cl.player;
 				if (isObject(%pl)) {
 					if (%pl.LMGHeat <= $LMGMaxHeat / 3) {

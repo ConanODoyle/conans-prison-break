@@ -1,15 +1,3 @@
-$windowDamage = 10;
-$towerDamage = 16;
-$towerStages = 4;
-$towerColor0 = 60;
-$towerColor1 = 59;
-$towerColor2 = 57;
-$towerColor3 = 55;
-$towerColor4 = 56;
-$towerColor5 = 55;
-$towerColor6 = 54;
-$damageFlashColor = 45;
-
 $BUILDINGS::GENERATORALERTCPPRIORITY = 5;
 $BUILDINGS::EWSALERTCPPRIORITY = 5;
 

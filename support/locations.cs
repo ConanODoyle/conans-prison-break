@@ -5,7 +5,7 @@
 //  getLocation
 //  GameConnection::isOutside
 //  collectPlayerLocations
-//  getNumPlayersOutside
+//  getNumPrisonersOutside
 
 
 package CPB_Support_Locations {
@@ -74,6 +74,6 @@ function collectPlayerLocations(%i) {
 	schedule(1, 0, collectPlayerLocations, %i++);
 }
 
-function getNumPlayersOutside() {
+function getNumPrisonersOutside() {
 	return $Live_PCOutside + $Live_PCYard;
 }

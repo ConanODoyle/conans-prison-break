@@ -1,4 +1,5 @@
 $CPB::RespawnWaveTime = 60 * 1.5;
+$SPAWN::BRONSONDEATHCPPRIORITY = 9;
 
 //Object properties:
 //GameConnection
