@@ -19,8 +19,6 @@ $BUILDINGS::EWSALERTCPPRIORITY = 5;
 //	destroyGeneratorWindow
 //	destroyGenerator
 //	destroyEWS
-//	fxDTSBrick::killDelete
-//	fxDTSBrick::damage
 
 
 registerOutputEvent("fxDTSBrick", "disableSpotlights", "", 1);
@@ -64,87 +62,4 @@ function destroyEWS(%cl) {
 	}
 
 	messageAll('MsgStartUpload', %cl.name @ " <bitmap:" @ %msg @ "> [" @ getTimeString($CPB::CurrRoundTime-1) @ "]");
-}
-
-function FxDTSBrick::killDelete(%this) {
-	if (%this.getDatablock().getName() $= "brick4x4F_GlassPaneData") {
-		$Server::PrisonEscape::GeneratorOpened = 1;
-	}
-	%this.fakeKillBrick((getRandom()-0.5)*20 SPC (getRandom()-0.5)*20 SPC -1, 2);
-	%this.schedule(2000, delete);
-	serverPlay3D("brickBreakSound", %this.getPosition());
-
-	if (isObject("Tower" @ %this.tower)) {
-		validateTower(%this.tower, %this);
-	}
-}
-
-function FxDTSBrick::damage(%brick, %damage, %player)
-{
-	if(isEventPending(%brick.recolorSchedule))
-		cancel(%brick.recolorSchedule);
-
-	if(!%brick.hasOriginalData)
-	{
-		%brick.origColorID = %brick.getColorID();
-		%brick.hasOriginalData = 1;
-	}
-	if(!%brick.maxDamage)
-	{
-		%db = %brick.getDatablock().getName();
-		if (%brick == $Server::PrisonEscape::CommDish) {
-			%brick.maxDamage = 18;
-		} else if (strPos(%brick.getName(), "tower") >= 0) {
-			%brick.maxDamage = $towerDamage * $towerStages;
-			%brick.isTowerSupport = 1;
-			%brick.colorStage = 0;
-		} else if (%brick == $Server::PrisonEscape::Generator) {
-			%brick.maxDamage = 10;
-		} else if (%brick.getDatablock().uiname $= "4x4f Glass Pane") {
-			%brick.maxDamage = 25;
-		} else if (strPos(%brick.getName(), "tower") < 0) {
-			%brick.maxDamage = $windowDamage;
-		}
-	}
-
-	%brick.damage += %damage;
-	if (%brick == $Server::PrisonEscape::CommDish) {
-		setStatistic("CommDishHit", getStatistic("CommDishHit", %player.client) + 1, %player.client);
-		setStatistic("CommDishHit", getStatistic("CommDishHit") + 1);
-		%brick.playSound(trayDeflect1Sound);
-	} else if (%brick.getDatablock().uiname $= "4x4f Glass Pane") {
-		setStatistic("GeneratorWindowsHit", getStatistic("GeneratorWindowsHit", %player.client) + 1, %player.client);
-		setStatistic("GeneratorWindowsHit", getStatistic("GeneratorWindowsHit") + 1);
-		%brick.playSound("glassChip" @ getRandom(1, 3) @ "Sound");
-	} else if (strPos(%brick.getName(), "tower") < 0) {
-		setStatistic("WindowsHit", getStatistic("WindowsHit", %player.client) + 1, %player.client);
-		setStatistic("WindowsHit", getStatistic("WindowsHit") + 1);
-		%brick.playSound("glassChip" @ getRandom(1, 3) @ "Sound");
-	} else {
-		setStatistic("TowerSupportsHit", getStatistic("TowerSupportsHit", %player.client) + 1, %player.client);
-		setStatistic("TowerSupportsHit", getStatistic("TowerSupportsHit") + 1);
-	}
-	if (%brick == $Server::PrisonEscape::CommDish) {
-		if (getRandom() > 0.8) {
-			%player.electrocute(2);
-		}
-	}
-
-	if (%brick.damage >= %brick.maxDamage) {
-		if (%brick == $Server::PrisonEscape::CommDish) {
-			%brick.spawnExplosion(tankShellProjectile, "0.5 0.5 0.5");
-		} else if (strPos(%brick.getName(), "tower") < 0) {
-			%brick.playSound(glassExplosionSound);
-		}
-		%brick.killDelete();
-		return;
-	}
-
-	if (%brick.isTowerSupport) {
-		%brick.colorStage = mFloor(%brick.damage / $towerDamage);
-		%brick.origColorID = $towerColor[%brick.colorStage];
-	}
-
-	%brick.setColor($damageFlashColor);
-	%brick.recolorSchedule = %brick.schedule(50, setColor, %brick.origColorID);
 }
