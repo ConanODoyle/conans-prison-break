@@ -3,7 +3,7 @@ if (!isObject($CPB::TowerGroup)) {
 	for (%i = 0; %i < 4; %i++) {
 		if (!isObject("Tower" @ %i)) {
 			TowerGroup.add(new SimSet("Tower" @ %i) {
-				supportCount = 4;
+				
 				});
 		}
 	}
@@ -39,6 +39,7 @@ $ClientVariable[$ClientVariableCount++] = "isSelectedToBeGuard";
 //	assignGuard
 //	serverCmdReplaceGuard
 //	removeGuard
+//	resetTowerData
 //	spawnGuard
 //	killTower
 //	validateTower

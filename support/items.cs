@@ -20,7 +20,7 @@ package CPB_Support_Items {
 		}
 	}
 	
-	function Armor::onCollision(%this, %obj, %col, %pos) { //check parameters
+	function Armor::onCollision(%this, %obj, %col, %pos) {
 		if (%col.getClassName() $= "Item" && isOneUseItem(%col)) {
 			%ret = parent::onCollision(%this, %obj, %col, %pos);
 			if (isEventPending(%col.respawnSchedule)) {

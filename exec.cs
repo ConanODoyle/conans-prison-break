@@ -36,12 +36,18 @@ exec("./game/breakables.cs");
 exec("./game/cameras.cs");
 exec("./game/classes.cs");
 exec("./game/guards.cs");
+exec("./game/info.cs");
 exec("./game/load.cs");
 exec("./game/logo.cs");
 exec("./game/rounds.cs");
 exec("./game/structures.cs");
 exec("./game/towers.cs");
+exec("./game/win.cs");
+
 exec("./game/playertypes/spotlight/server.cs");
+exec("./game/playertypes/laundrycart/server.cs");
+exec("./game/playertypes/bronson/server.cs");
+//exec("./game/playertypes/dog/server.cs");
 
 exec("./data/hair.cs");
 exec("./data/items/server.cs");

@@ -22,6 +22,8 @@ $ClientVariable[$ClientVariableCount++] = "cpPriority";
 //	GameConnection::canMessage
 //	serverCmdMessageAdmins
 //	messageAdmins
+//	messagePrisoners
+//	messageGuards
 //	GameConnection::priorityCenterprint
 //	GameConnection::setCPPriority
 //	priorityCenterprintAll
@@ -156,6 +158,23 @@ function messageAdmins(%msg, %level) {
 	}
 }
 
+function messagePrisoners(%msg) {
+	for (%i = 0; %i < ClientGroup.getCount(); %i++) {
+		%targ = ClientGroup.getObject(%i);
+		if (%targ.isPrisoner || %targ.isPrisonerSnoop) {
+			messageClient(%targ, '', %msg);
+		}
+	}
+}
+
+function messageGuards(%msg) {
+	for (%i = 0; %i < ClientGroup.getCount(); %i++) {
+		%targ = ClientGroup.getObject(%i);
+		if (%targ.isGuard || %targ.isGuardSnoop) {
+			messageClient(%targ, '', %msg);
+		}
+	}
+}
 
 ////////////////////
 

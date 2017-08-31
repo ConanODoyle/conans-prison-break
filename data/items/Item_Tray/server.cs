@@ -411,7 +411,7 @@ package PrisonItems
 					%sound = "trayDeflect" @ %sound @ "Sound";
 					serverPlay3D(%sound, %col.getHackPosition());
 
-					if ((%db.getID() == ShrapnelProjectile.getID() && %col.backBlockedShrapnel > 2) || %db.getID() != ShrapnelProjectile.getID()) {
+					if (%col.backBlockedShrapnel > 3 || %db.getID() != ShrapnelProjectile.getID()) {
 						%col.unMountImage(1);
 						%proj = new Projectile()
 						{
@@ -448,7 +448,7 @@ package PrisonItems
 					%sound = "trayDeflect" @ %sound @ "Sound";
 					serverPlay3D(%sound, %col.getHackPosition());
 
-					if ((%db.getID() == ShrapnelProjectile.getID() && %col.blockedShrapnel > 2) || %db.getID() != ShrapnelProjectile.getID()) {
+					if (%col.blockedShrapnel > 3 || %db.getID() != ShrapnelProjectile.getID()) {
 						%col.tool[%col.currtool] = 0;
 						%col.weaponCount--;
 						messageClient(%col.client,'MsgItemPickup','',%col.currtool,0);
@@ -492,7 +492,7 @@ package PrisonItems
 							%sound = "trayDeflect" @ %sound @ "Sound";
 							serverPlay3D(%sound, %col.getHackPosition());
 
-							if ((%db.getID() == ShrapnelProjectile.getID() && %col.headBlockedShrapnel > 2) || %db.getID() != ShrapnelProjectile.getID()) {
+							if (%col.headBlockedShrapnel > 3 || %db.getID() != ShrapnelProjectile.getID()) {
 								%col.tool[%i] = 0;
 								%col.weaponCount--;
 								messageClient(%col.client,'MsgItemPickup','',%i,0);
