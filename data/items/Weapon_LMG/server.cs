@@ -1,36 +1,32 @@
 //audio
-datablock AudioProfile(LightMachinegunFire1Sound)
-{
-   filename    = "./LMG_fire.wav";
-   description = AudioClosest3d;
-   preload = true;
+datablock AudioProfile(LightMachinegunFire1Sound) {
+	filename    = "./LMG_fire.wav";
+	description = AudioClosest3d;
+	preload = true;
 };
 
-datablock AudioProfile(LightMachinegunClickSound)
-{
-   filename    = "./LMG_clickofdeath.wav";
-   description = AudioClose3d;
-   preload = true;
+datablock AudioProfile(LightMachinegunClickSound) {
+	filename    = "./LMG_clickofdeath.wav";
+	description = AudioClose3d;
+	preload = true;
 };
 
-datablock ExplosionData(TTLittleRecoilExplosion)
-{
-   explosionShape = "";
+datablock ExplosionData(TTLittleRecoilExplosion) {
+	explosionShape = "";
 
-   lifeTimeMS = 150;
+	lifeTimeMS = 150;
 
-   faceViewer     = true;
-   explosionScale = "1 1 1";
+	faceViewer     = true;
+	explosionScale = "1 1 1";
 
-   shakeCamera = true;
-  camShakeFreq = "1 1 1";
-  camShakeAmp = "0.1 0.3 0.2";
-   camShakeDuration = 0.5;
-   camShakeRadius = 10.0;
+	shakeCamera = true;
+	camShakeFreq = "1 1 1";
+	camShakeAmp = "0.1 0.3 0.2";
+	camShakeDuration = 0.5;
+	camShakeRadius = 10.0;
 };
 
-datablock ProjectileData(TTLittleRecoilProjectile)
-{
+datablock ProjectileData(TTLittleRecoilProjectile) {
 	lifetime						= 10;
 	fadeDelay						= 10;
 	explodeondeath						= true;
@@ -38,44 +34,42 @@ datablock ProjectileData(TTLittleRecoilProjectile)
 
 };
 
-AddDamageType("LMG",   '<bitmap:add-ons/Weapon_Package_Tier2/ci_lmg1> %1',    '%2 <bitmap:add-ons/Weapon_Package_Tier2/ci_lmg1> %1',0.75,1);
-datablock ProjectileData(LightMachinegunProjectile)
-{
-   projectileShapeName = "Add-ons/Weapon_Gun/bullet.dts";
-   directDamage        = 15;
-   directDamageType    = $DamageType::LMG;
-   radiusDamageType    = $DamageType::LMG;
+AddDamageType("LMG", '<bitmap:add-ons/Weapon_Package_Tier2/ci_lmg1> %1', '%2 <bitmap:add-ons/Weapon_Package_Tier2/ci_lmg1> %1', 0.75, 1);
+datablock ProjectileData(LightMachinegunProjectile) {
+	projectileShapeName = "Add-ons/Weapon_Gun/bullet.dts";
+	directDamage        = 15;
+	directDamageType    = $DamageType::LMG;
+	radiusDamageType    = $DamageType::LMG;
 
-   brickExplosionRadius = 0;
-   brickExplosionImpact = true;          //destroy a brick if we hit it directly?
-   brickExplosionForce  = 0;
-   brickExplosionMaxVolume = 0;          //max volume of bricks that we can destroy
-   brickExplosionMaxVolumeFloating = 0;  //max volume of bricks that we can destroy if they aren't connected to the ground
+	brickExplosionRadius = 0;
+	brickExplosionImpact = true;          //destroy a brick if we hit it directly?
+	brickExplosionForce  = 0;
+	brickExplosionMaxVolume = 0;          //max volume of bricks that we can destroy
+	brickExplosionMaxVolumeFloating = 0;  //max volume of bricks that we can destroy if they aren't connected to the ground
 
-   impactImpulse	     = 0;
-   verticalImpulse     = 20;
-   explosion           = gunExplosion;
+	impactImpulse	     = 0;
+	verticalImpulse     = 20;
+	explosion           = gunExplosion;
 
-   muzzleVelocity      = 200;
-   velInheritFactor    = 1;
+	muzzleVelocity      = 200;
+	velInheritFactor    = 1;
 
-   armingDelay         = 0;
-   lifetime            = 4000;
-   fadeDelay           = 3500;
-   bounceElasticity    = 0.0;
-   bounceFriction      = 0.0;
-   isBallistic         = false;
-   gravityMod = 0.1;
-   explodeOnDeath = true;
-   explodeOnPlayerImpact = false;
+	armingDelay         = 0;
+	lifetime            = 4000;
+	fadeDelay           = 3500;
+	bounceElasticity    = 0.0;
+	bounceFriction      = 0.0;
+	isBallistic         = false;
+	gravityMod = 0.1;
+	explodeOnDeath = true;
+	explodeOnPlayerImpact = false;
 
-   hasLight    = false;
-   lightRadius = 3.0;
-   lightColor  = "0 0 0.5";
+	hasLight    = false;
+	lightRadius = 3.0;
+	lightColor  = "0 0 0.5";
 };
 
-datablock DebrisData(LMGCasing)
-{
+datablock DebrisData(LMGCasing) {
 	shapeFile = "./casing.dts";
 	lifetime = 8.0;
 	minSpinSpeed = -400.0;
@@ -93,8 +87,7 @@ datablock DebrisData(LMGCasing)
 //////////
 // item //
 //////////
-datablock ItemData(LightMachinegunItem)
-{
+datablock ItemData(LightMachinegunItem) {
 	category = "Weapon";  // Mission editor category
 	className = "Weapon"; // For inventory system
 
@@ -124,59 +117,58 @@ datablock ItemData(LightMachinegunItem)
 ////////////////
 //weapon image//
 ////////////////
-datablock ShapeBaseImageData(LightMachinegunImage)
-{
-    // Basic Item properties
-    shapeFile = "./lmgv2.dts";
-    emap = true;
+datablock ShapeBaseImageData(LightMachinegunImage) {
+	// Basic Item properties
+	shapeFile = "./lmgv2.dts";
+	emap = true;
 
-    // Specify mount point & offset for 3rd person, and eye offset
-    // for first person rendering.
-    mountPoint = 0;
-    offset = "0 0 0";
-    eyeOffset = 0; //"0.7 1.2 -0.5";
-    rotation = eulerToMatrix( "0 0 0" );
+	// Specify mount point & offset for 3rd person, and eye offset
+	// for first person rendering.
+	mountPoint = 0;
+	offset = "0 0 0";
+	eyeOffset = 0; //"0.7 1.2 -0.5";
+	rotation = eulerToMatrix( "0 0 0" );
 
-    // When firing from a point offset from the eye, muzzle correction
-    // will adjust the muzzle vector to point to the eye LOS point.
-    // Since this weapon doesn't actually fire from the muzzle point,
-    // we need to turn this off.  
-    correctMuzzleVector = true;
+	// When firing from a point offset from the eye, muzzle correction
+	// will adjust the muzzle vector to point to the eye LOS point.
+	// Since this weapon fires from the muzzle point,
+	// we need to turn this on.  
+	correctMuzzleVector = true;
 
-    // Add the WeaponImage namespace as a parent, WeaponImage namespace
-    // provides some hooks into the inventory system.
-    className = "WeaponImage";
+	// Add the WeaponImage namespace as a parent, WeaponImage namespace
+	// provides some hooks into the inventory system.
+	className = "WeaponImage";
 
-    // Projectile && Ammo.
-    item = LightMachinegunItem;
-    ammo = " ";
-    projectile = LightMachinegunProjectile;
-    projectileType = Projectile;
+	// Projectile && Ammo.
+	item = LightMachinegunItem;
+	ammo = " ";
+	projectile = LightMachinegunProjectile;
+	projectileType = Projectile;
 
-    casing = LMGCasing;
-    shellExitDir        = "1.0 0.1 1.0";
-    shellExitOffset     = "0 0 0";
-    shellExitVariance   = 50.0;	
-    shellVelocity       = 3.0;
+	casing = LMGCasing;
+	shellExitDir        = "1.0 0.1 1.0";
+	shellExitOffset     = "0 0 0";
+	shellExitVariance   = 50.0;	
+	shellVelocity       = 3.0;
 
-    //melee particles shoot from eye node for consistancy
-    melee = false;
-    //raise your arm up or not
-    armReady = true;
+	//melee particles shoot from eye node for consistancy
+	melee = false;
+	//raise your arm up or not
+	armReady = true;
 
-    doColorShift = true;
-    colorShiftColor = LightMachinegunItem.colorShiftColor;
+	doColorShift = true;
+	colorShiftColor = LightMachinegunItem.colorShiftColor;
 
-    goldenImage = LightMachinegunGoldenImage;
+	goldenImage = LightMachinegunGoldenImage;
 
-    // Images have a state system which controls how the animations
-    // are run, which sounds are played, script callbacks, etc. This
-    // state system is downloaded to the client so that clients can
-    // predict state changes and animate accordingly.  The following
-    // system supports basic ready->fire->reload transitions as
-    // well as a no-ammo->dryfire idle state.
+	// Images have a state system which controls how the animations
+	// are run, which sounds are played, script callbacks, etc. This
+	// state system is downloaded to the client so that clients can
+	// predict state changes and animate accordingly.  The following
+	// system supports basic ready->fire->reload transitions as
+	// well as a no-ammo->dryfire idle state.
 
-    // Initial start up state
+	// Initial start up state
 	stateName[0]                     = "Activate";
 	stateTimeoutValue[0]             = 0.05;
 	stateTransitionOnTimeout[0]       = "LoadCheckA";
@@ -291,8 +283,7 @@ datablock ShapeBaseImageData(LightMachinegunImage)
 
 };
 
-function LightMachinegunImage::onFire(%this,%obj,%slot)
-{ 
+function LightMachinegunImage::onFire(%this,%obj,%slot) { 
 	%fX = getWord(%fvec,0);
 	%fY = getWord(%fvec,1);
 	
@@ -310,19 +301,15 @@ function LightMachinegunImage::onFire(%this,%obj,%slot)
 	%obj.lastShotTime = getSimTime();
 	%shellcount = 1;
 	
-	if(vectorLen(%obj.getVelocity()) < 0.1 && (getSimTime() - %obj.lastShotTime) > 1000)
-	{
+	if(vectorLen(%obj.getVelocity()) < 0.1 && (getSimTime() - %obj.lastShotTime) > 1000) {
 		%spread = 0.00026 + 0.002 * (%obj.LMGHeat / $LMGMaxHeat);
-	}
-	else
-	{
+	} else {
 		%spread = 0.00026 + 0.002 * (%obj.LMGHeat / $LMGMaxHeat);
 	}
 
 	%projectile = LightMachinegunProjectile;
 	
-	if (%obj.isFiring) 
-	{
+	if (%obj.isFiring) {
 		%obj.playThread(2, plant);
 	}
 	%shellcount = 1;
@@ -334,8 +321,7 @@ function LightMachinegunImage::onFire(%this,%obj,%slot)
 
 	%obj.spawnExplosion(TTLittleRecoilProjectile,"1.2 1.2 1.2");
 
-	for(%shell=0; %shell<%shellcount; %shell++)
-	{
+	for(%shell=0; %shell<%shellcount; %shell++) {
 		%vector = %obj.getMuzzleVector(%slot);
 		%vector1 = VectorScale(%vector, %projectile.muzzleVelocity);
 		%vector2 = VectorScale(%objectVelocity, %projectile.velInheritFactor);
@@ -346,8 +332,7 @@ function LightMachinegunImage::onFire(%this,%obj,%slot)
 		%mat = MatrixCreateFromEuler(%x @ " " @ %y @ " " @ %z);
 		%velocity = MatrixMulVector(%mat, %velocity);
 
-		%p = new (%this.projectileType)()
-		{
+		%p = new (%this.projectileType)() {
 			dataBlock = %projectile;
 			initialVelocity = %velocity;
 			initialPosition = %obj.getMuzzlePoint(%slot);
@@ -360,60 +345,46 @@ function LightMachinegunImage::onFire(%this,%obj,%slot)
 	return %p;
 }
 
-function LightMachinegunImage::onReloadStart(%this,%obj,%slot)
-{           		
+function LightMachinegunImage::onReloadStart(%this,%obj,%slot) {           		
 	%obj.client.bottomPrintInfo();
-	if(%obj.LMGHeat >= 1 && !isEventPending(%obj.heatSchedule))
-	{
+	if(%obj.LMGHeat >= 1 && !isEventPending(%obj.heatSchedule)) {
 		releaseHeat(%obj);
 	}
 	%obj.isFiring = 0;
 }
 
-function LightMachinegunImage::onReloadWait(%this,%obj,%slot)
-{
+function LightMachinegunImage::onReloadWait(%this,%obj,%slot) {
 	%obj.client.bottomPrintInfo();
 }
 
-function LightMachinegunImage::onReloaded(%this,%obj,%slot)
-{
+function LightMachinegunImage::onReloaded(%this,%obj,%slot) {
 	%obj.isFiring = 0;
 }
 
-function LightMachinegunImage::onHalt(%this,%obj,%slot)
-{
-	if($Pref::Server::TTAmmo == 0 || $Pref::Server::TTAmmo == 1)
-	{
+function LightMachinegunImage::onHalt(%this,%obj,%slot) {
         %obj.client.bottomPrintInfo();
-	}
 	%obj.isFiring = 0;
 }
 
-function LightMachinegunImage::onMount(%this,%obj,%slot)
-{
+function LightMachinegunImage::onMount(%this,%obj,%slot) {
    	Parent::onMount(%this,%obj,%slot);
-	if($Pref::Server::TTAmmo == 0 || $Pref::Server::TTAmmo == 1)
-	{
-		%obj.client.bottomPrintInfo();
-	}
+	%obj.client.bottomPrintInfo();
 }
 
-function LightMachinegunImage::onUnMount(%this,%obj,%slot)
-{
+function LightMachinegunImage::onUnMount(%this,%obj,%slot) {
 	%obj.isFiring = 0;
-	if(%obj.LMGHeat >= 1 && !isEventPending(%obj.heatSchedule))
-	{
+	if(%obj.LMGHeat >= 1 && !isEventPending(%obj.heatSchedule)) {
 		releaseHeat(%obj);
 	}
    	Parent::onUnMount(%this,%obj,%slot);
 }
 
-function LightMachinegunImage::onLoadCheck(%this,%obj,%slot)
-{
-	if(%obj.LMGHeat >= $LMGMaxHeat) 
+function LightMachinegunImage::onLoadCheck(%this,%obj,%slot) {
+	if(%obj.LMGHeat >= $LMGMaxHeat) {
 		%obj.setImageAmmo(%slot,0);
-	else
+	} else {
 		%obj.setImageAmmo(%slot,1);
+	}
 
 	if (%obj.LMGHeat $= "") {
 		%obj.LMGHeat = 0;
@@ -421,8 +392,7 @@ function LightMachinegunImage::onLoadCheck(%this,%obj,%slot)
 
 	%obj.client.bottomPrintInfo();
 
-	if(%obj.LMGHeat >= 1 && !isEventPending(%obj.heatSchedule))
-	{
+	if(%obj.LMGHeat >= 1 && !isEventPending(%obj.heatSchedule)) {
 		releaseHeat(%obj);
 	}
 }
@@ -451,25 +421,19 @@ function releaseHeat(%obj) {
 	%obj.client.bottomPrintInfo();
 }
 
-function LightMachinegunProjectile::Damage(%this, %obj, %col, %fade, %pos, %normal)
-{
-	if (%this.directDamage <= 0.0)
-	{
+function LightMachinegunProjectile::Damage(%this, %obj, %col, %fade, %pos, %normal) {
+	if (%this.directDamage <= 0.0) {
 		return;
 	}
 	%damageType = $DamageType::Direct;
-	if (%this.DirectDamageType)
-	{
+	if (%this.DirectDamageType) {
 		%damageType = %this.DirectDamageType;
 	}
 	%scale = getWord(%obj.getScale(), 2);
 	%directDamage = mClampF(%this.directDamage, -100.0, 100) * %scale;
-	if (%col.getDatablock().getName() $= "BuffArmor")
-	{
+	if (%col.getDatablock().getName() $= "BuffArmor") {
 		%col.Damage(%obj, %pos, %directDamage, %damageType);
-	}
-	else
-	{
+	} else {
 		%col.Damage(%obj, %pos, %directDamage, %damageType);
 	}
 }
