@@ -72,6 +72,7 @@ function collectAllPrisonBricks(%bg, %i) {
 		messageAdmins("<font:Palatino Linotype:18>!!! \c5--T4 bc: " @ Tower3.getCount());
 		messageAdmins("<font:Palatino Linotype:18>!!! \c5# Prisoner Spawns: " @ PrisonerSpawnPoints.getcount());
 		messageAdmins("<font:Palatino Linotype:18>!!! \c5# Infirmary Spawns: " @ InfirmarySpawnPoints.getcount());
+		messageAdmins("<font:Palatino Linotype:18>!!! \c5# Lobby Spawns: " @ LobbySpawnPoints.getcount());
 
 		Tower0.origBrickCount = Tower0.getCount();
 		Tower1.origBrickCount = Tower1.getCount();
@@ -93,11 +94,13 @@ function collectAllPrisonBricks(%bg, %i) {
 		%b.door(4);
 	}
 
+	%name = %b.getName();
 	if (%name !$= "") {
-		%name = getSubStr(%b.getName(), 1, strLen(%b.getName()));
+		%name = getSubStr(%name, 1, strLen(%b.getName()));
 		%type = getSubStr(%name, 0, 3);
 
-		%firstName = getSubStr(%name, 0, strPos(%name, "_"));
+		%pos = strPos(%name, "_") < 0 ? strLen(%name) : strPos(%name, "_");
+		%firstName = getSubStr(%name, 0, %pos);
 		if (%type $= "pro") {	//allows bricks to have property setting names without special func
 			%index = 3;
 			while ((%c = getSubStr(%name, %index, 1)) !$= "") {
@@ -133,12 +136,13 @@ function collectTowerBrick(%b, %n) {
 	%tower.add(%b);
 	%b.tower = %tower;
 
-	%name = strLwr(%b.getName);
+	%name = strLwr(%b.getName());
 	if (strPos(%name, "spawn") >= 0) {
 		%tower.spawn = %b;
 	} else if (strPos(%name, "support") >= 0) {
 		%tower.supportCount++;
 		%b.isSupport = 1;
+		%b.damage(0);
 	} else if (strPos(%name, "info") >= 0) {
 		InfoPopups.add(%b);
 	} else if (isObject(%b.vehicle)) {

@@ -37,7 +37,7 @@ datablock ProjectileData(TTLittleRecoilProjectile) {
 AddDamageType("LMG", '<bitmap:add-ons/Weapon_Package_Tier2/ci_lmg1> %1', '%2 <bitmap:add-ons/Weapon_Package_Tier2/ci_lmg1> %1', 0.75, 1);
 datablock ProjectileData(LightMachinegunProjectile) {
 	projectileShapeName = "Add-ons/Weapon_Gun/bullet.dts";
-	directDamage        = 15;
+	directDamage        = 20;
 	directDamageType    = $DamageType::LMG;
 	radiusDamageType    = $DamageType::LMG;
 
@@ -432,7 +432,7 @@ function LightMachinegunProjectile::Damage(%this, %obj, %col, %fade, %pos, %norm
 	%scale = getWord(%obj.getScale(), 2);
 	%directDamage = mClampF(%this.directDamage, -100.0, 100) * %scale;
 	if (%col.getDatablock().getName() $= "BuffArmor") {
-		%col.Damage(%obj, %pos, %directDamage, %damageType);
+		%col.Damage(%obj, %pos, %directDamage - 2, %damageType);
 	} else {
 		%col.Damage(%obj, %pos, %directDamage, %damageType);
 	}

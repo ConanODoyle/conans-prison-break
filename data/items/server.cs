@@ -9,7 +9,7 @@ exec("./Item_Tear_Gas/Item_Gasmask.cs");
 exec("./Item_Chisel/server.cs");
 exec("./Item_Soap/server.cs");
 exec("./Item_Steak/server.cs");
-exec("./Item_PosTool/server.cs");
+exec("./Item_PosTool/posTool.cs");
 exec("./Hat_Croc/server.cs");
 
 datablock ParticleData(goldenParticleA)

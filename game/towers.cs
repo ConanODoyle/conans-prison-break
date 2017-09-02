@@ -3,7 +3,7 @@ if (!isObject($CPB::TowerGroup)) {
 	for (%i = 0; %i < 4; %i++) {
 		if (!isObject("Tower" @ %i)) {
 			TowerGroup.add(new SimSet("Tower" @ %i) {
-				
+					towerNum = %i;
 				});
 		}
 	}
@@ -156,9 +156,8 @@ function resetTowerData(%id) {
 	%tower.supportCount = "";
 }
 
-function killTower(%id) {
-	%id = %id % 4;
-	%tower = ("Tower" @ %id);
+function killTower(%tower) {
+	%id = %tower.towerNum;
 	%tower.isDestroyed = 1;
 	%cl = %tower.guard;
 
@@ -181,16 +180,10 @@ function killTower(%id) {
 	echo("Tower " @ %id @ " fell (Time: " @ getTimeString($CPB::currRoundTime) @ ")");
 }
 
-function validateTower(%id, %brick) {
-	if (isObject(%id) || %id < 10) {
-		validateTower(getSubStr(%id.getName(), strLen(%id.getName()) - 2, 1));
-		return;
-	}
-
-	%tower = ("Tower" @ %towerNum);
+function validateTower(%tower, %brick) {
 	%tower.remove(%brick);
 	if (%tower.getCount() <= %tower.origBrickCount - %tower.supportCount) {
-		killTower(%id);
+		killTower(%tower);
 	}
 	validateGameWin();
 }

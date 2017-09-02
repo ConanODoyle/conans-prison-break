@@ -51,7 +51,9 @@ package CPB_Support_Spectate {
 
 	function GameConnection::onDeath(%cl, %sourceObj, %sourceCl, %damageType, %damLoc) {
 		%cl.isSpectating = 0;
-		%cl.deadToSpectateSchedule = schedule(1000, %cl, eval, %cl @ ".isSpectating = 1;");
+		if ($CPB::PHASE != $CPB::OFF && $CPB::PHASE != $CPB::LOBBY) {
+			%cl.deadToSpectateSchedule = schedule(1000, %cl, eval, %cl @ ".isSpectating = 1;");
+		}
 		return parent::onDeath(%cl, %sourceObj, %sourceCl, %damageType, %damLoc);
 	}
 

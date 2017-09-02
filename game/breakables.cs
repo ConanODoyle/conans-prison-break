@@ -51,10 +51,10 @@ package CPB_Game_Breakables {
 
 	function ChiselProjectile::onCollision(%data, %obj, %col, %fade, %pos, %normal) {
 		if (%col.getClassName() $= "FxDTSBrick") {
-			if ((%type = %b.type) || (%type = getBrickType(%col, %obj.sourceObject))) {
+			if ((%type = %b.type) || (%type = getBrickType(%col))) {
 				%obj.type = %type;
 				%obj.client.incScore(1);
-				%col.damage();
+				%col.damage(1, %obj.sourceObject);
 			}
 		}
 		return parent::onCollision(%data, %obj, %col, %fade, %pos, %normal);
@@ -114,7 +114,7 @@ function fxDTSBrick::damage(%b, %damage, %player) {
 	%b.recolorSchedule = %b.schedule(50, setColor, %b.origColorID);
 }
 
-function getBrickType(%b, %player) {
+function getBrickType(%b) {
 	%db = %b.getDatablock().getName();
 	
 	if (%b.isSupport) {
@@ -132,7 +132,6 @@ function getBrickType(%b, %player) {
 
 function fxDTSBrick::killDelete(%b) {
 	%b.fakeKillBrick((getRandom() - 0.5) * 20 SPC (getRandom() - 0.5) * 20 SPC "-1", -1);
-	%b.schedule(2000, delete);
 	if (%b.type == $CPB::BrickType::SatDish) {
 		%b.spawnExplosion(tankShellProjectile, "0.5 0.5 0.5");
 	} else if (%b.type == $CPB::BrickType::Window) {
@@ -141,7 +140,8 @@ function fxDTSBrick::killDelete(%b) {
 		serverPlay3D("brickBreakSound", %b.getPosition());
 	}
 
-	if (%b.tower > 0) {
+	if (isObject(%b.tower)) {
 		validateTower(%b.tower, %b);
 	}
+	%b.schedule(2000, delete);
 }

@@ -78,6 +78,11 @@ package CPB_Game_Spawn {
 
 	function GameConnection::createPlayer(%cl, %t) {
 		%cl.isDead = 0;
+
+		if ($CPB::PHASE == $CPB::LOBBY) {
+			%t = LobbySpawnPoints.getObject(getRandom(0, LobbySpawnPoints.getCount() - 1)).getTransform();
+		}
+
 		return parent::createPlayer(%cl, %t);
 	}
 };

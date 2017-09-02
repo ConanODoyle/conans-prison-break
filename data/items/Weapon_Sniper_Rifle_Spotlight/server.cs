@@ -314,7 +314,7 @@ datablock ProjectileData(SniperShrapnelSpotlightProjectile : SniperRifleSpotligh
 
 datablock ProjectileData(ShrapnelProjectile) {
 	projectileShapeName = "./sniperShrapnel.dts";
-	directDamage = 20;
+	directDamage = 30;
 	directDamageType = $DamageType::Shrapnel;
 	radiusDamageType = $DamageType::Shrapnel;
 
@@ -341,7 +341,7 @@ datablock ProjectileData(ShrapnelProjectile) {
 	bounceFriction		= 0.2;
 	isBallistic			= true;
 
-	particleEmitter = GunBulletTrailEmitter;
+	particleEmitter = SniperRifleSpotlightBulletTrailEmitter;
 	uiName = "Shrapnel Projectile";
 
 	hasLight	 = false;
@@ -744,8 +744,8 @@ datablock ExplosionData(StunBulletExplosion)
 
 	shakeCamera = true;
 	camShakeFreq = "6.0 8.0 6.0";
-	camShakeAmp = "8.0 8.0 8.0";
-	camShakeDuration = 25.5;
+	camShakeAmp = "18.0 18.0 18.0";
+	camShakeDuration = 5.5;
 	camShakeRadius = 15.0;
 
 	// Dynamic light

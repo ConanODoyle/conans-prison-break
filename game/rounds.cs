@@ -1,9 +1,9 @@
-$CPB::OFF	= -1;	$CPB::PHASE["-1"] = "OFF";
-$CPB::GAME	= 0;	$CPB::PHASE["0"] = "GAME";
-$CPB::LOBBY	= 1;	$CPB::PHASE["1"] = "LOBBY";
-$CPB::INTRO	= 2;	$CPB::PHASE["2"] = "INTRO";
-$CPB::PWIN	= 3;	$CPB::PHASE["3"] = "PWIN";
-$CPB::GWIN	= 4;	$CPB::PHASE["4"] = "GWIN";
+$CPB::OFF	= -1;	$CPB::PHASENAME["-1"] = "OFF";
+$CPB::GAME	= 0;	$CPB::PHASENAME["0"] = "GAME";
+$CPB::LOBBY	= 1;	$CPB::PHASENAME["1"] = "LOBBY";
+$CPB::INTRO	= 2;	$CPB::PHASENAME["2"] = "INTRO";
+$CPB::PWIN	= 3;	$CPB::PHASENAME["3"] = "PWIN";
+$CPB::GWIN	= 4;	$CPB::PHASENAME["4"] = "GWIN";
 	
 $CPB::LastRoundWinners = ""; //"Prisoners" or "Guards"
 $CPB::SelectedGuards = "";

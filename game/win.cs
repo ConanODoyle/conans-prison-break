@@ -9,7 +9,11 @@ function checkWinConditions() {
 		setPhase("PWIN");
 		return;
 	} else if (checkGuardWinCondition()) {
-
+		setPhase("GWIN");
+		return;
+	} else {
+		talk("Neither team won...");
+		setPhase("LOBBY");
 	}
 }
 
