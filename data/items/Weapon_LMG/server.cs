@@ -302,9 +302,9 @@ function LightMachinegunImage::onFire(%this,%obj,%slot) {
 	%shellcount = 1;
 	
 	if(vectorLen(%obj.getVelocity()) < 0.1 && (getSimTime() - %obj.lastShotTime) > 1000) {
-		%spread = 0.00026 + 0.002 * (%obj.LMGHeat / $LMGMaxHeat);
+		%spread = 0.00026 + 0.001 * (%obj.LMGHeat / $LMGMaxHeat);
 	} else {
-		%spread = 0.00026 + 0.002 * (%obj.LMGHeat / $LMGMaxHeat);
+		%spread = 0.00026 + 0.001 * (%obj.LMGHeat / $LMGMaxHeat);
 	}
 
 	%projectile = LightMachinegunProjectile;

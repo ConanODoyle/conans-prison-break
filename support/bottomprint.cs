@@ -73,12 +73,12 @@ function GameConnection::bottomPrintInfo(%cl) {
 	} else if ($CPB::PHASE == $CPB::GWIN || $CPB::PHASE == $CPB::PWIN) { 
 		if ($CPB::PHASE == $CPB::PWIN) {
 			%color = "<color:" @ $PRISONER::CHATCOLOR @ ">";
-			%info = %color @ "<font:Arial Bold:34>Prisoners Win!";
+			%info = %color @ "<font:Arial Bold:26>Prisoners Win!";
 		} else if ($CPB::PHASE == $CPB::GWIN) {
 			%color = "<color:" @ $GUARD::CHATCOLOR @ ">";
-			%info = %color @ "<font:Arial Bold:34>Guards Win!";
+			%info = %color @ "<font:Arial Bold:26>Guards Win!";
 		}
-		%cl.bottomprint("<font:Arial Bold:34>\c6" @ %timeString @ " <br>" @ %info, 500, 0);
+		%cl.bottomprint("<just:center><font:Arial Bold:34>\c6" @ %timeString @ " <br><just:center>" @ %info, 500, 0);
 	} else {
 		%cl.bottomprint("CPB please wait for next round to start", -1, 0);
 	}
