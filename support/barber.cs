@@ -423,7 +423,7 @@ function GameConnection::giveHair(%cl, %hairID) {
 	$HairData::Unlocked[%cl.bl_id] = trim($HairData::Unlocked[%cl.bl_id] SPC %hairID);
 }
 
-function GameConnection::giveRandomHair(%cl) {
+function GameConnection::giveRandomHair(%cl, %canRepeat) {
 	%list = getIntegerList(1, $HairCount - 1);
 	%count = getWordCount(%list);
 	%ownedList = $HairData::Unlocked[%cl.bl_id];
@@ -437,7 +437,7 @@ function GameConnection::giveRandomHair(%cl) {
 		%idx = getRandom(0, %count - 1);
 		%hairID = getWord(%list, %idx);
 
-		if (!%cl.hasHair(%hairID)) {
+		if (!(%hasHair = %cl.hasHair(%hairID)) || %canRepeat) {
 			break;
 		} else {
 			%list = removeWord(%list, %idx);
@@ -447,7 +447,11 @@ function GameConnection::giveRandomHair(%cl) {
 	}
 
 	if (%count > 0) {
-		messageClient(%cl, '', "\c6You have been given the \c3" @ $Hair[%hairID] @ "\c6!");
+		if (!%hasHair) {
+			messageClient(%cl, '', "\c6You have been given the \c3" @ $Hair[%hairID] @ "\c6!");
+		} else {
+			messageClient(%cl, '', "\c6You won the \c3" @ $Hair[%hairID] @ "\c6, but you already own it!");
+		}
 		%cl.giveHair(%hairID);
 	} else { //all hairs already owned
 		messageClient(%cl, '', "\c6You won a hairdo, but you already have all the hairs!");

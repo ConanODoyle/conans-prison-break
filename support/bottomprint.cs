@@ -17,13 +17,13 @@ function GameConnection::bottomPrintInfo(%cl) {
 		if (%cl.isPrisoner) {
 			if (%cl.isDead) {
 				%timeToRespawn = getNextRespawnTime();
-				%info = "\c0Next Respawn Wave In " @ getTimeString(%timeToRespawn) @ " ";
+				%info = "<font:Arial Bold:28>\c0Next Respawn Wave In " @ getTimeString(%timeToRespawn) @ " ";
 			} else if (%cl.isAlive) {
 				%loc = %cl.getLocation();
 				%locCount = $Live_PC[%loc];
 				%totalP = $Live_PAlive;
 				
-				%info = "<font:Arial Bold:34>\c6[\c1" @ %loc @ "\c6: " @ %loc @ "/" @ %totalP @ "] ";
+				%info = "<font:Arial Bold:28>\c6[\c1" @ %loc @ "\c6: " @ %loc @ "/" @ %totalP @ "] ";
 			}
 		} else if (%cl.isGuard) {
 			if ($CPB::EWSActive) {
@@ -69,7 +69,7 @@ function GameConnection::bottomPrintInfo(%cl) {
 			}
 		}
 		
-		%cl.bottomprint("<font:Arial Bold:34><just:center>\c6" @ %timeString @ " <br><just:center><font:Arial Bold:34>" @ %info, 500, 0);
+		%cl.bottomprint("<font:Arial Bold:34><just:center>\c6" @ %timeString @ " <br><just:center>" @ %info, 500, 0);
 	} else if ($CPB::PHASE == $CPB::GWIN || $CPB::PHASE == $CPB::PWIN) { 
 		if ($CPB::PHASE == $CPB::PWIN) {
 			%color = "<color:" @ $PRISONER::CHATCOLOR @ ">";

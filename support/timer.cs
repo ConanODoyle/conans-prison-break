@@ -18,6 +18,7 @@ function roundTimer() { //package if need to do things per second
 	$CPB::CurrRoundTime--;
 	if ($CPB::CurrRoundTime < 0) {
 		endRound();
+		return;
 	}
 	$CPB::RoundTimerSchedule = schedule(1000, 0, roundTimer);
 }

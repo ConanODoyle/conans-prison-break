@@ -1,4 +1,4 @@
-$CPB::RespawnWaveTime = 60 * 1.5;
+$CPB::RespawnWaveTime = 10 * 1.5;
 $SPAWN::BRONSONDEATHCPPRIORITY = 9;
 
 //Object properties:
@@ -11,6 +11,7 @@ $SPAWN::BRONSONDEATHCPPRIORITY = 9;
 //	roundTimer
 //	Observer::onTrigger
 //	GameConnection::createPlayer
+//	serverCmdCreateMinigame
 //Created:
 //	despawnAll
 //	GameConnection::clearVariables
@@ -63,10 +64,10 @@ package CPB_Game_Spawn {
 	}
 
 	function roundTimer() {
-		parent::roundTimer();
-		if ($CPB::CurrRoundTime % $CPB::RespawnWaveTime == 0 && $CPB::CurrRoundTime < $CPB::RoundTime) {
+		if (($CPB::CurrRoundTime) % $CPB::RespawnWaveTime == 0 && $CPB::CurrRoundTime < $CPB::RoundTime) {
 			respawnPrisonersInfirmary();
 		}
+		parent::roundTimer();
 	}
 
 	function Observer::onTrigger(%this, %obj, %trig, %state) {
@@ -78,12 +79,21 @@ package CPB_Game_Spawn {
 
 	function GameConnection::createPlayer(%cl, %t) {
 		%cl.isDead = 0;
+		clearCenterprint(%cl);
 
 		if ($CPB::PHASE == $CPB::LOBBY) {
 			%t = LobbySpawnPoints.getObject(getRandom(0, LobbySpawnPoints.getCount() - 1)).getTransform();
 		}
 
 		return parent::createPlayer(%cl, %t);
+	}
+
+	function serverCmdCreateMinigame(%cl, %a, %b, %c, %d, %e, %f, %g, %h, %i, %j, %k, %l, %m, %n) {
+		if (!%cl.isSuperAdmin) {
+			messageAdmins("!!! \c6- Attempt to create minigame by " @ %cl.name);
+			return;
+		}
+		return parent::serverCmdCreateMinigame(%cl, %a, %b, %c, %d, %e, %f, %g, %h, %i, %j, %k, %l, %m, %n);
 	}
 };
 activatePackage(CPB_Game_Spawn);
@@ -207,5 +217,5 @@ function getNextRespawnTime() {
 		return -1;
 	}
 
-	return ($CPB::CurrRoundTime + $CPB::RespawnWaveTime - 1) % $CPB::RespawnWaveTime;
+	return $CPB::CurrRoundTime % $CPB::RespawnWaveTime;
 }

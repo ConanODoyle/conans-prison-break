@@ -42,6 +42,7 @@ exec("./game/logo.cs");
 exec("./game/rounds.cs");
 exec("./game/structures.cs");
 exec("./game/towers.cs");
+exec("./game/uniforms.cs");
 exec("./game/win.cs");
 
 exec("./game/playertypes/spotlight/server.cs");

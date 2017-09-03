@@ -56,7 +56,7 @@ function _setPhaseLOBBY() {
 	despawnAll();
 
 	//show logo, reset guards selected
-	displayLogo(_LobbyLogoCam, _LobbyLogoCamTarget, LogoClosedShape, 1);
+	displayLogo(_LobbyLogoCam.getPosition(), _LobbyLogoCamTarget.getPosition(), LogoClosedShape, 1);
 
 	spawnAllLobby();
 	for (%i = 0; %i < ClientGroup.getCount(); %i++){
@@ -64,11 +64,20 @@ function _setPhaseLOBBY() {
 		%cl.clearStatistics();
 		%cl.clearVariables();
 		commandToClient(%cl, 'showBricks', 0);
-		if (getRandom() < 0.1) {
-			%cl.giveRandomHair();
+
+		%cl.isPrisoner = 0;
+		%cl.isGuard = 0;
+
+		if (isObject(%cl.minigame)) {
+			if (getRandom() < 0.2) {
+				messageClient(%cl, '', "\c6You have recieved a random hairdo loot drop!");
+				%cl.giveRandomHair(1);
+			}
+			%cl.isPrisoner = 1;
 		}
 	}
 
+	//TODO: make this use "map type"
 	serverDirectSaveFileLoad("Add-ons/Gamemode_CPB/data/prison.bls", 3, "", 0, 1);
 
 	$CPB::SelectedGuards = "";

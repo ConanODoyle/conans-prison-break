@@ -1,6 +1,6 @@
 $OneUseItemCount = 3;
 $OneUseItem[0] = KeyYellowItem;
-$OneUseItem[1] = SmokeGrenadeItem;
+$OneUseItem[1] = riotSmokeGrenadeItem;
 $OneUseItem[2] = FireAxeItem;
 
 if (!isObject(DroppedItems)) {
@@ -21,7 +21,7 @@ package CPB_Support_Items {
 	}
 	
 	function Armor::onCollision(%this, %obj, %col, %pos) {
-		if (%col.getClassName() $= "Item" && isOneUseItem(%col)) {
+		if (%col.getClassName() $= "Item" && isOneUseItem(%col.getDatablock())) {
 			%ret = parent::onCollision(%this, %obj, %col, %pos);
 			if (isEventPending(%col.respawnSchedule)) {
 				return %ret;
@@ -50,13 +50,13 @@ package CPB_Support_Items {
 };
 activatePackage(CPB_Support_Items);
 
-function isOneUseItem (%col) {
-	if (!isObject(%col)) {
+function isOneUseItem (%db) {
+	if (!isObject(%db)) {
 		return 0;
 	}
 
 	for (%i = 0; %i < $OneUseItemCount; %i++) {
-		if (%col.getName() $= $OneUseItem[%i]) {
+		if (%db.getName() $= $OneUseItem[%i]) {
 			return 1;
 		}
 	}
