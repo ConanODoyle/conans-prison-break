@@ -101,7 +101,7 @@ function fxDTSBrick::damage(%b, %damage, %player) {
 	}
 
 	if (%b.damage >= %b.maxDamage) {
-		%b.killDelete();
+		%b.killDelete(%player.client);
 		return;
 	}
 
@@ -130,12 +130,15 @@ function getBrickType(%b) {
 	return 0;
 }
 
-function fxDTSBrick::killDelete(%b) {
+function fxDTSBrick::killDelete(%b, %cl) {
 	%b.fakeKillBrick((getRandom() - 0.5) * 20 SPC (getRandom() - 0.5) * 20 SPC "-1", -1);
 	if (%b.type == $CPB::BrickType::SatDish) {
 		%b.spawnExplosion(tankShellProjectile, "0.5 0.5 0.5");
 	} else if (%b.type == $CPB::BrickType::Window) {
 		%b.playSound(glassExplosionSound);
+		if (strPos(strLwr(%b.getName()), "generator") >= 0) {
+			destroyGeneratorWindow(%cl, %b);
+		}
 	} else {
 		serverPlay3D("brickBreakSound", %b.getPosition());
 	}

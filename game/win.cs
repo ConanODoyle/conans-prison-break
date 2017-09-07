@@ -2,6 +2,8 @@
 //Created:
 //	checkWinConditions
 //	checkPrisonerWinCondition
+//	checkGuardWinCondition
+//	fxDTSBrick::prisonersWin
 
 
 function checkWinConditions() {
@@ -40,4 +42,19 @@ function checkGuardWinCondition() {
 			return 1;
 		}
 	}
+}
+
+
+////////////////////
+
+
+registerOutputEvent("fxDTSBrick", "prisonersWin", "", 1);
+
+function fxDTSBrick::prisonersWin(%b, %cl) {
+	if (%cl.isGuard || !%cl.isPrisoner || $CPB::Phase != $CPB::GAME || !isObject(%cl.minigame)) {
+		return;
+	}
+
+	$CPB::firstPrisonerOut = %cl;
+	setPhase("PWIN");
 }

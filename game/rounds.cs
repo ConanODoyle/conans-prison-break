@@ -32,6 +32,7 @@ function setPhase(%phase) {
 
 function cancelAllRoundSchedules() {
 	cancel($CPB::RoundTimerSchedule);
+	cancel($CPB::DataCollectionSchedule);
 }
 
 function _setPhaseOFF() {
@@ -46,7 +47,7 @@ function _setPhaseGAME() {
 	createKillZones();
 
 	centerprintAll("", 0);
-	startStatisticsCollection($Stats::GameNum);
+	startDataCollection($Data::GameNum);
 	spawnAllGuards();
 	spawnAllPrisoners();
 }
@@ -110,7 +111,9 @@ function _setPhaseINTRO() {
 
 function _setPhaseGWIN() {
 	cancelAllRoundSchedules();
-	stopStatisticsCollection();
+	stopDataCollection();
+	
+	$CPB::CurrRoundTime++;
 	bottomPrintInfoAll();
 	$CPB::LastRoundWinners = "Guards";
 }
@@ -118,6 +121,8 @@ function _setPhaseGWIN() {
 function _setPhasePWIN() {
 	cancelAllRoundSchedules();
 	stopDataCollection();
+	
+	$CPB::CurrRoundTime++;
 	bottomPrintInfoAll();
 	$CPB::LastRoundWinners = "Prisoners";
 }

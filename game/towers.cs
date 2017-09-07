@@ -185,7 +185,9 @@ function validateTower(%tower, %brick) {
 	if (%tower.getCount() <= %tower.origBrickCount - %tower.supportCount) {
 		killTower(%tower);
 	}
-	validateGameWin();
+	if (checkPrisonerWinCondition()) {
+		setPhase("PWIN");
+	}
 }
 
 function enableTowerSpotlights() {

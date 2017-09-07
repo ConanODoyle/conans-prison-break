@@ -20,7 +20,7 @@ $SPAWN::BRONSONDEATHCPPRIORITY = 9;
 //	spawnAllPrisoners
 //	respawnPrisonersInfirmary
 //	getPrisonerCellSpawnPoint
-//	resetPrisionerSpawnPointCounts
+//	resetPrisonerCellSpawnPointCounts
 //	getInfirmarySpawnPoint
 //	resetInfirmarySpawnPointCounts
 //	getNextRespawnTime
@@ -71,7 +71,7 @@ package CPB_Game_Spawn {
 	}
 
 	function Observer::onTrigger(%this, %obj, %trig, %state) {
-		if ((%cl = %obj.getControllingClient()).isDead && !%cl.isSpectating) {
+		if ((%cl = %obj.getControllingClient()).isDead && !%cl.isSpectating && isObject(%cl.minigame)) {
 			return;
 		}
 		return parent::onTrigger(%this, %obj, %trig, %state);
@@ -174,7 +174,7 @@ function getPrisonerCellSpawnPoint() {
 		return %brick;
 	} else {
 		echo("Can't find a spawnpoint with less than 2 spawns! Resetting...");
-		resetPrisonerSpawnPointCounts();
+		resetPrisonerCellSpawnPointCounts();
 		return PrisonerSpawnPoints.getObject(%start);
 	}
 }
