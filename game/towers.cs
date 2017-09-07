@@ -35,7 +35,10 @@ $ClientVariable[$ClientVariableCount++] = "isSelectedToBeGuard";
 //Functions:
 //Packaged:
 //	GameConnection::onDrop
+//	MinigameSO::removeMember
 //Created:
+//	serverCmdAddGuard
+//	serverCmdRemoveGuard
 //	assignGuard
 //	serverCmdReplaceGuard
 //	removeGuard
@@ -55,15 +58,88 @@ package CPB_Game_Towers {
 	function GameConnection::onDrop(%this, %val) {
 		if (%this.isGuard && isObject(%this.tower)) {
 			messageAdmins("<font:Palatino Linotype:36>!!! \c6Tower \c3" @ %this.tower @ "\c6's guard has just left the game!");
-
-		} else if (%this.bl_id !$= "" && %cl.isSelectedToBeGuard) {
-			serverCmdUnsetGuard($superAdmin, %this.name);
+		} else if (%this.bl_id !$= "" && %this.isSelectedToBeGuard) {
+			serverCmdRemoveGuard(FakeClient, %this.name);
 		}
 
 		return parent::onDrop(%this, %val);
 	}
+
+	function MinigameSO::removeMember(%mg, %cl) {
+		if (%cl.isGuard && isObject(%cl.tower)) {
+			messageAdmins("<font:Palatino Linotype:36>!!! \c6Tower \c3" @ %cl.tower @ "\c6's guard has just left the game!");
+		} else if (%cl.bl_id !$= "" && %cl.isSelectedToBeGuard) {
+			serverCmdRemoveGuard(FakeClient, %cl.name);
+		}
+
+		return parent::removeMember(%mg, %cl);
+	}
 };
 activatePackage(CPB_Game_Towers);
+
+
+////////////////////
+
+
+function serverCmdAddGuard(%cl, %name) {
+	if (!%cl.isAdmin) {
+		return;
+	}
+
+	%targ = findClientByName(%name);
+	if (!isObject(%targ)) {
+		messageClient(%cl, '', "Cannot find client by the name of " @ %name @ "!");
+		return;
+	} else if (%targ.isSelectedToBeGuard) {
+		messageClient(%cl, '', %targ.name @ " is already selected to be a guard!");
+		return;
+	} else if (!isObject(%targ.minigame)) {
+		messageClient(%cl, '', %targ.name @ " is not in the minigame!");
+		return;
+	} else if (getWordCount($CPB::SelectedGuards) >= 4) {
+		messageClient(%cl, '', "There are already 4 guards!");
+		return;
+	}
+
+	%targ.isSelectedToBeGuard = 1;
+	$CPB::SelectedGuards = trim($CPB::SelectedGuards SPC %targ.bl_id);
+
+	messageAll('', "\c3" @ %cl.name @ "\c6 added \c3" @ %targ.name @ "\c6 to the guard selection");
+}
+
+function serverCmdRemoveGuard(%cl, %name) {
+	if (!%cl.isAdmin) {
+		return;
+	}
+
+	%targ = findClientByName(%name);
+	if (!isObject(%targ)) {
+		messageClient(%cl, '', "Cannot find client by the name of " @ %name @ "!");
+		return;
+	} else if (!%targ.isSelectedToBeGuard) {
+		messageClient(%cl, '', %targ.name @ " is not selected to be a guard!");
+		return;
+	} else if (getWordCount($CPB::SelectedGuards) <= 0) {
+		messageClient(%cl, '', "There are no guards!");
+		return;
+	} else if (!containsWord($CPB::SelectedGuards, %targ.bl_id)) {
+		messageClient(%cl, '', %targ.name @ " is not in the selected guards list!");
+		return;
+	}
+
+	%targ.isSelectedToBeGuard = 0;
+	$CPB::SelectedGuards = removeWordString($CPB::SelectedGuards, %targ.bl_id);
+
+	if (%cl != FakeClient) {
+		messageAll('', "\c3" @ %cl.name @ "\c6 removed \c3" @ %targ.name @ "\c6 from the guard selection");
+	} else {
+		messageAll('', "\c3" @ %targ.name @ "\c6 was removed from the guard selection");
+	}
+}
+
+
+////////////////////
+
 
 function assignGuard(%cl, %towerNum) {
 	//randomly pick a tower to assign the client to
@@ -93,6 +169,7 @@ function assignGuard(%cl, %towerNum) {
 	%cl.isPrisoner = 0;
 	%cl.tower = "Tower" @ %towerNum;
 	("Tower" @ %towerNum).guard = %cl;
+	%cl.tower.guardOption = %cl.guardClass;
 }
 
 function serverCmdReplaceGuard(%cl, %towerNum, %name) {
@@ -136,13 +213,20 @@ function removeGuard(%cl) {
 	for (%i = 0; %i < 4; %i++) {
 		%towerNum = %i + 1;
 		if (("Tower" @ %towerNum).guard == %cl) {
-			("Tower" @ %towerNum).guard = "";
 			%cl.isGuard = 0;
+			if (isObject(%cl.minigame)) {
+				%cl.isPrisoner = 1;
+			}
+			resetTowerData(("Tower" @ %towerNum));
 			return;
 		}
 	}
 	echo("Cannot find " @ %cl.name @ " in the list of guards!");
 }
+
+
+////////////////////
+
 
 function resetTowerData(%id) {
 	%tower = ("Tower" @ %id);
@@ -230,7 +314,7 @@ function SimSet::destroy(%this) {
 	%this.schedule(1, destroy);
 }
 
-registerOutputEvent(fxDTSBrick, "setTower", "list 1 1 2 2 3 3 4 4", 1);
+registerOutputEvent(fxDTSBrick, "setTower", "list 1 0 2 1 3 2 4 3", 1);
 registerOutputEvent(fxDTSBrick, "clearTower", "", 1);
 
 function fxDTSBrick::setTower(%b, %tower, %cl) {
@@ -240,6 +324,8 @@ function fxDTSBrick::setTower(%b, %tower, %cl) {
 	} else if (%cl.guardClass $= "") {
 		messageClient(%cl, '', "You cannot pick a tower without picking a class first!");
 		return;
+    } else if (isObject(%cl.pickedTowerBrick)) {
+    	%cl.pickedTowerBrick.clearTower(%cl);
     }
 	
 	%cl.tower = ("Tower" @ %tower);

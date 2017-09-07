@@ -28,7 +28,7 @@ function containsWord(%str, %word) {
 	return 0;
 }
 
-function removeWord(%str, %word) {
+function removeWordString(%str, %word) {
 	if (getWordCount(%word) > 1) {
 		warn("Cannot remove multi-word phrase in string! (" @ %word @ ")");
 		return %str;
