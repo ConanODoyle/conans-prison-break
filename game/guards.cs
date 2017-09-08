@@ -1,47 +1,88 @@
+$CPB::GUARDCOUNT = 4;
+
 //Functions:
 //Created:
-//	serverCmdSetGuard
-//	serverCmdUnsetGuard
-//	lockInGuards
+//	serverCmdAddGuard
+//	serverCmdRemoveGuard
+//	validateGuardSelection
 //	spawnGuard
 //	spawnAllGuards
 
 
-function serverCmdUnsetGuard(%cl, %name) {
+function serverCmdAddGuard(%cl, %name) {
 	if ($CPB::PHASE != $CPB::LOBBY || !%cl.isAdmin) {
 		return;
 	}
 
-	fxDTSBrick::clearTower(0, %cl);
-	%cl.isSelectedToBeGuard = 0;
-	%cl.isGuard = 0;
-	%cl.isPrisoner = 1;
-	if (isObject(%cl.player)) {
-		%cl.player.delete();
+	%targ = findClientByName(%name);
+	if (!isObject(%targ)) {
+		messageClient(%cl, '', "Cannot find client by the name of " @ %name @ "!");
+		return;
+	} else if (%targ.isSelectedToBeGuard) {
+		messageClient(%cl, '', %targ.name @ " is already selected to be a guard!");
+		return;
+	} else if (!isObject(%targ.minigame)) {
+		messageClient(%cl, '', %targ.name @ " is not in the minigame!");
+		return;
+	} else if (getWordCount($CPB::SelectedGuards) >= $CPB::GUARDCOUNT) {
+		messageClient(%cl, '', "There are already " @ $CPB::GUARDCOUNT @ " guards!");
+		return;
 	}
-	spawnDeadLobby();
-	$CPB::SelectedGuards = removeWord($CPB::SelectedGuards, %cl.bl_id);
-	updateInfoBoard();
+
+	%targ.isSelectedToBeGuard = 1;
+	%targ.isGuard = 1;
+	%targ.isPrisoner = 0;
+	$CPB::SelectedGuards = trim($CPB::SelectedGuards SPC %targ.bl_id);
+
+	if (isObject(%targ.player)) {
+		%targ.player.delete();
+	}
+	%targ.createPlayer(_GuardClassesRoom.getTransform());
+
+	messageAll('', "\c3" @ %cl.name @ "\c6 added \c3" @ %targ.name @ "\c6 to the guard selection");
 }
 
-function serverCmdSetGuard(%cl, %name) {
+function serverCmdRemoveGuard(%cl, %name) {
 	if ($CPB::PHASE != $CPB::LOBBY || !%cl.isAdmin) {
 		return;
 	}
 
-	%cl.isSelectedToBeGuard = 1;
-	%cl.isGuard = 1;
-	%cl.isPrisoner = 0;
-	if (isObject(%cl.player)) {
-		%cl.player.delete();
+	%targ = findClientByName(%name);
+	if (!isObject(%targ)) {
+		messageClient(%cl, '', "Cannot find client by the name of " @ %name @ "!");
+		return;
+	} else if (!%targ.isSelectedToBeGuard) {
+		messageClient(%cl, '', %targ.name @ " is not selected to be a guard!");
+		return;
+	} else if (getWordCount($CPB::SelectedGuards) <= 0) {
+		messageClient(%cl, '', "There are no guards!");
+		return;
+	} else if (!containsWord($CPB::SelectedGuards, %targ.bl_id)) {
+		messageClient(%cl, '', %targ.name @ " is not in the selected guards list!");
+		return;
 	}
-	%cl.createPlayer(_GuardClassesRoom);
-	$CPB::SelectedGuards = trim($CPB::SelectedGuards SPC %cl.bl_id);
-	updateInfoBoard();
+
+	%targ.isSelectedToBeGuard = 0;
+	%targ.isGuard = 0;
+	%targ.isPrisoner = 1;
+	%targ.guardClass = "";
+	%targ.pickedTowerBrick.clearTower(%targ);
+	$CPB::SelectedGuards = removeWordString($CPB::SelectedGuards, %targ.bl_id);
+
+	if (isObject(%targ.player)) {
+		%targ.player.delete();
+	}
+	spawnDeadLobby();
+
+	if (%cl != FakeClient) {
+		messageAll('', "\c3" @ %cl.name @ "\c6 removed \c3" @ %targ.name @ "\c6 from the guard selection");
+	} else {
+		messageAll('', "\c3" @ %targ.name @ "\c6 was removed from the guard selection");
+	}
 }
 
 function validateGuardSelection() {
-	if ($CPB::PHASE != $CPB::LOBBY || !%cl.isAdmin) {
+	if ($CPB::PHASE != $CPB::LOBBY) {
 		return;
 	} else if (getWordCount($CPB::SelectedGuards) != $CPB::GUARDCOUNT) {
 		messageAdmins("!!! \c6Cannot lock in guards - not enough guards selected!");
@@ -57,6 +98,14 @@ function validateGuardSelection() {
 		if (%isTaken[%cl.tower.getName()]) {
 			messageAdmins("!!! \c6Cannot lock in guards - two guards share one tower!");
 			return;
+		}
+		if (%cl.guardClass == 0) {
+			messageAdmins("!!! \c6Cannot lock in guards - a guard has no class!");
+			return;
+		}
+		if (!isObject(%cl.tower)) {
+			messageAdmins("!!! \c6Cannot lock in guards - a guard has no tower!");
+			return;	
 		}
 		%isTaken[%cl.tower.getName()] = 1;
 	}

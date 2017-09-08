@@ -81,7 +81,7 @@ package CPB_Game_Spawn {
 		%cl.isDead = 0;
 		clearCenterprint(%cl);
 
-		if ($CPB::PHASE == $CPB::LOBBY) {
+		if ($CPB::PHASE == $CPB::LOBBY && %cl.isPrisoner) {
 			%t = LobbySpawnPoints.getObject(getRandom(0, LobbySpawnPoints.getCount() - 1)).getTransform();
 		}
 

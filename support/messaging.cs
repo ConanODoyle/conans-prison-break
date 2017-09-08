@@ -20,6 +20,7 @@ $ClientVariable[$ClientVariableCount++] = "cpPriority";
 //	getFormattedMessage
 //	CPB_SpamFilter
 //	GameConnection::canMessage
+//	GameConnection::getTeam
 //	serverCmdMessageAdmins
 //	messageAdmins
 //	messagePrisoners
@@ -138,6 +139,15 @@ function GameConnection::canMessage(%cl, %targ, %msg) {
 	} else {
 		return 1;
 	}
+}
+
+function GameConnection::getTeam(%cl) {
+	if (%cl.isPrisoner) {
+		return "[Prisoner]";
+	} else if (%cl.isGuard) {
+		return "[Guard]";
+	}
+	return "[No Team]";
 }
 
 

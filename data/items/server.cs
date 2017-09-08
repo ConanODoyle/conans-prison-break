@@ -6,6 +6,7 @@ exec("./Item_Smoke_Grenade/server.cs");
 exec("./Item_Tape/server.cs");
 exec("./Item_Tear_Gas/server.cs");
 exec("./Item_Tear_Gas/Item_Gasmask.cs");
+exec("./Item_FireAxe/server.cs");
 exec("./Item_Chisel/server.cs");
 exec("./Item_Soap/server.cs");
 exec("./Item_Steak/server.cs");

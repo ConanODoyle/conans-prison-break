@@ -440,7 +440,7 @@ function GameConnection::giveRandomHair(%cl, %canRepeat) {
 		if (!(%hasHair = %cl.hasHair(%hairID)) || %canRepeat) {
 			break;
 		} else {
-			%list = removeWord(%list, %idx);
+			%list = removeWordString(%list, %idx);
 			%count--;
 		}
 		%loopCount++;
