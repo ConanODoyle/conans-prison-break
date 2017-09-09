@@ -38,8 +38,8 @@ package CPB_Support_Messaging {
 			}
 
 			%finalMsg = getFormattedMessage(%cl, %msg);
-			for (%i = 0; %i < ClientGroup.getCount; %i++) {
-				if (%cl.canMessage((%targ = ClientGroup.getObject(%i).messageGroup))) {
+			for (%i = 0; %i < ClientGroup.getCount(); %i++) {
+				if (%cl.canMessage(%targ = ClientGroup.getObject(%i))) {
 					messageClient(%targ, '', %finalMsg);
 				}
 			}
@@ -54,7 +54,7 @@ package CPB_Support_Messaging {
 
 	function serverCmdTeamMessageSent(%cl, %msg) {
 		if ($MessagingEnabled) {
-			messageClient(%cl, '', "\c1Team chat disabled - normal chat is already team-specific unless outside.");
+			messageClient(%cl, '', "\c1Team chat disabled - normal chat is team-only when inside.");
 		} else {
 			return parent::serverCmdTeamMessageSent(%cl, %msg);
 		}
@@ -82,7 +82,7 @@ function getFormattedMessage(%cl, %msg) {
 	if (%location $= "") {
 		return %color @ %name @ "\c6: " @ %msg;
 	} else {
-		return "\c6[\c3" @ %location @ "\c6] " @ %color @ %name @ "\c6: " @ %msg;
+		return "\c6[\c7" @ %location @ "\c6] " @ %color @ %name @ "\c6: " @ %msg;
 	}
 }
 

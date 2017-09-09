@@ -95,12 +95,18 @@ package CPB_Game_Spawn {
 		}
 		return parent::serverCmdCreateMinigame(%cl, %a, %b, %c, %d, %e, %f, %g, %h, %i, %j, %k, %l, %m, %n);
 	}
+
+	function serverCmdLeaveMinigame(%cl) {
+		%cl.isPrisoner = 0;
+		%cl.isGuard = 0;
+
+	}
 };
 activatePackage(CPB_Game_Spawn);
 
 function despawnAll() {
 	for (%i = 0; %i < ClientGroup.getCount(); %i++) {
-		if (isObject(%pl = (%cl = ClientGroup.getObject(%i)).player)) {
+		if (isObject(%pl = (%cl = ClientGroup.getObject(%i)).player) && isObject(%cl.minigame)) {
 			%pl.delete();
 			%cl.setControlObject(%cl.camera);
 			%cl.camera.setControlObject(%cl.dummycamera);
@@ -112,7 +118,9 @@ function GameConnection::clearVariables(%cl) {
 	%cl.setScore(0);
 	//other vars
 	for (%i = 0; %i < $ClientVariableCount; %i++) {
-		eval(%cl @ "." @ $ClientVariable[%i] @ " = \"\";");
+		if ($ClientVariable[%i] !$= "") {
+			eval(%cl @ "." @ $ClientVariable[%i] @ " = \"\";");
+		}
 	}
 }
 
@@ -126,7 +134,12 @@ function spawnDeadLobby() {
 
 function spawnAllLobby() {
 	for (%i = 0; %i < ClientGroup.getCount(); %i++) {
-		if (isObject(%pl = (%cl = ClientGroup.getObject(%i)).player)) {
+		%cl = ClientGroup.getObject(%i);
+		if (!isObject(%cl.minigame)) {
+			continue;
+		}
+		
+		if (isObject(%pl = %cl.player) && isObject(%cl.minigame)) {
 			%pl.delete();
 		}
 		%cl.createPlayer(LobbySpawnPoints.getObject(getRandom(0, LobbySpawnPoints.getCount() - 1)).getTransform());

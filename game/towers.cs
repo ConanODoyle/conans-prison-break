@@ -24,7 +24,7 @@ $ClientVariable[$ClientVariableCount++] = "isSelectedToBeGuard";
 //	isSelectedToBeGuard
 //Tower#
 //	isDestroyed
-//	guardClient
+//	guard
 //	spawn
 //	spotlightBot
 //	origBrickCount
@@ -40,6 +40,7 @@ $ClientVariable[$ClientVariableCount++] = "isSelectedToBeGuard";
 //	serverCmdReplaceGuard
 //	removeGuard
 //	resetTowerData
+//	resetAllTowerData
 //	spawnGuard
 //	killTower
 //	validateTower
@@ -48,6 +49,9 @@ $ClientVariable[$ClientVariableCount++] = "isSelectedToBeGuard";
 //	SimSet::destroy
 //	fxDTSBrick::setTower
 //	fxDTSBrick::clearTower
+//	fxDTSBrick::softClearTower
+//	fxDTSBrick::onSetTower
+//	fxDTSBrick::onClearTower
 //	getClosestTower
 
 
@@ -169,12 +173,18 @@ function resetTowerData(%id) {
 	%tower = ("Tower" @ %id);
 
 	%tower.isDestroyed = "";
-	%tower.guardClient = "";
+	%tower.guard = "";
 	%tower.spawn = "";
 	%tower.spotlightBot = "";
 	%tower.origBrickCount = "";
 	%tower.guardOption = "";
 	%tower.supportCount = "";
+}
+
+function resetAllTowerData() {
+	for (%i = 0; %i < 4; %i++) {
+		resetTowerData(%i);
+	}
 }
 
 function killTower(%tower) {
@@ -285,9 +295,16 @@ function fxDTSBrick::setTower(%b, %tower, %cl) {
 function fxDTSBrick::clearTower(%b, %cl) {
 	%cl.pickedTowerBrick.item.setShapeName("");
 	%cl.pickedTowerBrick.onClearTower(%cl.player, %cl);
+	%cl.pickedTowerBrick = "";
 	%cl.tower.guardOption = "";
 	%cl.tower.guard = "";
 	%cl.tower = "";
+}
+
+function fxDTSBrick::softClearTower(%b, %cl) {
+	%cl.pickedTowerBrick.item.setShapeName("");
+	%cl.pickedTowerBrick.onClearTower(%cl.player, %cl);
+	%cl.pickedTowerBrick = "";
 }
 
 function fxDTSBrick::onSetTower(%b, %pl, %cl, %pos, %vec) {

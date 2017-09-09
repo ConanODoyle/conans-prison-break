@@ -391,7 +391,7 @@ package LaundryCartPackage {
             %cl.centerprint("\c3You can't swap seats as the driver of the cart!", 1);
          } else {
             parent::serverCmdNextSeat(%cl);
-            if (%pl.getMountNode() == 0) {
+            if (%pl.getMountNode() == 0 && isObject(%mount = %pl.getObjectMount()) && %pl.getObjectMount().getDatablock().getName() $= "LaundryCartArmor") {
                parent::serverCmdNextSeat(%cl);
             }
          }
@@ -404,7 +404,7 @@ package LaundryCartPackage {
             %cl.centerprint("\c3You can't swap seats as the driver of the cart!", 1);
          } else {
             parent::serverCmdPrevSeat(%cl);
-            if (%pl.getMountNode() == 0) {
+            if (%pl.getMountNode() == 0 && isObject(%mount = %pl.getObjectMount()) && %pl.getObjectMount().getDatablock().getName() $= "LaundryCartArmor") {
                parent::serverCmdPrevSeat(%cl);
             }
          }

@@ -35,6 +35,7 @@ exec("./support/timer.cs");
 exec("./game/breakables.cs");
 exec("./game/cameras.cs");
 exec("./game/classes.cs");
+exec("./game/damage.cs");
 exec("./game/guards.cs");
 exec("./game/info.cs");
 exec("./game/load.cs");

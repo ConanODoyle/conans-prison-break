@@ -108,6 +108,11 @@ function validateGuardSelection() {
 			return;	
 		}
 		%isTaken[%cl.tower.getName()] = 1;
+		if (isObject(%cl.pickedTowerBrick)) {
+			%cl.pickedTowerBrick.softClearTower(%cl);
+		} else {
+			messageAdmins("!!! \c6Client has no towerbrick to soft clear!");
+		}
 	}
 	return 1;
 }
@@ -123,7 +128,8 @@ function spawnGuard(%tower) {
 		%pl.delete();
 	}
 	%tower.guard.createPlayer(%tower.spawn.getTransform());
-	messageAll('', "\c3" @ %tower.guard.name @ "\c4 has been spawned at \c5Tower " @ %tower);
+	messageAll('', "\c3" @ %tower.guard.name @ "\c4 has been spawned at \c5Tower " @ %tower.towerNum + 1);
+
 	return 1;
 }
 

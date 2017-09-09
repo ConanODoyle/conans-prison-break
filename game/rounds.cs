@@ -11,6 +11,7 @@ $CPB::SelectedGuards = "";
 //Functions:
 //Created:
 //	setPhase
+//	resetPhase
 //	cancelAllRoundSchedules
 //	_setPhaseOFF
 //	_setPhaseGAME
@@ -22,6 +23,17 @@ $CPB::SelectedGuards = "";
 
 
 function setPhase(%phase) {
+	if ($CPB["::" @ %phase] $= "") {
+		messageAdmins("!!! \c6- Cannot set phase to " @ %phase);
+	}
+	
+	if ($CPB::PHASE != $CPB["::" @ %phase]) {
+		$CPB::PHASE = $CPB["::" @ %phase];
+		eval("_setPhase" @ %phase @ "();");
+	}
+}
+
+function resetPhase(%phase) {
 	if ($CPB["::" @ %phase] $= "") {
 		messageAdmins("!!! \c6- Cannot set phase to " @ %phase);
 	}
@@ -44,10 +56,12 @@ function _setPhaseGAME() {
 	cancelAllRoundSchedules();
 
 	startRoundTimer();
-	createKillZones();
+	// createKillZones();
 
 	centerprintAll("", 0);
-	startDataCollection($Data::GameNum);
+	// startDataCollection($Data::GameNum);
+
+	despawnAll();
 	spawnAllGuards();
 	spawnAllPrisoners();
 }
@@ -59,15 +73,15 @@ function _setPhaseLOBBY() {
 	//show logo, reset guards selected
 	displayLogo(_LobbyLogoCam.getPosition(), _LobbyLogoCamTarget.getPosition(), LogoClosedShape, 1);
 
-	spawnAllLobby();
 	for (%i = 0; %i < ClientGroup.getCount(); %i++){
 		%cl = ClientGroup.getObject(%i);
-		%cl.clearStatistics();
+		// %cl.clearStatistics();
 		%cl.clearVariables();
 		commandToClient(%cl, 'showBricks', 0);
 
 		%cl.isPrisoner = 0;
 		%cl.isGuard = 0;
+		%cl.tower = 0;
 
 		if (isObject(%cl.minigame)) {
 			if (getRandom() < 0.2) {
@@ -77,6 +91,8 @@ function _setPhaseLOBBY() {
 			%cl.isPrisoner = 1;
 		}
 	}
+	resetAllTowerData();
+	spawnAllLobby();
 
 	//TODO: make this use "map type"
 	serverDirectSaveFileLoad("Add-ons/Gamemode_CPB/data/prison.bls", 3, "", 0, 1);
@@ -103,7 +119,7 @@ function _setPhaseINTRO() {
 	spawnGenRoomKill();
 	spawnKillGround();
 
-	if (lockInGuards()) {
+	if (validateGuardSelection()) {
 		doIntro();
 		$CPB::hasCollectedBricks = 0;
 	}
@@ -116,15 +132,19 @@ function _setPhaseGWIN() {
 	$CPB::CurrRoundTime++;
 	bottomPrintInfoAll();
 	$CPB::LastRoundWinners = "Guards";
+
+	schedule(5000, 0, setPhase, "LOBBY");
 }
 
 function _setPhasePWIN() {
 	cancelAllRoundSchedules();
 	stopDataCollection();
-	
+
 	$CPB::CurrRoundTime++;
 	bottomPrintInfoAll();
 	$CPB::LastRoundWinners = "Prisoners";
+
+	schedule(5000, 0, setPhase, "LOBBY");
 }
 
 function doIntro() {

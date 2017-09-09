@@ -3,6 +3,10 @@
 //  roundTimer
 //Created:
 //  getLocation
+//	GameConnection::getLocation
+//	Player::getLocation
+//	AIPlayer::getLocation
+//	SimObject::getLocation
 //  GameConnection::isOutside
 //  collectPlayerLocations
 //  getNumPrisonersOutside
@@ -35,6 +39,22 @@ function getLocation(%obj) {
 		}
 	}
 	return "Outside";
+}
+
+function GameConnection::getLocation(%cl) {
+	return getLocation(%cl.player);
+}
+
+function Player::getLocation(%pl) {
+	return getLocation(%pl);
+}
+
+function AIPlayer::getLocation(%pl) {
+	return getLocation(%pl);
+}
+
+function SimObject::getLocation(%obj) {
+	return getLocation(%obj);
 }
 
 function GameConnection::isOutside(%cl) {
