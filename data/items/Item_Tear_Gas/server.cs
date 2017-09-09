@@ -464,7 +464,7 @@ function tearGasDamageLoop(%emitter, %killer) {
 
 		%dist = vectorLen(vectorSub(%eyePos, %pos));
 		if (%dist < $tearGasRadius) {
-			if (getRegion(%pl) $= "Outside" || getRegion(%pl) $= "Yard") {
+			if (getLocation(%pl) $= "Outside" || getLocation(%pl) $= "Yard") {
 				applyTearGas(%pl, %emitter);
 			} else if (!isObject(getWord(containerRaycast(%eyePos, %pos, $TypeMasks::FxBrickObjectType), 0))) {
 				applyTearGas(%pl, %emitter);

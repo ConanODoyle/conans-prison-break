@@ -25,6 +25,12 @@ package CPB_Game_Uniforms {
 			return parent::applyBodyParts(%cl);
 		}
 
+		%ret = parent::applyBodyParts(%cl);
+
+		if (%cl.isPrisoner || %cl.isGuard) {
+			%cl.applyUniformParts();
+		}
+
 		if (%pl.getDatablock().getName() $= "BuffArmor") {
 			%pl.unhideNode("ALL");
 
@@ -34,12 +40,11 @@ package CPB_Game_Uniforms {
 				%pl.mountImage(CrocHatImage, 1);
 			}
 		}
-
-		%ret = parent::applyBodyParts(%cl);
-
-		if (%cl.isPrisoner || %cl.isGuard) {
-			%cl.applyUniformParts();
+		
+		if (!%cl.skipHairEquip) {
+			%pl.equipHair("Saved");
 		}
+
 		return %ret;
 	}
 

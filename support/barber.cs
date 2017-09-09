@@ -8,7 +8,7 @@ $Hair[5]	= "Neat Hair";
 $Hair[6]	= "Judge Hair";
 $Hair[7]	= "Wig";
 $Hair[8]	= "BobCut Hair";
-$Hair[9]	= "Goatee Hair";
+$Hair[9]	= "Goatee Hair";		$HairKeepHat["Goatee Hair"] = 1;
 $Hair[10]	= "Old Woman Hair";
 $Hair[11]	= "Emo Hair";
 $Hair[12]	= "Broad Hair";
@@ -60,6 +60,7 @@ if(!isObject(CPB_HairSet)) {
 //	isCustomizing
 //	canDismount
 //	chairBot
+//	skipHairEquip
 
 //Functions:
 //Packaged:
@@ -378,8 +379,11 @@ function getHairName(%id) {
 
 function Player::equipHair(%pl, %hair) {
 	%cl = %pl.client;
-	if ((%hair $= "" || %hair $= "None") && %pl.getMountedImage(2) != 0) {
+	if (%hair $= "" || %hair $= "None") {
 		%pl.unMountImage(2);
+		%pl.client.skipHairEquip = 1;
+		%pl.client.applyBodyParts();
+		%pl.client.skipHairEquip = 0;
 	} else if (%hair $= "Saved") {
 		%list = $HairData::Unlocked[%cl.bl_id];
 		%currHairName = getHairName(getWord(%list, $HairData::savedHair[%cl.bl_id]));
@@ -387,12 +391,18 @@ function Player::equipHair(%pl, %hair) {
 	} else {
 		%pl.mountImage("Hat" @ stripchars(%hair, " -1234567890_+=.,;':?!@#$%&*()[]{}\"/<>") @ "Data", 2);
 
-		for (%i = 0; $hat[%i] !$= ""; %i++) {
-			%pl.hideNode($hat[%i]);
-		}
+		if ($HairKeepHat[%hair]) {
+			%pl.client.skipHairEquip = 1;
+			%pl.client.applyBodyParts();
+			%pl.client.skipHairEquip = 0;
+		} else {
+			for (%i = 0; $hat[%i] !$= ""; %i++) {
+				%pl.hideNode($hat[%i]);
+			}
 
-		for (%i = 0; $accent[%i] !$= ""; %i++) {
-			%pl.hideNode($accent[%i]);
+			for (%i = 0; $accent[%i] !$= ""; %i++) {
+				%pl.hideNode($accent[%i]);
+			}
 		}
 	}
 }
@@ -451,6 +461,7 @@ function GameConnection::giveRandomHair(%cl, %canRepeat) {
 			messageClient(%cl, '', "\c6You have been given the \c3" @ $Hair[%hairID] @ "\c6!");
 		} else {
 			messageClient(%cl, '', "\c6You won the \c3" @ $Hair[%hairID] @ "\c6, but you already own it!");
+			return;
 		}
 		%cl.giveHair(%hairID);
 	} else { //all hairs already owned

@@ -67,6 +67,49 @@ function getFormattedMessage(%cl, %msg) {
 	%location = %cl.getLocation();
 
 	%msg = stripMLControlChars(%msg);
+
+	%text = %msg;
+	%protocol = "http://";
+	%protocolLen = strlen(%protocol);
+	%urlStart = strpos(%text, %protocol);
+	if (%urlStart == -1.0) {
+		%protocol = "https://";
+		%protocolLen = strlen(%protocol);
+		%urlStart = strpos(%text, %protocol);
+	}
+	if (%urlStart == -1.0) {
+		%protocol = "ftp://";
+		%protocolLen = strlen(%protocol);
+		%urlStart = strpos(%text, %protocol);
+	}
+	if (%urlStart != -1.0) {
+		%urlEnd = strpos(%text, " ", %urlStart + 1.0);
+		%skipProtocol = 0;
+		if (%protocol $= "http://") {
+			%skipProtocol = 1;
+		}
+		if (%urlEnd == -1.0) {
+			%fullUrl = getSubStr(%text, %urlStart, strlen(%text) - %urlStart);
+			%url = getSubStr(%text, %urlStart + %protocolLen, strlen(%text) - %urlStart - %protocolLen);
+		} else {
+			%fullUrl = getSubStr(%text, %urlStart, %urlEnd - %urlStart);
+			%url = getSubStr(%text, %urlStart + %protocolLen, %urlEnd - %urlStart - %protocolLen);
+		}
+		if (strlen(%url) > 0.0) {
+			%url = strreplace(%url, "<", "");
+			%url = strreplace(%url, ">", "");
+			if (%skipProtocol) {
+				%newText = strreplace(%text, %fullUrl, "<a:" @ %url @ ">" @ %url @ "</a>\c7");
+			} else {
+				%newText = strreplace(%text, %fullUrl, "<a:" @ %protocol @ %url @ ">" @ %url @ "</a>\c7");
+			}
+			echo(%newText);
+			%text = %newText;
+		}
+	}
+	%msg = %text;
+
+
 	if (%cl.isDonator) {
 		%msg = $DONATOR::CHATMODIFIER @ %msg;
 	}
@@ -185,6 +228,7 @@ function messageGuards(%msg) {
 		}
 	}
 }
+
 
 ////////////////////
 

@@ -11,6 +11,8 @@ $CPB::Classes::List = "Stun Shrapnel LMG TearGas";
 //Functions:
 //Created:
 //	GameConnection::setClass
+//	Player::addItem
+//	giveGuardItems
 
 
 registerOutputEvent(GameConnection, "setGuardClass", "string 200 156", 1);
@@ -26,5 +28,38 @@ function GameConnection::setGuardClass(%cl, %name) {
 
 	if (isObject(%cl.tower)) {
 		%cl.tower.guardOption = %cl.guardClass;
+	}
+}
+
+function Player::addItem(%this, %item) {
+	%item = %item.getID();
+	%cl = %this.client;
+	for(%i = 0; %i < %this.getDatablock().maxTools; %i++) {
+		%tool = %this.tool[%i];
+		if (%tool == 0) {
+			%this.tool[%i] = %item.getID();
+			%this.weaponCount++;
+			messageClient(%cl, 'MsgItemPickup', '', %i, %item.getID());
+			break;
+		}
+	}
+}
+
+function giveGuardItems(%pl, %item) {
+	%cl = %pl.client;
+	if (!%cl.isGuard) {
+		return;
+	} else if (!isObject(%cl.tower) && %cl.tower.guardOption <= 0) {
+		messageAdmins("!!! \c6Invalid guard class to give items!");
+		return;
+	}
+
+	%pl.addItem(SniperRifleSpotlightItem);
+	//%pl.addItem(WhistleItem);
+	//%pl.addItem(SteakItem);
+
+	switch (%cl.tower.guardOption) {
+		case $CPB::Classes::LMG: %pl.addItem(LightMachineGunItem);
+		case $CPB::Classes::TearGas: %pl.addItem(TearGasGrenadeItem);
 	}
 }

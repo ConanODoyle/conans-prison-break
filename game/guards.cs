@@ -37,7 +37,7 @@ function serverCmdAddGuard(%cl, %name) {
 	if (isObject(%targ.player)) {
 		%targ.player.delete();
 	}
-	%targ.createPlayer(_GuardClassesRoom.getTransform());
+	%targ.createPlayer(getGuardLobbySpawnPoint());
 
 	messageAll('', "\c3" @ %cl.name @ "\c6 added \c3" @ %targ.name @ "\c6 to the guard selection");
 }

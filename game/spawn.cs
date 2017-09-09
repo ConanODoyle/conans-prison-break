@@ -17,6 +17,8 @@ $SPAWN::BRONSONDEATHCPPRIORITY = 9;
 //	GameConnection::clearVariables
 //	spawnDeadLobby
 //	spawnAllLobby
+//	getPrisonerLobbySpawnPoint
+//	getGuardLobbySpawnPoint
 //	spawnAllPrisoners
 //	respawnPrisonersInfirmary
 //	getPrisonerCellSpawnPoint
@@ -71,7 +73,7 @@ package CPB_Game_Spawn {
 	}
 
 	function Observer::onTrigger(%this, %obj, %trig, %state) {
-		if ((%cl = %obj.getControllingClient()).isDead && !%cl.isSpectating && isObject(%cl.minigame)) {
+		if ((%cl = %obj.getControllingClient()).isDead && !%cl.isSpectating && isObject(%cl.minigame) && $CPB::PHASE != $CPB::LOBBY) {
 			return;
 		}
 		return parent::onTrigger(%this, %obj, %trig, %state);
@@ -81,8 +83,13 @@ package CPB_Game_Spawn {
 		%cl.isDead = 0;
 		clearCenterprint(%cl);
 
-		if ($CPB::PHASE == $CPB::LOBBY && %cl.isPrisoner) {
-			%t = LobbySpawnPoints.getObject(getRandom(0, LobbySpawnPoints.getCount() - 1)).getTransform();
+		//if players self-respawn while dead during lobby phase, spawns them in appropriate place
+		if ($CPB::PHASE == $CPB::LOBBY) {
+			if (%cl.isPrisoner) {
+				%t = getPrisonerLobbySpawnPoint();
+			} else if (%cl.isGuard) {
+				%t = getGuardLobbySpawnPoint();
+			}
 		}
 
 		return parent::createPlayer(%cl, %t);
@@ -126,8 +133,8 @@ function GameConnection::clearVariables(%cl) {
 
 function spawnDeadLobby() {
 	for (%i = 0; %i < ClientGroup.getCount(); %i++) {
-		if (!isObject(%pl = (%cl = ClientGroup.getObject(%i)).player)) {
-			%cl.createPlayer(LobbySpawnPoints.getObject(getRandom(0, LobbySpawnPoints.getCount() - 1)).getTransform());
+		if (!isObject(%pl = (%cl = ClientGroup.getObject(%i)).player) && isObject(%cl.minigame)) {
+			%cl.createPlayer(getPrisonerLobbySpawnPoint());
 		}
 	}
 }
@@ -142,8 +149,16 @@ function spawnAllLobby() {
 		if (isObject(%pl = %cl.player) && isObject(%cl.minigame)) {
 			%pl.delete();
 		}
-		%cl.createPlayer(LobbySpawnPoints.getObject(getRandom(0, LobbySpawnPoints.getCount() - 1)).getTransform());
+		%cl.createPlayer(getPrisonerLobbySpawnPoint());
 	}
+}
+
+function getPrisonerLobbySpawnPoint() {
+	return LobbySpawnPoints.getObject(getRandom(0, LobbySpawnPoints.getCount() - 1)).getTransform();
+}
+
+function getGuardLobbySpawnPoint() {
+	return _GuardClassesRoom.getTransform();
 }
 
 function spawnAllPrisoners() {
