@@ -359,10 +359,7 @@ function tearGasGrenadeImage::onArmed(%this, %obj, %slot)
 
 function tearGasGrenadeImage::onFire(%this, %obj, %slot)
 {
-	//statistics
 	%obj.totalTearGasShots++;
-	setStatistic("TearGasGrenadesThrown", getStatistic("TearGasGrenadesThrown", %obj.client) + 1, %obj.client);
-	setStatistic("TearGasGrenadesThrown", getStatistic("TearGasGrenadesThrown") + 1);
 
 	%obj.playthread(2, plant);
 	%ret = Parent::onFire(%this, %obj, %slot);
@@ -486,8 +483,6 @@ function applyTearGas(%pl, %emitter) {
 	%pl.setWhiteOut(0.8);
 	%pl.timeInTearGas += 0.5;
 	%pl.playPain();
-	setStatistic("timeInTearGas", getStatistic("timeInTearGas", %pl.client) + 0.5, %pl.client);
-	setStatistic("timeInTearGas", getStatistic("timeInTearGas") + 0.5);
 
 	if (%pl.timeInTearGas >= 5) {
 		stun(getTimeRemaining(mCeil(%emitter.deleteSchedule / 1000)));

@@ -192,8 +192,6 @@ function killTower(%tower) {
 	%tower.isDestroyed = 1;
 	%cl = %tower.guard;
 
-	//setStatistic("Tower" @ %id + 1 @ "Destroyed", $Server::PrisonEscape::currTime);
-
 	//remove the guard's items
 	if (isObject(%cl.player)) {
 		%cl.player.clearTools();

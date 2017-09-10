@@ -325,7 +325,6 @@ package BotHole_Dogs
 		%i.schedule(61000, delete);
 
 		centerprintAll("<font:Impact:30>The guard dog has died and dropped its key!", 20);
-		setStatistic("GuardDogDied", $Server::PrisonEscape::currTime);
 
 		messageAll('', "<bitmap:" @ $DamageType::MurderBitmap[$DamageType::Dog] @ "> [" @ getTimeString($Server::PrisonEscape::currTime) @ "]");
 		

@@ -242,10 +242,6 @@ function riotSmokeGrenadeImage::onCharge(%this, %obj, %slot)
 }
 function riotSmokeGrenadeImage::onFire(%this, %obj, %slot)
 {
-	//statistics
-	setStatistic("SmokeGrenadesThrown", getStatistic("SmokeGrenadesThrown", %obj.client) + 1, %obj.client);
-	setStatistic("SmokeGrenadesThrown", getStatistic("SmokeGrenadesThrown") + 1);
-
 	%obj.playthread(2, spearThrow);
 	%ret = Parent::onFire(%this, %obj, %slot);
 

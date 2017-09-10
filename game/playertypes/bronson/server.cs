@@ -380,9 +380,6 @@ datablock ShapeBaseImageData(BuffBashImage) {
 };
 
 function BuffBashImage::onFire(%this, %obj, %slot) {
-   setStatistic("BuffAttacks", getStatistic("BuffAttacks", %obj.client) + 1, %obj.client);
-   setStatistic("BuffAttacks", getStatistic("BuffAttacks") + 1);
-
    %obj.playThread(1, activate2);
    return parent::onFire(%this, %obj, %slot);
 }
@@ -392,9 +389,6 @@ package BuffHit {
       if (%col.getClassName() $= "FxDTSBrick" && %obj.sourceObject.getClassName() $= "Player") {
          %type = isBreakableBrick(%col, %obj.sourceObject);
          if (%type > 0) {
-            //statistics
-            setStatistic("BuffHits", getStatistic("BuffHits", %obj.client) + 1, %obj.client);
-            setStatistic("BuffHits", getStatistic("BuffHits") + 1);
             if (%type == 1) {
                %col.killDelete();
             } else if (%type == 2) {

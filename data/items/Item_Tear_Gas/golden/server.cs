@@ -200,10 +200,7 @@ function tearGasGrenadeGoldenImage::onArmed(%this, %obj, %slot)
 
 function tearGasGrenadeGoldenImage::onFire(%this, %obj, %slot)
 {
-	//statistics
 	%obj.totalTearGasShots++;
-	setStatistic("TearGasGrenadeGoldensThrown", getStatistic("TearGasGrenadeGoldensThrown", %obj.client) + 1, %obj.client);
-	setStatistic("TearGasGrenadeGoldensThrown", getStatistic("TearGasGrenadeGoldensThrown") + 1);
 
 	%obj.playthread(2, plant);
 	%ret = Parent::onFire(%this, %obj, %slot);

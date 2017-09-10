@@ -106,7 +106,13 @@ package CPB_Game_Spawn {
 	function serverCmdLeaveMinigame(%cl) {
 		%cl.isPrisoner = 0;
 		%cl.isGuard = 0;
+		parent::serverCmdLeaveMinigame(%cl);
+	}
 
+	function serverCmdJoinMinigame(%cl, %mg) {
+		%cl.isPrisoner = 1;
+		%cl.isGuard = 0;
+		parent::serverCmdLeaveMinigame(%cl, %mg);
 	}
 };
 activatePackage(CPB_Game_Spawn);

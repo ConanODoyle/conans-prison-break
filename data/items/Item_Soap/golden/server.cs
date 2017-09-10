@@ -206,10 +206,6 @@ function PrisonSoapGoldenImage::onCharge(%this, %obj, %slot)
 }
 function PrisonSoapGoldenImage::onFire(%this, %obj, %slot)
 {
-	//statistics
-	setStatistic("SoapThrown", getStatistic("SoapThrown", %obj.client) + 1, %obj.client);
-	setStatistic("SoapThrown", getStatistic("SoapThrown") + 1);
-
 	%obj.playThread(2, spearThrow);
 	%i = new Item(Soap) {
 		datablock = PrisonSoapGoldenPickupItem;

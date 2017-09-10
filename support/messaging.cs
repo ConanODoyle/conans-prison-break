@@ -160,6 +160,10 @@ function GameConnection::canMessage(%cl, %targ, %msg) {
 		return 1;
 	}
 
+	if (!isObject(%cl.minigame) || !isObject(%targ.minigame)) {
+		return 1;
+	}
+
 	if ($CPB::PHASE == $CPB::INGAME) {
 		if (%cl.isAlive) {
 			if (%cl.isPrisoner && %targ.isPrisoner) return 1;

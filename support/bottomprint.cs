@@ -80,7 +80,7 @@ function GameConnection::bottomPrintInfo(%cl) {
 		}
 		%cl.bottomprint("<just:center><font:Arial Bold:34>\c6" @ %timeString @ " <br><just:center>" @ %info, 500, 0);
 	} else {
-		%cl.bottomprint("CPB please wait for next round to start", -1, 0);
+		%cl.bottomprint("<just:center><font:Arial Bold:34>Conan's Prison Break <br><just:center>Please wait for next round to start", -1, 0);
 	}
 }
 

@@ -219,10 +219,6 @@ function PrisonSoapImage::onCharge(%this, %obj, %slot) {
 }
 
 function PrisonSoapImage::onFire(%this, %obj, %slot) {
-	//statistics
-	setStatistic("SoapThrown", getStatistic("SoapThrown", %obj.client) + 1, %obj.client);
-	setStatistic("SoapThrown", getStatistic("SoapThrown") + 1);
-
 	%obj.playThread(2, spearThrow);
 	%i = new Item(Soap) {
 		datablock = PrisonSoapPickupItem;
@@ -330,13 +326,10 @@ package SoapItem {
 			%col.delete();
 			if (!%obj.isSliding) {
 				if (isObject(%cl = %obj.client) && %cl.isGuard) {
-					setStatistic("GuardsSoaped", getStatistic("GuardsSoaped") + 1);
 					%obj.setWhiteOut(0.8);
 					stun(%obj, 10);
 					removeUniform(%obj);
 				} else {
-					setStatistic("SoapUsed", getStatistic("SoapUsed", %obj.client) + 1, %obj.client);
-					setStatistic("SoapUsed", getStatistic("SoapUsed") + 1);
 					//talk("Soap!");
 					%soap = new AIPlayer(Soap) {
 						datablock = EmptyHoleBot;

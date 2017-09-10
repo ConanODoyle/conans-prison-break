@@ -482,8 +482,6 @@ function whiteOutPlayers(%obj, %start, %end, %i) {
 			%angle = mACos(vectorDot(%pl.getEyeVector(), %targetVector));
 			if (%dist < %radius && %angle < 1.8) {
 				%pl.setWhiteOut(1);
-				setStatistic("whiteOutTime", getStatistic("whiteOutTime", %pl.client) + 1, %pl.client);
-				setStatistic("whiteOutTime", getStatistic("whiteOutTime") + 1);
 				%proj = new Projectile(){
 					datablock = PlayerTeleportProjectile;
 					initialPosition = %pos;

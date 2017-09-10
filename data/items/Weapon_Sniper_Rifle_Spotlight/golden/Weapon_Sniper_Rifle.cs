@@ -194,10 +194,6 @@ datablock ShapeBaseImageData(SniperRifleSpotlightGoldenImage)
 
 function SniperRifleSpotlightGoldenImage::onFire(%this,%obj,%slot)
 {
-	//statistics
-	setStatistic("SniperShotsFired", getStatistic("SniperShotsFired", %obj.client) + 1, %obj.client);
-	setStatistic("SniperShotsFired", getStatistic("SniperShotsFired") + 1);
-
 	%obj.playThread(2, plant);
 	Parent::onFire(%this,%obj,%slot);
 	%obj.setImageAmmo(%slot, 0);
@@ -248,10 +244,6 @@ package SniperRifleSpotlight {
 		if (%col.getClassName() $= "Player" && !%col.isGuard && isObject($Server::PrisonEscape::CommDish)) {
 			%target.spotLightTarget = %col;
 			%target.spotLightTargetLocation = "";
-
-			//statistics: increment %client.shotsHit
-			setStatistic("SniperShotsHit", getStatistic("SniperShotsHit", %obj.client) + 1, %obj.client);
-			setStatistic("SniperShotsHit", getStatistic("SniperShotsHit") + 1);
 		} else {
 			if (!isObject($Server::PrisonEscape::CommDish)) {
 				%target.spotLightTarget = 0;
