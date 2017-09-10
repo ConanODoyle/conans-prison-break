@@ -1,7 +1,5 @@
 exec("./Item_Tray/server.cs");
 exec("./Item_Bucket/server.cs");
-exec("./Weapon_Sniper_Rifle_Spotlight/server.cs");
-exec("./Weapon_LMG/server.cs");
 exec("./Item_Smoke_Grenade/server.cs");
 exec("./Item_Tape/server.cs");
 exec("./Item_Tear_Gas/server.cs");
@@ -11,6 +9,9 @@ exec("./Item_Chisel/server.cs");
 exec("./Item_Soap/server.cs");
 exec("./Item_Steak/server.cs");
 exec("./Item_PosTool/posTool.cs");
+exec("./Weapon_Shotgun/server.cs");
+exec("./Weapon_LMG/server.cs");
+exec("./Weapon_Sniper_Rifle_Spotlight/server.cs");
 exec("./Hat_Croc/server.cs");
 
 datablock ParticleData(goldenParticleA)
@@ -128,10 +129,11 @@ datablock ParticleEmitterData(projectileGoldenEmitter)
 exec("./Item_Tray/golden/server.cs");
 exec("./Item_Bucket/golden/server.cs");
 exec("./Item_Soap/golden/server.cs");
-exec("./Weapon_Sniper_Rifle_Spotlight/golden/server.cs");
-exec("./Weapon_LMG/golden/server.cs");
 exec("./Item_Smoke_Grenade/golden/server.cs");
 exec("./Item_Tape/golden/server.cs");
 exec("./Item_Tear_Gas/golden/server.cs");
 exec("./Item_Tear_Gas/golden/Item_Gasmask.cs");
 exec("./Item_Chisel/golden/server.cs");
+exec("./Weapon_Shotgun/golden/server.cs");
+exec("./Weapon_LMG/golden/server.cs");
+exec("./Weapon_Sniper_Rifle_Spotlight/golden/server.cs");

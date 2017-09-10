@@ -51,3 +51,29 @@ function getRandomVector() {
 	%y = %s * mSin(%angle);
 	return %x SPC %y SPC %z;
 }
+
+function WeaponImage::onLoadCheck(%this,%obj,%slot) {
+	if(%obj.toolAmmo[%obj.currTool] <= 0 && %this.item.maxAmmo > 0 && %obj.getState() !$= "Dead") {
+		%obj.setImageAmmo(%slot,0);
+	} else {
+		%obj.setImageAmmo(%slot,1);
+	}
+}
+
+package CPB_Support_FuncLib {
+	function servercmdLight(%client) {
+		if(isObject(%client.player) && isObject(%client.player.getMountedImage(0))) {
+			%p = %client.player;
+			%im = %p.getMountedImage(0);
+			if(%im.item.maxAmmo > 0 && %im.item.canReload == 1 && %p.toolAmmo[%p.currTool] < %im.item.maxAmmo){
+				if(%p.getImageState(0) $= "Ready") {
+					%p.setImageAmmo(0,0);
+				}
+				return;
+			}
+		}
+		
+		Parent::servercmdLight(%client);
+	}
+};
+activatePackage(CPB_Support_FuncLib);
