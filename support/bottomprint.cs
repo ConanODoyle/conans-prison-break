@@ -5,9 +5,8 @@ $CPB::EWSAlertThreshold = 6;
 //Created:
 //	GameConnection::bottomPrintInfo
 //	bottomPrintInfoAll
+//	serverCmdToggleBottomprintBar
 
-
-// "<just:right><font:impact:24><color:fff000>Heat <font:impact:28>" @ %pl.heatColor @ %pl.LMGHeat @ "/" @ $LMGMaxHeat
 
 function GameConnection::bottomPrintInfo(%cl) {
 	%time = $CPB::CurrRoundTime;
@@ -83,7 +82,7 @@ function GameConnection::bottomPrintInfo(%cl) {
 		}
 		
 		%timeString = "<just:center>" @ %timeString;
-		%cl.bottomprint(%timeString @ " <br><just:center>" @ %info, 500, 0);
+		%cl.bottomprint(%timeString @ " <br><just:center>" @ %info, 500, %cl.hideBottomprintBar);
 	} else if ($CPB::PHASE == $CPB::GWIN || $CPB::PHASE == $CPB::PWIN) { 
 		if ($CPB::PHASE == $CPB::PWIN) {
 			%color = "<color:" @ $PRISONER::CHATCOLOR @ ">";
@@ -101,5 +100,14 @@ function GameConnection::bottomPrintInfo(%cl) {
 function bottomPrintInfoAll() {
 	for (%i = 0; %i < ClientGroup.getCount(); %i++) {
 		ClientGroup.getObject(%i).bottomPrintInfo();
+	}
+}
+
+function serverCmdToggleBottomprintBar(%cl) {
+	%cl.hideBottomprintBar = !%cl.hideBottomprintBar;
+	if (%cl.hideBottomprintBar) {
+		messageClient(%cl, '', "\c6You have turned the bottomprint bar \c0OFF");
+	} else {
+		messageClient(%cl, '', "\c6You have turned the bottomprint bar \c2ON");
 	}
 }

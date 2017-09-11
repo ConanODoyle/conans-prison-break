@@ -55,7 +55,7 @@ package CPB_Game_Cameras {
 			}
 			%cl.player.isPreviewingCameras = 0;
 			%cl.player.canLeaveCamera = 1;
-			%cl.priorityCenterprint(%cl, "", $CAMERAS::INFOCPPRIORITY);
+			%cl.priorityCenterprint("", $CAMERAS::INFOCPPRIORITY);
 			return;
 		} else {
 			return parent::serverCmdLight(%cl);
@@ -161,6 +161,8 @@ function fxDTSBrick::endDoorToggleLoop(%this) {
 		}
 	}
 }
+
+registerOutputEvent("fxDTSBrick", "previewCameras", "", 1);
 
 function fxDTSBrick::previewCameras(%this, %cl) {
 	if (getSimTime() - %cl.lastUsedCameraTime < 2000 || %cl.player.isInCamera) {

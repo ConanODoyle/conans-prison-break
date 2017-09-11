@@ -110,7 +110,7 @@ datablock ShapeBaseImageData(PumpShotgunGoldenImage)
 	stateWaitForTimeout[2]			= true;
 
 	stateName[3]					= "Smoke";
-	stateTimeoutValue[3]			= 0.7;
+	stateTimeoutValue[3]			= 0.3;
 	stateTransitionOnTimeout[3]		= "Eject";
 
 	stateName[4]					= "Eject";

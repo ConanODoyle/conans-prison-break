@@ -63,8 +63,8 @@ datablock ParticleEmitterData(tierstickGrenadeExplosionEmitter)
 	ejectionVelocity = 20;
 	velocityVariance = 10.0;
 	ejectionOffset   = 1.0;
-	thetaMin         = -30;
-	thetaMax         = 30;
+	thetaMin         = -180;
+	thetaMax         = 180;
 	phiReferenceVel  = 0;
 	phiVariance      = 360;
 	overrideAdvance = false;
