@@ -53,19 +53,31 @@ function getRandomVector() {
 }
 
 function WeaponImage::onLoadCheck(%this,%obj,%slot) {
-	if(%obj.toolAmmo[%obj.currTool] <= 0 && %this.item.maxAmmo > 0 && %obj.getState() !$= "Dead") {
+	if(%obj.shotgunAmmo <= 0 && %this.item.maxAmmo > 0 && %obj.getState() !$= "Dead") {
 		%obj.setImageAmmo(%slot,0);
 	} else {
 		%obj.setImageAmmo(%slot,1);
 	}
 }
 
+function WeaponImage::onReloadCheck(%this,%obj,%slot) {
+	if(%obj.shotgunAmmo < %this.item.maxAmmo && %this.item.maxAmmo > 0 && %obj.getState() !$= "Dead") {
+		%obj.setImageAmmo(%slot,0);
+	} else {
+		%obj.setImageAmmo(%slot,1);
+	}
+}
+
+function WeaponImage::onReloaded(%this,%obj,%slot) {
+	%obj.shotgunAmmo++;
+}
+
 package CPB_Support_FuncLib {
-	function servercmdLight(%client) {
+	function serverCmdLight(%client) {
 		if(isObject(%client.player) && isObject(%client.player.getMountedImage(0))) {
 			%p = %client.player;
 			%im = %p.getMountedImage(0);
-			if(%im.item.maxAmmo > 0 && %im.item.canReload == 1 && %p.toolAmmo[%p.currTool] < %im.item.maxAmmo){
+			if(%im.item.maxAmmo > 0 && %im.item.canReload == 1 && %p.shotgunAmmo < %im.item.maxAmmo){
 				if(%p.getImageState(0) $= "Ready") {
 					%p.setImageAmmo(0,0);
 				}
@@ -73,7 +85,7 @@ package CPB_Support_FuncLib {
 			}
 		}
 		
-		Parent::servercmdLight(%client);
+		Parent::serverCmdLight(%client);
 	}
 };
 activatePackage(CPB_Support_FuncLib);

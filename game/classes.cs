@@ -11,7 +11,6 @@ $CPB::Classes::List = "Stun Shrapnel LMG TearGas";
 //Functions:
 //Created:
 //	GameConnection::setClass
-//	Player::addItem
 //	giveGuardItems
 
 
@@ -28,20 +27,6 @@ function GameConnection::setGuardClass(%cl, %name) {
 
 	if (isObject(%cl.tower)) {
 		%cl.tower.guardOption = %cl.guardClass;
-	}
-}
-
-function Player::addItem(%this, %item) {
-	%item = %item.getID();
-	%cl = %this.client;
-	for(%i = 0; %i < %this.getDatablock().maxTools; %i++) {
-		%tool = %this.tool[%i];
-		if (%tool == 0) {
-			%this.tool[%i] = %item.getID();
-			%this.weaponCount++;
-			messageClient(%cl, 'MsgItemPickup', '', %i, %item.getID());
-			break;
-		}
 	}
 }
 

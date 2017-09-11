@@ -7,6 +7,18 @@ if (!isObject(DroppedItems)) {
 	new SimSet(DroppedItems) {};
 }
 
+//Functions:
+//Packaged:
+//	collectAllPrisonBricks
+//	Armor::onCollision
+//	Armor::onDisabled
+//Created:
+//	Player::removeItem
+//	Player::addItem
+//	isOneUseItem
+//	clearAllDroppedItems
+
+
 package CPB_Support_Items {
 	function collectAllPrisonBricks(%bg, %i) {
 		%ret = parent::collectAllPrisonBricks(%bg, %i);
@@ -49,6 +61,28 @@ package CPB_Support_Items {
 	}
 };
 activatePackage(CPB_Support_Items);
+
+function Player::removeItem(%player, %i) {
+	%client = %player.client;
+	%player.tool[%i] = 0;
+	if (isObject(%client)) {
+		messageClient(%client, 'MsgItemPickup', "", %i, 0, 1);
+	}
+}
+
+function Player::addItem(%this, %item) {
+	%item = %item.getID();
+	%cl = %this.client;
+	for(%i = 0; %i < %this.getDatablock().maxTools; %i++) {
+		%tool = %this.tool[%i];
+		if (%tool == 0) {
+			%this.tool[%i] = %item.getID();
+			%this.weaponCount++;
+			messageClient(%cl, 'MsgItemPickup', '', %i, %item.getID());
+			break;
+		}
+	}
+}
 
 function isOneUseItem (%db) {
 	if (!isObject(%db)) {

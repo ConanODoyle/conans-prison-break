@@ -223,7 +223,7 @@ datablock ItemData(PumpShotgunItem)
 	emap = true;
 
 	//gui stuff
-	uiName = "Pump Shotgun";
+	uiName = "Shotgun";
 	iconName = "./pumpshotgun";
 	doColorShift = true;
 	colorShiftColor = "0.3 0.3 0.31 1.000";
@@ -315,11 +315,11 @@ datablock ShapeBaseImageData(PumpShotgunImage)
 	stateWaitForTimeout[2]			= true;
 
 	stateName[3]					= "Smoke";
-	stateTimeoutValue[3]			= 0.2;
+	stateTimeoutValue[3]			= 0.7;
 	stateTransitionOnTimeout[3]		= "Eject";
 
 	stateName[4]					= "Eject";
-	stateTimeoutValue[4]			= 0.8;
+	stateTimeoutValue[4]			= 0.2;
 	stateTransitionOnTimeout[4]		= "LoadCheckA";
 	stateWaitForTimeout[4]			= true;
 	stateEjectShell[4]				= true;
@@ -332,64 +332,56 @@ datablock ShapeBaseImageData(PumpShotgunImage)
 	stateTransitionOnTriggerUp[5]	= "LoadCheckB";
 						
 	stateName[6]					= "LoadCheckB";
+	stateTransitionOnTimeout[6]		= 0.35;
+	stateWaitForTimeout[6]			= true;
 	stateTransitionOnAmmo[6]		= "Ready";
 	stateTransitionOnNoAmmo[6]		= "Reload";
 	
 	stateName[7]					= "ReloadCheckA";
+	stateTransitionOnTriggerDown[7]	= "Fire";
 	stateScript[7]					= "onReloadCheck";
-	stateTimeoutValue[7]			= 0.01;
+	stateTimeoutValue[7]			= 0.35;
 	stateTransitionOnTimeout[7]		= "ReloadCheckB";
 						
 	stateName[8]					= "ReloadCheckB";
+	stateTransitionOnTriggerDown[8]	= "Fire";
 	stateTransitionOnAmmo[8]		= "CompleteReload";
 	stateTransitionOnNoAmmo[8]		= "Reload";
-						
-	stateName[9]					= "ForceReload";
-	stateTransitionOnTimeout[9]		= "ForceReloaded";
+
+	stateName[9]					= "Reload";
+	stateTransitionOnTimeout[9]		= "Reloaded";
+	stateWaitForTimeout[9]			= false;
 	stateTimeoutValue[9]			= 0.25;
+	stateTransitionOnTriggerDown[9]	= "Fire";
 	stateSequence[9]				= "Reload";
-	stateSound[9]					= Block_MoveBrick_Sound;
 	stateScript[9]					= "onReloadStart";
 	
-	stateName[10]					= "ForceReloaded";
+	stateName[10]					= "Reloaded";
 	stateTransitionOnTimeout[10]	= "ReloadCheckA";
+	stateWaitForTimeout[10]			= false;
 	stateTimeoutValue[10]			= 0.2;
 	stateScript[10]					= "onReloaded";
-	
-	stateName[11]					= "Reload";
-	stateTransitionOnTimeout[11]	= "Reloaded";
-	stateTransitionOnTriggerDown[11]= "Fire";
-	stateWaitForTimeout[11]			= false;
-	stateTimeoutValue[11]			= 0.25;
-	stateSequence[11]				= "Reload";
-	stateScript[11]					= "onReloadStart";
-	
-	stateName[12]					= "Reloaded";
-	stateTransitionOnTimeout[12]	= "ReloadCheckA";
-	stateWaitForTimeout[12]			= false;
-	stateTimeoutValue[12]			= 0.2;
-	stateScript[12]					= "onReloaded";
 
-	stateName[13]					= "CompleteReload";
-	stateTimeoutValue[13]			= 0.5;
-	stateWaitForTimeout[13]			= true;
-	stateTransitionOnTimeout[13]	= "Ready";
-	stateSequence[13]				= "fire";
-	stateSound[13]					= PumpShotgunReloadSound;
-	stateScript[13]					= "onEject";
+	stateName[11]					= "CompleteReload";
+	stateTimeoutValue[11]			= 0.5;
+	stateWaitForTimeout[11]			= true;
+	stateTransitionOnTimeout[11]	= "Ready";
+	stateSequence[11]				= "fire";
+	stateSound[11]					= PumpShotgunReloadSound;
+	stateScript[11]					= "onEject";
 
-	stateName[14]					= "FireCheckA";
-	stateScript[14]					= "onLoadCheck";
-	stateTimeoutValue[14]			= 0.01;
-	stateTransitionOnTimeout[14]	= "FireCheckB";
+	stateName[12]					= "FireCheckA";
+	stateScript[12]					= "onLoadCheck";
+	stateTimeoutValue[12]			= 0.01;
+	stateTransitionOnTimeout[12]	= "FireCheckB";
 						
-	stateName[15]					= "FireCheckB";
-	stateTransitionOnAmmo[15]		= "Fire";
-	stateTransitionOnNoAmmo[15]		= "Reload";
+	stateName[13]					= "FireCheckB";
+	stateTransitionOnAmmo[13]		= "Fire";
+	stateTransitionOnNoAmmo[13]		= "Reload";
 };
 
 function PumpShotgunImage::onFire(%this,%obj,%slot) {
-	if(%obj.toolAmmo[%obj.currTool]					> 0) {
+	if(%obj.shotgunAmmo > 0) {
 		%fvec = %obj.getForwardVector();
 		%fX = getWord(%fvec,0);
 		%fY = getWord(%fvec,1);
@@ -403,15 +395,16 @@ function PumpShotgunImage::onFire(%this,%obj,%slot) {
   
 		%aimVec = %fX*%eXY SPC %fY*%eXY SPC %eZ;
 		serverPlay3D(PumpShotgunfireSound,%obj.getPosition());
-		%obj.playThread(2, activate);
+		%obj.playThread(2, plant);
 
-		%obj.toolAmmo[%obj.currTool]--;
+		%obj.shotgunAmmo--;
+    	%obj.client.bottomprintInfo();
 
-		%obj.spawnExplosion(TTLittleRecoilProjectile, "1.5 1.5 1.5");
+		%obj.spawnExplosion(TTLittleRecoilProjectile, "2.5 2.5 2.5");
             		
 
 		%projectile = %this.projectile;
-		%spread = 0.0035;
+		%spread = 0.0038;
 		%shellcount = 10;
 
 		for(%shell=0; %shell<%shellcount; %shell++)
@@ -465,8 +458,6 @@ function PumpShotgunImage::onFire(%this,%obj,%slot) {
 		};
 		MissionCleanup.add(%p);
 		return %p;
-	} else {
-		serverPlay3D(PumpShotgunJamSound,%obj.getPosition());
 	}
 }
 
@@ -477,12 +468,13 @@ function PumpShotgunImage::onEject(%this,%obj,%slot)
 }
 
 function PumpShotgunImage::onReloadStart(%this,%obj,%slot)
-{       		
- 	%obj.playThread(2, shiftto);
-    serverPlay3D(block_MoveBrick_Sound, %obj.getPosition());
+{
+	serverPlay3D(PumpShotgunJamSound,%obj.getPosition());
+ 	%obj.playThread(2, shiftRight);
 }
 
 function PumpShotgunImage::onReloaded(%this,%obj,%slot) {
 	%this.onLoadCheck(%obj,%slot);
-    %obj.toolAmmo[%obj.currTool]++;
+    %obj.shotgunAmmo++;
+    %obj.client.bottomprintInfo();
 }

@@ -9,6 +9,7 @@ exec("./Item_Chisel/server.cs");
 exec("./Item_Soap/server.cs");
 exec("./Item_Steak/server.cs");
 exec("./Item_PosTool/posTool.cs");
+exec("./Weapon_Grenade/server.cs");
 exec("./Weapon_Shotgun/server.cs");
 exec("./Weapon_LMG/server.cs");
 exec("./Weapon_Sniper_Rifle_Spotlight/server.cs");

@@ -74,7 +74,7 @@ function serverCmdRemoveGuard(%cl, %name) {
 	}
 	spawnDeadLobby();
 
-	if (%cl != FakeClient) {
+	if (%cl != FakeClient.getID()) {
 		messageAll('', "\c3" @ %cl.name @ "\c6 removed \c3" @ %targ.name @ "\c6 from the guard selection");
 	} else {
 		messageAll('', "\c3" @ %targ.name @ "\c6 was removed from the guard selection");

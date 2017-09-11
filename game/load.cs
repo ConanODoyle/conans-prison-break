@@ -82,7 +82,7 @@ function collectAllPrisonBricks(%bg, %i) {
 		return 0;
 	}
 
-	if (%i > 13300) {
+	if (%i == 13300) {
 		echo("passed count check");
 	}
 

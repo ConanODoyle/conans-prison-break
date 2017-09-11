@@ -11,7 +11,7 @@ $CPB::EWSAlertThreshold = 6;
 
 function GameConnection::bottomPrintInfo(%cl) {
 	%time = $CPB::CurrRoundTime;
-	%timeString = getTimeString(%time);
+	%timeString = "<font:Arial Bold:34>\c6" @ getTimeString(%time);
 
 	if ($CPB::PHASE == $CPB::GAME) {
 		if (%cl.isPrisoner) {
@@ -24,6 +24,14 @@ function GameConnection::bottomPrintInfo(%cl) {
 				%totalP = $Live_PAlive;
 				
 				%info = "<font:Arial Bold:28>\c6[\c1" @ %loc @ "\c6: " @ %loc @ "/" @ %totalP @ "] ";
+				if (%cl.player.getDatablock().getID() == BuffArmor.getID()) {
+					if (%cl.player.getDamagePercent() > 0.5) {
+						%damageColor = "\c0";
+					} else {
+						%damageColor = "\c6";
+					}
+					%info = %info @ %damageColor @ "HP: " @ %cl.player.getDatablock().maxDamage - %cl.player.getDamageLevel() @ " ";
+				}
 			}
 		} else if (%cl.isGuard) {
 			if ($CPB::EWSActive) {
@@ -52,7 +60,12 @@ function GameConnection::bottomPrintInfo(%cl) {
 				%info = "<font:Arial Bold:34>Satellite Dish Inactive";
 			}
 
-			if (%cl.tower.guardOption == $CPB::Classes::LMG || %cl.isLMGGuard) {
+			if (%cl.tower.guardEquipment == $CPB::Equipment::Shotgun) {
+				%pl = %cl.player;
+				%timeString = "<just:left><font:impact:24>\c312 Gauge: \c6" @ %pl.shotgunAmmo + 0 @ "/" @ PumpShotgunItem.maxAmmo @ "<just:center>" @ %timeString @ "              ";
+			}
+
+			if (%cl.tower.guardOption == $CPB::Classes::LMG) {
 				%pl = %cl.player;
 				if (isObject(%pl)) {
 					if (%pl.LMGHeat <= $LMGMaxHeat / 3) {
@@ -65,11 +78,12 @@ function GameConnection::bottomPrintInfo(%cl) {
 				} else {
 					%pl.heatColor = "\c0";
 				}
-				%timeString = %timeString @  "<just:right><font:impact:24><color:fff000>Heat <font:impact:28>" @ %pl.heatColor @ (%pl.LMGHeat + 0) @ "/" @ $LMGMaxHeat;
+				%timeString = %timeString @  "<just:right><font:impact:24>\c3Heat: " @ %pl.heatColor @ (%pl.LMGHeat + 0) @ "/" @ $LMGMaxHeat;
 			}
 		}
 		
-		%cl.bottomprint("<font:Arial Bold:34><just:center>\c6" @ %timeString @ " <br><just:center>" @ %info, 500, 0);
+		%timeString = "<just:center>" @ %timeString;
+		%cl.bottomprint(%timeString @ " <br><just:center>" @ %info, 500, 0);
 	} else if ($CPB::PHASE == $CPB::GWIN || $CPB::PHASE == $CPB::PWIN) { 
 		if ($CPB::PHASE == $CPB::PWIN) {
 			%color = "<color:" @ $PRISONER::CHATCOLOR @ ">";
