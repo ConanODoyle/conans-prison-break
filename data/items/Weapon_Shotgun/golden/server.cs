@@ -56,7 +56,7 @@ datablock ShapeBaseImageData(PumpShotgunGoldenImage)
    // Projectile && Ammo.
    item = PumpShotgunGoldenItem;
    ammo = " ";
-   projectile = PumpShotgunGoldenProjectile;
+   projectile = PumpShotgunProjectile;
    projectileType = Projectile;
 
    casing = PumpShotgunShellDebris;
