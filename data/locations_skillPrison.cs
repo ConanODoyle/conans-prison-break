@@ -133,3 +133,4 @@ $location8::SkillPrison::pos1 = "-30 -166.5 36";
 $location9::SkillPrison::name = "Storage";
 $location9::SkillPrison::pos0 = "-30 -166 40.2";
 $location9::SkillPrison::pos1 = "-12 -186.5 30.8";
+$locationNum = 45;

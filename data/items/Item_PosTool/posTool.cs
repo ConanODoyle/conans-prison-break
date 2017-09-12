@@ -132,7 +132,7 @@ function serverCmdSavePos(%cl, %a, %b, %c, %d, %e) {
 			%pl.currPosShape2.setNodeColor("ALL", "0 1 1 0.5");
 		}
 
-		export("$location*", "Add-ons/Gamemode_PPE/locations.cs");
+		export("$location*", "Add-ons/Gamemode_CPB/data/locations.cs");
 	}
 }
 
@@ -152,15 +152,15 @@ function serverCmdLockPos(%cl) {
 		messageClient(%cl, '', "!!! \c6Current location does not have a second position!");
 	}
 
-	export("$location*", "Add-ons/Gamemode_PPE/locations.cs");
+	export("$location*", "Add-ons/Gamemode_CPB/data/locations.cs");
 }
 
 function serverCmdLP(%cl) {
 	serverCmdLockPos(%cl);
 }
 
-if (isFile("Add-Ons/Gamemode_PPE/locations.cs")) {
-	exec("Add-Ons/Gamemode_PPE/locations.cs");
+if (isFile("Add-Ons/Gamemode_CPB/data/locations.cs")) {
+	exec("Add-Ons/Gamemode_CPB/data/locations.cs");
 }
 if ($locationNum $= "") {
 	$locationNum = 0;
