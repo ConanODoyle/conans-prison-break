@@ -346,12 +346,7 @@ package posToolPackage {
 activatePackage(posToolPackage);
 
 function getCompassVec(%cl) {
-	%forwardVec = vectorNormalize(getWords(%cl.getControlObject().getForwardVector(), 0, 1) SPC 0);
-	%xOry = mAbs(getWord(%forwardVec, 0)) - mAbs(getWord(%forwardVec, 1));
-	if (%xOry > 0) {
-		%compassVec = mFloatLength(getWord(%forwardVec, 0), 0) SPC "0 0";
-	} else {
-		%compassVec = 0 SPC mFloatLength(getWord(%forwardVec, 1), 0) SPC 0;
-	}
-	return %compassVec;
+	%fv = vectorScale(%cl.getControlObject().getForwardVector(), 1 / mSqrt(2));
+	%v = vectorAdd(%fv, "0.5 0.5 0");
+	return mFloor(getWord(%v, 0)) SPC mFloor(getWord(%v, 1)) SPC "0";
 }
