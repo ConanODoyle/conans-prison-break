@@ -58,7 +58,7 @@ $ClientVariable[$ClientVariableCount++] = "isSelectedToBeGuard";
 package CPB_Game_Towers {
 	function GameConnection::onDrop(%this, %val) {
 		if (%this.isGuard && isObject(%this.tower)) {
-			messageAdmins("<font:Palatino Linotype:36>!!! \c6Tower \c3" @ %this.tower @ "\c6's guard has just left the game!");
+			messageAdmins("<font:Palatino Linotype:36>!!! \c6Tower \c3" @ %this.tower.towerNum @ "\c6's guard has just left the game!");
 		} else if (%this.bl_id !$= "" && %this.isSelectedToBeGuard) {
 			serverCmdRemoveGuard(FakeClient, %this.name);
 		}
@@ -68,7 +68,7 @@ package CPB_Game_Towers {
 
 	function MinigameSO::removeMember(%mg, %cl) {
 		if (%cl.isGuard && isObject(%cl.tower)) {
-			messageAdmins("<font:Palatino Linotype:36>!!! \c6Tower \c3" @ %cl.tower @ "\c6's guard has just left the game!");
+			messageAdmins("<font:Palatino Linotype:36>!!! \c6Tower \c3" @ %cl.tower.towerNum @ "\c6's guard has just left the game!");
 		} else if (%cl.bl_id !$= "" && %cl.isSelectedToBeGuard) {
 			serverCmdRemoveGuard(FakeClient, %cl.name);
 		}

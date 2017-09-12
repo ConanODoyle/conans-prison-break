@@ -405,7 +405,7 @@ function PumpShotgunImage::onFire(%this,%obj,%slot) {
 
 		%projectile = %this.projectile;
 		%spread = 0.0038;
-		%shellcount = 10;
+		%shellcount = 15;
 
 		for(%shell=0; %shell<%shellcount; %shell++)
 		{
