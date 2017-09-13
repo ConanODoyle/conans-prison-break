@@ -56,6 +56,7 @@ if(!isObject(CPB_HairSet)) {
 //	hairTest
 //Player
 //	customizingMode
+//	customizingBrick
 //	lastCustomizeTime
 //	isCustomizing
 //	canDismount
@@ -76,6 +77,7 @@ if(!isObject(CPB_HairSet)) {
 //	serverCmdLight
 //Created:
 //	serverCmdBarber
+//	fxDTSBrick::startBarber
 //	startBarber
 //	stopBarber
 //	toggleBarberSelection
@@ -196,6 +198,12 @@ function serverCmdBarber(%cl) {
 	schedule(1, %pl, startBarber, %cl);
 }
 
+registerOutputEvent("fxDTSBrick", "startBarber", "", 1);
+
+function fxDTSBrick::startBarber(%b, %cl) {
+	startBarber(%cl, %b);
+}
+
 function startBarber(%cl, %brick) {
 	if (!isObject(%pl = %cl.player)) {
 		return;
@@ -209,7 +217,9 @@ function startBarber(%cl, %brick) {
 	%pl.chairBot = %mount;
 	if (isObject(%brick) && %brick.getClassName() $= "fxDTSBrick") {
 		%mount.setTransform(%brick.getTransform());
+		%pl.oldTransform = %pl.getTransform();
 		%pl.setTransform(%pl.getPosition());
+		%pl.customizingBrick = %brick;
 	} else {
 		%mount.setTransform(%pl.getTransform());
 	}
@@ -254,6 +264,8 @@ function stopBarber(%cl) {
 	%pl.dismount();
 	if (!isObject(%pl.customizingBrick)) {
 		%pl.schedule(10, setTransform, %pl.chairBot.getPosition() SPC rotFromTransform(%pl.getTransform()));
+	} else {
+		%pl.schedule(!0, setTransform, %pl.oldTransform);
 	}
 
 	%pl.isCustomizing = 0;

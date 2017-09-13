@@ -208,9 +208,9 @@ function displayAllLocations() {
 		%shape2 = new StaticShape(Locations) {
 			datablock = C_SquareShape;
 		};
-		%pos0 = $location[%i @ "::pos0"];
-		%pos1 = $location[%i @ "::pos1"];
-		%name = $location[%i @ "::name"];
+		%pos0 = $location[%i @ "::" @ $currMap @ "::pos0"];
+		%pos1 = $location[%i @ "::" @ $currMap @ "::pos1"];
+		%name = $location[%i @ "::" @ $currMap @ "::name"];
 
 		%xa = getWord(%pos0, 0); %xb = getWord(%pos1, 0);
 		%ya = getWord(%pos0, 1); %yb = getWord(%pos1, 1);

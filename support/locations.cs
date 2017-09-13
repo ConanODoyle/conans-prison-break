@@ -15,7 +15,6 @@
 package CPB_Support_Locations {
 	function roundTimer() {
 		parent::roundTimer();
-
 		collectPlayerLocations(%i);
 	}
 };
@@ -31,30 +30,15 @@ function getLocation(%obj) {
 	}
 
 	%pos = %obj.getPosition();
+	%map = $currMap;
 	for (%i = 0; %i < $locationNum; %i++) {
-		%pos0 = $location[%i @ "::" @ $currMap @ "::pos0"];
-		%pos1 = $location[%i @ "::" @ $currMap @ "::pos1"];
+		%pos0 = $location[%i @ "::" @ %map @ "::pos0"];
+		%pos1 = $location[%i @ "::" @ %map @ "::pos1"];
 		if (isPosInBounds(%pos, %pos0, %pos1)) {
-			return $location[%i @ "::" @ $currMap @ "::name"];
+			return $location[%i @ "::" @ %map @ "::name"];
 		}
 	}
 	return "Outside";
-}
-
-function GameConnection::getLocation(%cl) {
-	return getLocation(%cl.player);
-}
-
-function Player::getLocation(%pl) {
-	return getLocation(%pl);
-}
-
-function AIPlayer::getLocation(%pl) {
-	return getLocation(%pl);
-}
-
-function SimObject::getLocation(%obj) {
-	return getLocation(%obj);
 }
 
 function GameConnection::isOutside(%cl) {
@@ -69,29 +53,33 @@ function GameConnection::isOutside(%cl) {
 	return 0;
 }
 
-function collectPlayerLocations(%i) {
-	if (%i >= ClientGroup.getCount()) {
-		$RegionCollectingInProgress = 0;
-		return;
-	} else if ($RegionCollectingInProgress && %i == 0) {
-		return;
-	} else if (%i == 0) {
-		$RegionCollectingInProgress = 1;
-		deleteVariables("$Live*");
-	}
-
-	%cl = ClientGroup.getObject(%i);
-	if (isObject(%pl = %cl.player)) {
-		%loc = getLocation(%pl);
-		if (%cl.isPrisoner) {
-			$Live_PAlive++;
-			$Live_PC[%loc]++;
-		} else {
-			$Live_GAlive++;
-			$Live_GC[%loc]++;
+function collectPlayerLocations(%ct) {
+	for (%i = 0; %i < 5; %i++) {
+		%i = %i + %ct;
+		if (%i >= ClientGroup.getCount()) {
+			$RegionCollectingInProgress = 0;
+			return;
+		} else if ($RegionCollectingInProgress && %i == 0) {
+			return;
+		} else if (%i == 0) {
+			$RegionCollectingInProgress = 1;
+			deleteVariables("$Live*");
 		}
+
+		%cl = ClientGroup.getObject(%i);
+		if (isObject(%pl = %cl.player)) {
+			%loc = getLocation(%pl);
+			if (%cl.isPrisoner) {
+				$Live_PAlive++;
+				$Live_PC[%loc]++;
+			} else {
+				$Live_GAlive++;
+				$Live_GC[%loc]++;
+			}
+		}
+		%i = %i - %ct;
 	}
-	schedule(1, 0, collectPlayerLocations, %i++);
+	schedule(1, 0, collectPlayerLocations, %ct + 5);
 }
 
 function getNumPrisonersOutside() {

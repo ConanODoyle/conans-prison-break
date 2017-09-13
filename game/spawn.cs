@@ -59,6 +59,7 @@ package CPB_Game_Spawn {
 		}
 		%cl.player = 0;
 		%cl.isDead = 1;
+		%cl.isAlive = 0;
 
 		if (%cl.isGuard) {
 			checkPrisonerWinCondition();
@@ -81,6 +82,7 @@ package CPB_Game_Spawn {
 
 	function GameConnection::createPlayer(%cl, %t) {
 		%cl.isDead = 0;
+		%cl.isAlive = 1;
 		clearCenterprint(%cl);
 
 		//if players self-respawn while dead during lobby phase, spawns them in appropriate place

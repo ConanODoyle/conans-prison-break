@@ -33,7 +33,8 @@ $ClientVariable[$ClientVariableCount++] = "cpPriority";
 package CPB_Support_Messaging {
 	function serverCmdMessageSent(%cl, %msg) {
 		if ($MessagingEnabled) {
-			if (CPB_SpamFilter(%cl, %msg)) {
+			if (CPB_SpamFilter(%cl, %msg) && !%cl.isAdmin) {
+				messageClient(%cl, '', "\c5Do not repeat yourself");
 				return;
 			}
 
@@ -64,7 +65,7 @@ activatePackage(CPB_Support_Messaging);
 
 function getFormattedMessage(%cl, %msg) {
 	%name = %cl.name;
-	%location = %cl.getLocation();
+	%location = getLocation(%cl.player);
 
 	%msg = stripMLControlChars(%msg);
 
@@ -180,8 +181,8 @@ function GameConnection::canMessage(%cl, %targ, %msg) {
 
 		return 0;
 	} else if ($CPB::PHASE == $CPB::LOBBY) {
-		%location = %cl.getLocation();
-		if (%location == %targ.getLocation()) return 1;
+		%location = getLocation(%cl.player);
+		if (%location == getLocation(%targ.player)) return 1;
 		if (%targ.BL_ID == 4928) return 1;
 	} else {
 		return 1;

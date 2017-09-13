@@ -227,7 +227,7 @@ datablock ExplosionData(tierstickGrenadeExplosion)
 	impulseForce = 2100;
 
 	damageRadius = 10;
-	radiusDamage = 150;
+	radiusDamage = 50;
 
 	uiName = "Grenade Explosion";
 };
@@ -489,3 +489,45 @@ function tierfraggrenadeProjectile::onCollision(%this,%obj,%col,%fade,%pos,%norm
 	if (%obj.explodeticks >= 0) {%obj.explodeticks += 1;}
 	if (%obj.explodeticks == 3) {%obj.explode();}
 }
+
+function spawnGrenadeStunExplosion(%pos, %obj) {
+	for (%i = 0; %i < ClientGroup.getCount(); %i++) {
+		%cl = ClientGroup.getObject(%i);
+		if (isObject(%pl = %cl.player) && !%cl.isGuard && !%cl.isWearingBucket) {
+			%eyePos = getWords(%pl.getEyeTransform(), 0, 3);
+			%eyeVec = %pl.getEyeVector();
+			%angle = mACos(vectorDot(%eyeVec, vectorNormalize(vectorSub(%pos, %eyePos))));
+			%dist = VectorLen(vectorSub(%eyePos, %pos));
+			// talk(%cl.name SPC %angle);
+			// talk("    " SPC %eyevec SPC "eye" SPC vectorSub(%pos, %eyePos) SPC "target");
+			if (%dist <= $STUNBLINDRADIUS && %angle < 1.9) {
+				%pl.setWhiteOut((($STUNBLINDRADIUS - %dist) / $STUNBLINDRADIUS) + $STUNBLINDBONUS);
+			}
+			%dist = VectorLen(vectorSub(%pl.getHackPosition(), %pos));
+			if (%dist <= $STUNDISTANCE * 10 && %pl.getDatablock().getID() != BuffArmor.getID()) {
+				stun(%pl, mCeil((($STUNDISTANCE * 10 - %dist) / ($STUNDISTANCE * 10)) * $STUNMAX * 5));
+			}
+		}
+	}
+
+	%p = new Projectile() {
+		datablock = StunBulletProjectile;
+		initialPosition = %pos;
+		client = %obj.client;
+	};
+	%p.explode();
+}
+
+package GrenadeStunExplosion {
+	function ProjectileData::onExplode(%db, %obj, %pos) {
+
+		%ret = parent::onExplode(%db, %obj, %pos);
+
+		if (%db.getID() == tierfragGrenadeProjectile.getID()) {
+			spawnGrenadeStunExplosion(%pos, %obj);
+		}
+
+		return %ret;
+	}
+};
+activatePackage(GrenadeStunExplosion);

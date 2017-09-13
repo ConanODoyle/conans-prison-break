@@ -351,12 +351,12 @@ datablock ShapeBaseImageData(PumpShotgunImage)
 	stateName[9]					= "Reload";
 	stateTransitionOnTimeout[9]		= "Reloaded";
 	stateWaitForTimeout[9]			= false;
-	stateTimeoutValue[9]			= 0.25;
-	stateTransitionOnTriggerDown[9]	= "Fire";
+	stateTimeoutValue[9]			= 0.45;
 	stateSequence[9]				= "Reload";
 	stateScript[9]					= "onReloadStart";
 	
 	stateName[10]					= "Reloaded";
+	stateTransitionOnTriggerDown[10]= "Fire";
 	stateTransitionOnTimeout[10]	= "ReloadCheckA";
 	stateWaitForTimeout[10]			= false;
 	stateTimeoutValue[10]			= 0.2;
@@ -471,10 +471,9 @@ function PumpShotgunImage::onReloadStart(%this,%obj,%slot)
 {
 	serverPlay3D(PumpShotgunJamSound,%obj.getPosition());
  	%obj.playThread(2, shiftRight);
-}
-
-function PumpShotgunImage::onReloaded(%this,%obj,%slot) {
-	%this.onLoadCheck(%obj,%slot);
     %obj.shotgunAmmo++;
     %obj.client.bottomprintInfo();
 }
+
+function PumpShotgunImage::onReloaded(%this,%obj,%slot) {
+	%this.onLoadCheck(%obj,%slot);}

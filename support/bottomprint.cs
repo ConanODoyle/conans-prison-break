@@ -18,11 +18,14 @@ function GameConnection::bottomPrintInfo(%cl) {
 				%timeToRespawn = getNextRespawnTime();
 				%info = "<font:Arial Bold:28>\c0Next Respawn Wave In " @ getTimeString(%timeToRespawn) @ " ";
 			} else if (%cl.isAlive) {
-				%loc = %cl.getLocation();
+				%loc = getLocation(%cl.player);
 				%locCount = $Live_PC[%loc];
+				if (%locCount == 0) {
+					%locCount = 1;
+				}
 				%totalP = $Live_PAlive;
 				
-				%info = "<font:Arial Bold:28>\c6[\c1" @ %loc @ "\c6: " @ %loc @ "/" @ %totalP @ "] ";
+				%info = "<font:Arial Bold:28>\c6[\c1" @ %loc @ "\c6: " @ (%locCount + 0) @ "/" @ %totalP @ "] <br>";
 				if (%cl.player.getDatablock().getID() == BuffArmor.getID()) {
 					if (%cl.player.getDamagePercent() > 0.5) {
 						%damageColor = "\c0";

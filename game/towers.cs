@@ -16,6 +16,12 @@ $ClientVariable[$ClientVariableCount++] = "isGuard";
 $ClientVariable[$ClientVariableCount++] = "isPrisoner";
 $ClientVariable[$ClientVariableCount++] = "isSelectedToBeGuard";
 
+datablock ItemData(TowerItemA : HammerItem) {
+	shapeFile = "./shapes/towerItem/towerItem.dts";
+
+	uiName = "TowerItem";
+};
+
 //Object properties:
 //Client
 //	tower
