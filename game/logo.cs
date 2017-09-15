@@ -18,13 +18,6 @@ datablock StaticShapeData(LogoDishShape)
 	shapeFile = "./shapes/logo/LogoDish.dts";
 };
 
-datablock ItemData(StunItemA : HammerItem) {
-	shapeFile = "./shapes/stunVisual/stunVisual.dts";
-
-	doColorShift = false;
-	uiName = "Stun VisualA";
-};
-
 //Functions:
 //Created:
 //	displayLogo
@@ -32,6 +25,20 @@ datablock ItemData(StunItemA : HammerItem) {
 //  doLogoFadeIn
 //  doLogoFadeOut
 //  clearLogo
+
+function displayNewLogo(%pos) {
+	if (isObject($LogoShape)) {
+		$LogoShape.delete();
+	}
+
+	$LogoShape = new StaticShape(Logo) {
+		datablock = NewLogoShape;
+		scale = "2.0 2.0 2.0";
+	};
+
+	$LogoShape.setTransform(%pos);
+	applyLogoColors($LogoShape, 1);
+}
 
 function displayLogo(%camPos, %targetPos, %logo, %bg) {
 	if (!isObject(%logo)) {

@@ -66,7 +66,9 @@ function serverCmdRemoveGuard(%cl, %name) {
 	%targ.isGuard = 0;
 	%targ.isPrisoner = 1;
 	%targ.guardClass = "";
-	%targ.pickedTowerBrick.clearTower(%targ);
+	if (isObject(%targ.pickedTowerBrick)) {
+		%targ.pickedTowerBrick.clearTower(%targ);
+	}
 	$CPB::SelectedGuards = removeWordString($CPB::SelectedGuards, %targ.bl_id);
 
 	if (isObject(%targ.player)) {

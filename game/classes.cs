@@ -11,14 +11,73 @@ $CPB::Equipment::Flash = 2;			$CPB::Equipment[2] = "Flash";
 $CPB::Equipment::Heli = 3;			$CPB::Equipment[3] = "Heli";
 $CPB::Equipment::List = "Shotgun Flash Heli";
 
+datablock ItemData(StunItem : HammerItem) {
+	shapeFile = "./shapes/stunVisual/stunVisual.dts";
+
+	isVisual = 1;
+	doColorShift = false;
+	uiName = "Stun Visual";
+};
+
+datablock ItemData(ShrapnelItemB : HammerItem) {
+	shapeFile = "./shapes/shrapnelVisual/shrapnelVisual.dts";
+
+	isVisual = 1;
+	doColorShift = false;
+	uiName = "Shrapnel VisualB";
+};
+
+datablock ItemData(TearGasItem : HammerItem) {
+	shapeFile = "./shapes/TearGasVisual/TearGasVisual.dts";
+
+	isVisual = 1;
+	doColorShift = false;
+	uiName = "TearGas Visual";
+};
+
+datablock ItemData(LMGItem : HammerItem) {
+	shapeFile = "./shapes/LMGVisual/LMGVisual.dts";
+
+	isVisual = 1;
+	doColorShift = false;
+	uiName = "LMG Visual";
+};
+
 //Object parameters:
 //Client
 //	guardClass
 
 //Functions:
+//Packaged:
+//	ItemData::onAdd
+//	Armor::onCollision
 //Created:
-//	GameConnection::setClass
+//	GameConnection::setGuardClass
+//	GameConnection::setGuardEquipment
 //	giveGuardItems
+//	colorVisualItem
+
+
+package CPB_Game_Classes {
+	function ItemData::onAdd(%this, %obj) {
+		%ret = parent::onAdd(%this, %obj);
+		if (%this.isVisual) {
+			schedule(33, %obj, colorVisualItem, %obj);
+		}
+		return %ret;
+	}
+
+	function Armor::onCollision(%this, %obj, %col, %pos) {
+		if (%col.getDatablock().isVisual) {
+			return;
+		}
+		return parent::onCollision(%this, %obj, %col, %pos);
+	}
+};
+activatePackage(CPB_Game_Classes);
+
+
+////////////////////
 
 
 registerOutputEvent(GameConnection, "setGuardClass", "string 200 156", 1);
@@ -73,4 +132,48 @@ function giveGuardItems(%pl, %item) {
 		case $CPB::Equipment::Shotgun: %pl.addItem(PumpShotgunItem);
 		case $CPB::Classes::Flash: %pl.addItem(tierFragGrenadeItem); %pl.addItem(tierFragGrenadeItem); %pl.addItem(tierFragGrenadeItem);
 	}
+}
+
+function colorVisualItem(%item) {
+	%alpha = 1;
+
+	%item.startFade(0, 0, 1);
+	%skinColor = "0.9 0.712 0.456 " @ %alpha;
+	// %item.setNodeColor("cHeadSkin", %skinColor);
+	// %item.setNodeColor("cChest", $GuardColor);
+	// %item.setNodeColor("cLArm", $GuardColor);
+	// %item.setNodeColor("cRArm", $GuardColor);
+	// %item.setNodeColor("cPack", "0.2 0.2 0.2 1");
+	// %item.setNodeColor("clHand", %skinColor);
+	// %item.setNodeColor("cRHand", %skinColor);
+	// %item.setNodeColor("cPants", "0.1 0.1 0.1 1");
+	// %item.setNodeColor("cCopHat", $GuardColor);
+	%item.setNodeColor("pHeadSkin", %skinColor);
+	%item.setNodeColor("pLHand", %skinColor);
+	%item.setNodeColor("pRHand", %skinColor);
+	%item.setNodeColor("pPants", $PrisonerColor);
+	%item.setNodeColor("pChest", $PrisonerColor);
+	%item.setNodeColor("pChestStripes", "0 0 0 " @ %alpha);
+	%item.setNodeColor("pLArmSlim", $PrisonerColor);
+	%item.setNodeColor("pRArmSlim", $PrisonerColor);
+	// %item.setNodeColor("Cylinder", "0.3 0.3 0.3 1");
+	// %item.setNodeColor("sniperBolt", "0.3 0.3 0.3 1");
+	// %item.setNodeColor("sniperStock", "0.12 0.12 0.12 1");
+	%item.setNodeColor("sniperBarrel", "0.4 0.4 0.4 1");
+	// %item.setNodeColor("sniperScope", "0 0 0 1");
+
+	%item.setNodeColor("Icosphere", "1 1 1 1");
+	%item.setNodeColor("tracers", "0.5 0.5 0.5 0.5");
+	%item.setNodeColor("bullets", "1 1 0 1");
+	%item.setNodeColor("yellow", "1 1 0 1");
+	%item.setNodeColor("gray15", "0.15 0.15 0.15 1");
+	%item.setNodeColor("gray25", "0.25 0.25 0.25 1");
+	%item.setNodeColor("gray50", "0.50 0.50 0.50 1");
+	%item.setNodeColor("gray75", "0.75 0.75 0.75 1");
+	%item.setNodeColor("greenMagazine", "0.1 0.5 0.1 1");
+
+	%item.setNodeColor("grey50", "0.15 0.15 0.15 1");
+	%item.setNodeColor("grey80", "0.07 0.07 0.07 1");
+	%item.setNodeColor("grey95", "0.01 0.01 0.01 1");
+	%item.setNodeColor("white", "1 1 1 1");
 }

@@ -19,6 +19,7 @@ $ClientVariable[$ClientVariableCount++] = "isSelectedToBeGuard";
 datablock ItemData(TowerItemA : HammerItem) {
 	shapeFile = "./shapes/towerItem/towerItem.dts";
 
+	isVisual = 1;
 	uiName = "TowerItem";
 };
 

@@ -332,7 +332,7 @@ datablock ShapeBaseImageData(PumpShotgunImage)
 	stateTransitionOnTriggerUp[5]	= "LoadCheckB";
 						
 	stateName[6]					= "LoadCheckB";
-	stateTransitionOnTimeout[6]		= 0.35;
+	stateTransitionOnTimeout[6]		= 0.55;
 	stateWaitForTimeout[6]			= true;
 	stateTransitionOnAmmo[6]		= "Ready";
 	stateTransitionOnNoAmmo[6]		= "Reload";
@@ -340,7 +340,7 @@ datablock ShapeBaseImageData(PumpShotgunImage)
 	stateName[7]					= "ReloadCheckA";
 	stateTransitionOnTriggerDown[7]	= "Fire";
 	stateScript[7]					= "onReloadCheck";
-	stateTimeoutValue[7]			= 0.35;
+	stateTimeoutValue[7]			= 0.55;
 	stateTransitionOnTimeout[7]		= "ReloadCheckB";
 						
 	stateName[8]					= "ReloadCheckB";
@@ -405,7 +405,7 @@ function PumpShotgunImage::onFire(%this,%obj,%slot) {
 
 		%projectile = %this.projectile;
 		%spread = 0.0038;
-		%shellcount = 15;
+		%shellcount = 10;
 
 		for(%shell=0; %shell<%shellcount; %shell++)
 		{

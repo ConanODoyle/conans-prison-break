@@ -55,7 +55,11 @@ package CPB_Support_Messaging {
 
 	function serverCmdTeamMessageSent(%cl, %msg) {
 		if ($MessagingEnabled) {
-			messageClient(%cl, '', "\c1Team chat disabled - normal chat is team-only when inside.");
+			if ($DebugMode) {
+				messageAll('', getFormattedMessage(%cl, %msg));
+			} else {
+				messageClient(%cl, '', "\c1Team chat disabled - normal chat is team-only when inside.");
+			}
 		} else {
 			return parent::serverCmdTeamMessageSent(%cl, %msg);
 		}

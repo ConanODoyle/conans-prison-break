@@ -764,7 +764,7 @@ function spawnStunExplosion(%pos, %obj) {
 
 	for (%i = 0; %i < ClientGroup.getCount(); %i++) {
 		%cl = ClientGroup.getObject(%i);
-		if (isObject(%pl = %cl.player) && !%cl.isGuard && !%cl.isWearingBucket) {
+		if (isObject(%pl = %cl.player) && !%cl.isGuard && !%cl.player.isWearingBucket) {
 			%eyePos = getWords(%pl.getEyeTransform(), 0, 3);
 			%eyeVec = %pl.getEyeVector();
 			%angle = mACos(vectorDot(%eyeVec, vectorNormalize(vectorSub(%pos, %eyePos))));

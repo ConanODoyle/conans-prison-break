@@ -136,6 +136,8 @@ function getBrickType(%b) {
 		return $CPB::BrickType::Bars;
 	} else if (strPos(strLwr(%db.getName()), "window") >= 0) {
 		return $CPB::BrickType::Window;
+	} else if (strPos(strLwr(%b.getName()), "chiselwall") >= 0) {
+		return $CPB::BrickType::Plates;
 	}
 
 	return 0;

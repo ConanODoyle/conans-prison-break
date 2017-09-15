@@ -166,6 +166,11 @@ function getPrisonerLobbySpawnPoint() {
 }
 
 function getGuardLobbySpawnPoint() {
+	%i = 0;
+	while (isObject(%b = "_GuardVisualItems" @ %i) && isObject(%item = %b.item)) {
+		colorVisualItem(%item);
+		%i++;
+	}
 	return _GuardClassesRoom.getTransform();
 }
 

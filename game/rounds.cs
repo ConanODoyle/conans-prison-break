@@ -82,6 +82,7 @@ function _setPhaseLOBBY() {
 		%cl.isPrisoner = 0;
 		%cl.isGuard = 0;
 		%cl.tower = 0;
+		%cl.isSelectedToBeGuard = 0;
 
 		if (isObject(%cl.minigame)) {
 			if (getRandom() < 0.2) {
