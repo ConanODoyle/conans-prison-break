@@ -30,6 +30,8 @@ $damageFlashColor = 45;
 //Packaged:
 //	fxDTSBrick::onDeath
 //	ChiselProjectile::onCollision
+//	FireAxeProjectile::onCollision
+//	BuffBashProjectile::onCollision
 //Created:
 //	fxDTSBrick::damage
 //	getBrickType
@@ -42,7 +44,7 @@ package CPB_Game_Breakables {
 		$InputTarget_["Self"] = %obj;
 		$InputTarget_["Client"] = %cl = findClientByBL_ID(%obj.getGroup().bl_id);
 		$InputTarget_["Player"] = %cl.player;
-		$InputTarget_["Minigame"] = getMinigameFromObject(%b);
+		$InputTarget_["Minigame"] = getMinigameFromObject(%obj);
 
 		%obj.processInputEvent("onDeath", %obj.hitClient);
 
@@ -51,8 +53,8 @@ package CPB_Game_Breakables {
 
 	function ChiselProjectile::onCollision(%data, %obj, %col, %fade, %pos, %normal) {
 		if (%col.getClassName() $= "FxDTSBrick" && $CPB::PHASE == $CPB::GAME) {
-			if ((%type = %b.type) || (%type = getBrickType(%col))) {
-				%obj.type = %type;
+			if ((%type = %col.type) || (%type = getBrickType(%col))) {
+				%col.type = %type;
 				%obj.client.incScore(1);
 				%col.damage(1, %obj.sourceObject);
 			}
@@ -60,12 +62,23 @@ package CPB_Game_Breakables {
 		return parent::onCollision(%data, %obj, %col, %fade, %pos, %normal);
 	}
 
-	function fireAxeProjectile::onCollision(%data, %obj, %col, %fade, %pos, %normal) {
+	function FireAxeProjectile::onCollision(%data, %obj, %col, %fade, %pos, %normal) {
 		if (%col.getClassName() $= "FxDTSBrick" && $CPB::PHASE == $CPB::GAME) {
-			if ((%type = %b.type) || (%type = getBrickType(%col))) {
-				%obj.type = %type;
+			if ((%type = %col.type) || (%type = getBrickType(%col))) {
+				%col.type = %type;
 				%obj.client.incScore(1);
 				%col.damage(5, %obj.sourceObject);
+			}
+		}
+		return parent::onCollision(%data, %obj, %col, %fade, %pos, %normal);
+	}
+
+	function BuffBashProjectile::onCollision(%data, %obj, %col, %fade, %pos, %normal) {
+		if (%col.getClassName() $= "FxDTSBrick" && $CPB::PHASE == $CPB::GAME) {
+			if ((%type = %col.type) || (%type = getBrickType(%col))) {
+				%col.type = %type;
+				%obj.client.incScore(1);
+				%col.damage(1, %obj.sourceObject);
 			}
 		}
 		return parent::onCollision(%data, %obj, %col, %fade, %pos, %normal);

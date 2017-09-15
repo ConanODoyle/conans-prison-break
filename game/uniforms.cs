@@ -41,8 +41,14 @@ package CPB_Game_Uniforms {
 			}
 		}
 		
-		if (!%cl.skipHairEquip) {
+		if (!%cl.skipHairEquip && %cl.player.getDatablock().getID() != BuffArmor.getID()) {
 			%pl.equipHair("Saved");
+		} else if (%cl.player.getDatablock().getID() == BuffArmor.getID()) {
+			if (%cl.isDonator) {
+				%cl.player.mountImage(CrocHatImage, 2);
+			} else {
+				%cl.player.equipHair("Saved");
+			}
 		}
 
 		return %ret;
@@ -67,6 +73,8 @@ package CPB_Game_Uniforms {
 			%cl.player.setNodeColor("pants", "0.1 0.1 0.1 1");
 			%cl.player.setNodeColor("lShoe", "0.1 0.1 0.1 1");
 			%cl.player.setNodeColor("rShoe", "0.1 0.1 0.1 1");
+
+			return %ret;
 		}
 
 		if (%cl.isPrisoner || %cl.isGuard) {
