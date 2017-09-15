@@ -6,8 +6,10 @@
 //	resetAllClientsFOV
 //	setAllCameraControlPlayers
 //	setAllCameraControlSelf
+//	setAllCameraControlNone
 
-function setAllCamerasView(%camPos, %targetPos, %nocontrol, %FOV) {
+
+function setAllCamerasView(%camPos, %targetPos, %noControl, %FOV) {
 	//calculate the position and rotation of camera
 	%pos = %camPos;
 	%delta = vectorSub(%targetPos, %pos);
@@ -23,10 +25,10 @@ function setAllCamerasView(%camPos, %targetPos, %nocontrol, %FOV) {
 	%camTransform = %pos SPC %aa;
 
 	//apply this on everyone
-	setCameraViewLoop(%camTransform, 0, %nocontrol, %FOV);
+	setCameraViewLoop(%camTransform, 0, %noControl, %FOV);
 }
 
-function setCameraViewLoop(%transform, %i, %nocontrol, %FOV) {
+function setCameraViewLoop(%transform, %i, %noControl, %FOV) {
 	if (%i >= ClientGroup.getCount()) {
 		return;
 	}
@@ -39,7 +41,7 @@ function setCameraViewLoop(%transform, %i, %nocontrol, %FOV) {
 
 	%camera.setFlyMode();
 	%camera.mode = "Observer";
-	if (%nocontrol) {
+	if (%noControl) {
 		%camera.setControlObject(%cl.dummyCamera);
 	}
 
@@ -49,7 +51,7 @@ function setCameraViewLoop(%transform, %i, %nocontrol, %FOV) {
 	} else if (%cl.originalFOV > 0) {
 		%cl.setControlCameraFOV(%cl.originalFOV);
 	}
-	schedule(0, 0, setCameraViewLoop, %transform, %i+1, %nocontrol, %FOV);
+	schedule(0, 0, setCameraViewLoop, %transform, %i+1, %noControl, %FOV);
 }
 
 function returnAllPlayerControl() {
@@ -81,9 +83,14 @@ function setAllCameraControlPlayers() {
 function setAllCameraControlSelf() {
 	for(%i = 0; %i < ClientGroup.getCount(); %i++) {
 		%cl = ClientGroup.getObject(%i);
-		if (isObject(%cl.player)) {
-			%cl.camera.setControlObject(0);
-		}
+		%cl.camera.setControlObject(0);
+	}
+}
+
+function setAllCameraControlNone(){
+	for(%i = 0; %i < ClientGroup.getCount(); %i++) {
+		%cl = ClientGroup.getObject(%i);
+		%cl.camera.setControlObject(%cl.dummyCamera);
 	}
 }
 

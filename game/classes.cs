@@ -19,12 +19,12 @@ datablock ItemData(StunItem : HammerItem) {
 	uiName = "Stun Visual";
 };
 
-datablock ItemData(ShrapnelItemB : HammerItem) {
+datablock ItemData(ShrapnelItem : HammerItem) {
 	shapeFile = "./shapes/shrapnelVisual/shrapnelVisual.dts";
 
 	isVisual = 1;
 	doColorShift = false;
-	uiName = "Shrapnel VisualB";
+	uiName = "Shrapnel Visual";
 };
 
 datablock ItemData(TearGasItem : HammerItem) {
@@ -135,45 +135,37 @@ function giveGuardItems(%pl, %item) {
 }
 
 function colorVisualItem(%item) {
+	echo(%name = %item.getDatablock().getName());
 	%alpha = 1;
-
 	%item.startFade(0, 0, 1);
 	%skinColor = "0.9 0.712 0.456 " @ %alpha;
-	// %item.setNodeColor("cHeadSkin", %skinColor);
-	// %item.setNodeColor("cChest", $GuardColor);
-	// %item.setNodeColor("cLArm", $GuardColor);
-	// %item.setNodeColor("cRArm", $GuardColor);
-	// %item.setNodeColor("cPack", "0.2 0.2 0.2 1");
-	// %item.setNodeColor("clHand", %skinColor);
-	// %item.setNodeColor("cRHand", %skinColor);
-	// %item.setNodeColor("cPants", "0.1 0.1 0.1 1");
-	// %item.setNodeColor("cCopHat", $GuardColor);
-	%item.setNodeColor("pHeadSkin", %skinColor);
-	%item.setNodeColor("pLHand", %skinColor);
-	%item.setNodeColor("pRHand", %skinColor);
-	%item.setNodeColor("pPants", $PrisonerColor);
-	%item.setNodeColor("pChest", $PrisonerColor);
-	%item.setNodeColor("pChestStripes", "0 0 0 " @ %alpha);
-	%item.setNodeColor("pLArmSlim", $PrisonerColor);
-	%item.setNodeColor("pRArmSlim", $PrisonerColor);
-	// %item.setNodeColor("Cylinder", "0.3 0.3 0.3 1");
-	// %item.setNodeColor("sniperBolt", "0.3 0.3 0.3 1");
-	// %item.setNodeColor("sniperStock", "0.12 0.12 0.12 1");
-	%item.setNodeColor("sniperBarrel", "0.4 0.4 0.4 1");
-	// %item.setNodeColor("sniperScope", "0 0 0 1");
-
-	%item.setNodeColor("Icosphere", "1 1 1 1");
-	%item.setNodeColor("tracers", "0.5 0.5 0.5 0.5");
-	%item.setNodeColor("bullets", "1 1 0 1");
-	%item.setNodeColor("yellow", "1 1 0 1");
-	%item.setNodeColor("gray15", "0.15 0.15 0.15 1");
-	%item.setNodeColor("gray25", "0.25 0.25 0.25 1");
-	%item.setNodeColor("gray50", "0.50 0.50 0.50 1");
-	%item.setNodeColor("gray75", "0.75 0.75 0.75 1");
-	%item.setNodeColor("greenMagazine", "0.1 0.5 0.1 1");
-
-	%item.setNodeColor("grey50", "0.15 0.15 0.15 1");
-	%item.setNodeColor("grey80", "0.07 0.07 0.07 1");
-	%item.setNodeColor("grey95", "0.01 0.01 0.01 1");
-	%item.setNodeColor("white", "1 1 1 1");
+	if (%name $= "StunItem") {
+		%item.setNodeColor("pHeadSkin", %skinColor);
+		%item.setNodeColor("pLHand", %skinColor);
+		%item.setNodeColor("pRHand", %skinColor);
+		%item.setNodeColor("pPants", $PrisonerColor);
+		%item.setNodeColor("pChest", $PrisonerColor);
+		%item.setNodeColor("pChestStripes", "0 0 0 " @ %alpha);
+		%item.setNodeColor("pLArmSlim", $PrisonerColor);
+		%item.setNodeColor("pRArmSlim", $PrisonerColor);
+		%item.setNodeColor("Icosphere", "1 1 1 1");
+		%item.setNodeColor("sniperBarrel", "0.4 0.4 0.4 1");
+	} else if (%name $= "ShrapnelItemB") {
+		%item.setNodeColor("Icosphere", "1 1 1 1");
+		%item.setNodeColor("tracers", "0.5 0.5 0.5 0.5");
+		%item.setNodeColor("bullets", "1 1 0 1");
+	} else if (%name $= "TearGasItem") {
+		%item.setNodeColor("Icosphere", "1 1 1 1");
+		%item.setNodeColor("grey50", "0.15 0.15 0.15 1");
+		%item.setNodeColor("grey80", "0.07 0.07 0.07 1");
+		%item.setNodeColor("grey95", "0.01 0.01 0.01 1");
+		%item.setNodeColor("white", "1 1 1 1");
+	} else if (%name $= "LMGItem") {
+		%item.setNodeColor("yellow", "1 1 0 1");
+		%item.setNodeColor("gray15", "0.15 0.15 0.15 1");
+		%item.setNodeColor("gray25", "0.25 0.25 0.25 1");
+		%item.setNodeColor("gray50", "0.50 0.50 0.50 1");
+		%item.setNodeColor("gray75", "0.75 0.75 0.75 1");
+		%item.setNodeColor("greenMagazine", "0.1 0.5 0.1 1");
+	}
 }

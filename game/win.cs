@@ -56,5 +56,22 @@ function fxDTSBrick::prisonersWin(%b, %cl) {
 	}
 
 	$CPB::firstPrisonerOut = %cl;
+	%b.setColliding(0);
+
+	%winString = "<font:Palatino Linotype:28>\c6The prisoners have escaped!";
+
+	%id = %b.getAngleID();
+	switch (%id) {
+		case 1: %vec = "0 5 2";
+		case 0: %vec = "-5 0 2";
+		case 3: %vec = "0 -5 2";
+		case 2: %vec = "5 0 2";
+	}
+	%start = %b.getPosition();
+	%end = vectorAdd(%vec, %start);
+	setAllCamerasView(%end, %start);
+	setAllCameraControlNone();
+	setAllCameraControlPlayers();
+
 	setPhase("PWIN");
 }
