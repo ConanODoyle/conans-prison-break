@@ -101,6 +101,7 @@ function _setPhaseLOBBY() {
 	}
 	resetAllTowerData();
 	spawnAllLobby();
+	bottomPrintInfoAll();
 
 	//TODO: make this use "map type"
 	serverDirectSaveFileLoad("Add-ons/Gamemode_CPB/data/prison.bls", 3, "", 0, 1);

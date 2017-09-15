@@ -131,10 +131,6 @@ function applyLogoColors(%item, %alpha, %isNew) {
 		%item.setNodeColor("sniperStock", "0.12 0.12 0.12 1");
 		%item.setNodeColor("sniperBarrel", "0.4 0.4 0.4 1");
 		%item.setNodeColor("sniperScope", "0 0 0 1");
-
-		%item.setNodeColor("Icosphere", "1 1 1 1");
-		%item.setNodeColor("tracers", "0.5 0.5 0.5 0.5");
-		%item.setNodeColor("bullets", "1 1 0 1");
 	}
 }
 

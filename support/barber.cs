@@ -215,8 +215,11 @@ function fxDTSBrick::startBarber(%b, %cl) {
 	startBarber(%cl, %b);
 }
 
-function startBarber(%cl, %brick) {
+function startBarber(%cl, %b) {
 	if (!isObject(%pl = %cl.player)) {
+		return;
+	} else if (isObject(%b.customizingMount)) {
+		messageClient(%cl, '', "This chair is in use!");
 		return;
 	}
 	
@@ -226,11 +229,13 @@ function startBarber(%cl, %brick) {
 	MissionCleanup.add(%mount);
 
 	%pl.chairBot = %mount;
-	if (isObject(%brick) && %brick.getClassName() $= "fxDTSBrick") {
-		%mount.setTransform(%brick.getTransform());
+	if (isObject(%b) && %b.getClassName() $= "fxDTSBrick") {
+		%mount.setTransform(%b.getTransform());
 		%pl.oldTransform = %pl.getTransform();
 		%pl.setTransform(%pl.getPosition());
-		%pl.customizingBrick = %brick;
+		%pl.customizingBrick = %b;
+
+		%b.customizingMount = %mount;
 	} else {
 		%mount.setTransform(%pl.getTransform());
 	}
