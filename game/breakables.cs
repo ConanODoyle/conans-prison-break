@@ -50,7 +50,7 @@ package CPB_Game_Breakables {
 	}
 
 	function ChiselProjectile::onCollision(%data, %obj, %col, %fade, %pos, %normal) {
-		if (%col.getClassName() $= "FxDTSBrick") {
+		if (%col.getClassName() $= "FxDTSBrick" && $CPB::PHASE == $CPB::GAME) {
 			if ((%type = %b.type) || (%type = getBrickType(%col))) {
 				%obj.type = %type;
 				%obj.client.incScore(1);
@@ -61,11 +61,11 @@ package CPB_Game_Breakables {
 	}
 
 	function fireAxeProjectile::onCollision(%data, %obj, %col, %fade, %pos, %normal) {
-		if (%col.getClassName() $= "FxDTSBrick") {
+		if (%col.getClassName() $= "FxDTSBrick" && $CPB::PHASE == $CPB::GAME) {
 			if ((%type = %b.type) || (%type = getBrickType(%col))) {
 				%obj.type = %type;
 				%obj.client.incScore(1);
-				%col.damage(3, %obj.sourceObject);
+				%col.damage(5, %obj.sourceObject);
 			}
 		}
 		return parent::onCollision(%data, %obj, %col, %fade, %pos, %normal);

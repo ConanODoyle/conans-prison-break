@@ -134,6 +134,7 @@ exec("./Item_Smoke_Grenade/golden/server.cs");
 exec("./Item_Tape/golden/server.cs");
 exec("./Item_Tear_Gas/golden/server.cs");
 exec("./Item_Tear_Gas/golden/Item_Gasmask.cs");
+exec("./Item_FireAxe/golden/server.cs");
 exec("./Item_Chisel/golden/server.cs");
 exec("./Weapon_Shotgun/golden/server.cs");
 exec("./Weapon_LMG/golden/server.cs");

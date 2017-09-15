@@ -1,34 +1,7 @@
-//projectile
-	AddDamageType("fireAxeDirect",'<bitmap:add-ons/Gamemode_PPE/Item_Prison/Item_chisel/CI_chisel> %1', '%2 <bitmap:add-ons/Gamemode_PPE/Item_Prison/Item_chisel/CI_chisel> %1',1,1);
-
-datablock ProjectileData(fireAxeProjectile)
-{
-	directDamage  = 20;
-	directDamageType  = $DamageType::fireAxeDirect;
-	radiusDamageType  = $DamageType::fireAxeDirect;
-	explosion  = swordExplosion;
-
-	muzzleVelocity= 50;
-	velInheritFactor = 1;
-
-	armingDelay= 0;
-	lifetime= 100;
-	fadeDelay  = 70;
-	bounceElasticity = 0;
-	bounceFriction= 0;
-	isBallistic= false;
-	gravityMod = 0.0;
-
-	hasLight = false;
-	lightRadius = 3.0;
-	lightColor  = "0 0 0.5";
-};
-
-
 //////////
 // item //
 //////////
-datablock ItemData(fireAxeItem)
+datablock ItemData(fireAxeGoldenItem)
 {
 	category = "Weapon";  // Mission editor category
 	className = "Weapon"; // For inventory system
@@ -40,16 +13,16 @@ datablock ItemData(fireAxeItem)
 	friction = 0.6;
 	emap = true;
 
-	uiName = "Fire Axe";
+	uiName = "Golden Fire Axe";
 	iconName = "Add-ons/Gamemode_PPE/icons/chisel";
 	doColorShift = true;
 	colorShiftColor = "0.4 0.4 0.4 1.000";
 
-	image = fireAxeImage;
+	image = fireAxeGoldenImage;
 	canDrop = true;
 };
 
-datablock ShapeBaseImageData(fireAxeImage)
+datablock ShapeBaseImageData(fireAxeGoldenImage)
 {
 	// Basic Item properties
 	shapeFile = "./fireAxe.dts";
@@ -71,10 +44,8 @@ datablock ShapeBaseImageData(fireAxeImage)
 	// provides some hooks into the inventory system.
 	className = "WeaponImage";
 
-	goldenImage = fireAxeGoldenImage;
-
 	// Projectile && Ammo.
-	item = fireAxeItem;
+	item = fireAxeGoldenItem;
 	ammo = " ";
 	projectile = fireAxeProjectile;
 	projectileType = Projectile;
@@ -101,11 +72,17 @@ datablock ShapeBaseImageData(fireAxeImage)
 	stateTransitionOnTimeout[0]			= "Ready";
 	stateSequence[0]					= "activate";
 	stateSound[0]						= weaponSwitchSound;
+	stateEmitter[0]						= GoldenEmitter;
+	stateEmitterNode[0]					= "mountPoint";
+	stateEmitterTime[0]					= 1000;
 
 	stateName[1]						= "Ready";
 	stateSequence[1]					= "activate";
 	stateTransitionOnTriggerDown[1]		= "Charge";
 	stateAllowImageChange[1]			= true;
+	stateEmitter[1]						= GoldenEmitter;
+	stateEmitterNode[1]					= "mountPoint";
+	stateEmitterTime[1]					= 1000;
 	
 	stateName[2]						= "Charge";
 	stateTransitionOnTimeout[2]			= "Armed";
@@ -120,6 +97,9 @@ datablock ShapeBaseImageData(fireAxeImage)
 	stateScript[3]						= "onArmed";
 	stateTransitionOnTriggerUp[3]		= "Fire";
 	stateAllowImageChange[3]			= false;
+	stateEmitter[3]						= GoldenEmitter;
+	stateEmitterNode[3]					= "mountPoint";
+	stateEmitterTime[3]					= 1000;
 
 	stateName[4]						= "Fire";
 	stateTransitionOnTimeout[4] 		= "Cooldown";
