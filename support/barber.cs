@@ -66,6 +66,7 @@ if(!isObject(CPB_HairSet)) {
 //Functions:
 //Packaged:
 //	GameConnection::onDeath
+//	Armor::onRemove
 //	GameConnection::onDrop
 //	Observer::onTrigger
 //	Player::activateStuff
@@ -104,6 +105,16 @@ package CPB_Support_Barber {
 		}
 
 		return parent::onDeath(%cl, %sourceObj, %sourceClient, %damageType, %part);
+	}
+
+	function Armor::onRemove(%this, %obj) {
+		if (%obj.isCustomizing && isObject(%obj.client)) {
+			stopBarber(%obj.client);
+		} else if (isObject(%obj.chairBot)) {
+			%obj.chairBot.delete();
+		}
+
+		return parent::onRemove(%this, %obj);
 	}
 
 	function GameConnection::onDrop(%cl) {

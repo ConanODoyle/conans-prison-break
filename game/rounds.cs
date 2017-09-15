@@ -71,7 +71,8 @@ function _setPhaseLOBBY() {
 	despawnAll();
 
 	//show logo, reset guards selected
-	displayLogo(_LobbyLogoCam.getPosition(), _LobbyLogoCamTarget.getPosition(), LogoClosedShape, 1);
+	// displayLogo(_LobbyLogoCam.getPosition(), _LobbyLogoCamTarget.getPosition(), LogoClosedShape, 1);
+	displayNewLogo(_newLogoPos.getPosition());
 
 	for (%i = 0; %i < ClientGroup.getCount(); %i++){
 		%cl = ClientGroup.getObject(%i);
@@ -83,6 +84,8 @@ function _setPhaseLOBBY() {
 		%cl.isGuard = 0;
 		%cl.tower = 0;
 		%cl.isSelectedToBeGuard = 0;
+		%cl.guardClass = "";
+		%cl.guardEquipment = "";
 
 		if (isObject(%cl.minigame)) {
 			if (getRandom() < 0.2) {
@@ -90,6 +93,10 @@ function _setPhaseLOBBY() {
 				%cl.giveRandomHair(1);
 			}
 			%cl.isPrisoner = 1;
+		}
+
+		if (isObject(%cl.pickedTowerBrick)) {
+			%cl.pickedTowerBrick.clearTower(%cl);
 		}
 	}
 	resetAllTowerData();

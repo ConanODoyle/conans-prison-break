@@ -161,6 +161,7 @@ function colorVisualItem(%item) {
 		%item.setNodeColor("grey95", "0.01 0.01 0.01 1");
 		%item.setNodeColor("white", "1 1 1 1");
 	} else if (%name $= "LMGItem") {
+		%item.setNodeColor("Icosphere", "1 1 1 1");
 		%item.setNodeColor("yellow", "1 1 0 1");
 		%item.setNodeColor("gray15", "0.15 0.15 0.15 1");
 		%item.setNodeColor("gray25", "0.25 0.25 0.25 1");

@@ -70,6 +70,10 @@ package CPB_Game_Towers {
 			serverCmdRemoveGuard(FakeClient, %this.name);
 		}
 
+		if (isObject(%cl.pickedTowerBrick)) {
+			%cl.pickedTowerBrick.clearTower(%cl);
+		}
+
 		return parent::onDrop(%this, %val);
 	}
 
@@ -78,6 +82,10 @@ package CPB_Game_Towers {
 			messageAdmins("<font:Palatino Linotype:36>!!! \c6Tower \c3" @ %cl.tower.towerNum @ "\c6's guard has just left the game!");
 		} else if (%cl.bl_id !$= "" && %cl.isSelectedToBeGuard) {
 			serverCmdRemoveGuard(FakeClient, %cl.name);
+		}
+
+		if (isObject(%cl.pickedTowerBrick)) {
+			%cl.pickedTowerBrick.clearTower(%cl);
 		}
 
 		return parent::removeMember(%mg, %cl);
@@ -185,6 +193,7 @@ function resetTowerData(%id) {
 	%tower.spotlightBot = "";
 	%tower.origBrickCount = "";
 	%tower.guardOption = "";
+	%tower.guardEquipment = "";
 	%tower.supportCount = "";
 }
 
@@ -228,13 +237,13 @@ function validateTower(%tower, %brick) {
 
 function enableTowerSpotlights() {
 	for (%i = 0; %i < 4; %i++) {
-		startLightBeamLoop(("Tower" @ %towerNum).spotlightBot); //
+		startLightBeamLoop(("Tower" @ %towerNum).spotlightBot);
 	}
 }
 
 function disableTowerSpotlights() {
 	for (%i = 0; %i < 4; %i++) {
-		clearLightBeam(("Tower" @ %towerNum).spotlightBot); //
+		clearLightBeam(("Tower" @ %towerNum).spotlightBot);
 	}
 }
 
@@ -294,7 +303,7 @@ function fxDTSBrick::setTower(%b, %tower, %cl) {
 	messageClient(%cl, '', "\c6You have been assigned to \c5Tower " @ %tower + 1);
 	%cl.pickedTowerBrick = %b;
 	%b.onSetTower(%cl.player, %cl);
-	%b.item.setShapeName(%cl.name @ " - " @ $CPB::Classes[%cl.guardClass]);
+	%b.item.setShapeName(%cl.name @ " - " @ $CPB::Classes[%cl.guardClass] @ ", " @ $CPB::Equipment[%cl.guardEquipment]);
 }
 
 function fxDTSBrick::clearTower(%b, %cl) {
@@ -302,6 +311,7 @@ function fxDTSBrick::clearTower(%b, %cl) {
 	%cl.pickedTowerBrick.onClearTower(%cl.player, %cl);
 	%cl.pickedTowerBrick = "";
 	%cl.tower.guardOption = "";
+	%cl.tower.guardEquipment = "";
 	%cl.tower.guard = "";
 	%cl.tower = "";
 }

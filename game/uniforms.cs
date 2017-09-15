@@ -65,7 +65,7 @@ package CPB_Game_Uniforms {
 		if (%pl.getDatablock().getName() $= "BuffArmor") {
 			%color = %cl.headColor;
 			%hc = %cl.headColor;
-			%tint = max(getWord(%hc, 0) - 0.14, 0) SPC max(getWord(%hc, 1) - 0.16, 0) SPC getWords(%hc, 2, 3);
+			%tint = getMax(getWord(%hc, 0) - 0.14, 0) SPC getMax(getWord(%hc, 1) - 0.16, 0) SPC getWords(%hc, 2, 3) SPC 1;
 
 			%cl.player.setNodeColor("ALL", %color);
 			%cl.player.setNodeColor("nipples", %tint);
