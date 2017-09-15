@@ -126,6 +126,7 @@ function assignGuard(%cl, %towerNum) {
 	%cl.tower = "Tower" @ %towerNum;
 	("Tower" @ %towerNum).guard = %cl;
 	%cl.tower.guardOption = %cl.guardClass;
+	%cl.tower.guardEquipment = %cl.guardEquipment;
 }
 
 function serverCmdReplaceGuard(%cl, %towerNum, %name) {

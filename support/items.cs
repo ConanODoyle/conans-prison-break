@@ -3,6 +3,8 @@ $OneUseItem[0] = KeyYellowItem;
 $OneUseItem[1] = riotSmokeGrenadeItem;
 $OneUseItem[2] = FireAxeItem;
 
+$CPB::OneUseItemPopTime = 60 * 10;
+
 if (!isObject(DroppedItems)) {
 	new SimSet(DroppedItems) {};
 }
@@ -12,11 +14,13 @@ if (!isObject(DroppedItems)) {
 //	collectAllPrisonBricks
 //	Armor::onCollision
 //	Armor::onDisabled
+//	Item::schedulePop
 //Created:
 //	Player::removeItem
 //	Player::addItem
 //	isOneUseItem
 //	clearAllDroppedItems
+//	startTimedPop
 
 
 package CPB_Support_Items {
@@ -35,7 +39,7 @@ package CPB_Support_Items {
 	function Armor::onCollision(%this, %obj, %col, %pos) {
 		if (%col.getClassName() $= "Item" && isOneUseItem(%col.getDatablock())) {
 			%ret = parent::onCollision(%this, %obj, %col, %pos);
-			if (isEventPending(%col.respawnSchedule)) {
+			if (!isEventPending(%col.fadeInSchedule) || !%col.isStatic()) {
 				return %ret;
 			}
 			%col.spawnBrick.oneUseItem = %col.getDatablock().getName();
@@ -58,6 +62,16 @@ package CPB_Support_Items {
 			}
 		}
 		return parent::onDisabled(%this, %obj, %col, %pos);
+	}
+
+	function Item::schedulePop(%obj) {
+		if (isOneUseItem(%obj.getDatablock())) {
+			DroppedItems.add(%obj);
+
+			startTimedPop(%obj, $CPB::OneUseItemPopTime);
+			return;
+		}
+		return parent::schedulePop(%obj);
 	}
 };
 activatePackage(CPB_Support_Items);
@@ -98,7 +112,19 @@ function isOneUseItem (%db) {
 }
 
 function clearAllDroppedItems() {
-	for (%i = DroppedItems.getCount() - 1; %i >= 0; %i--) {
-		DroppedItems.getObject(%i).delete();
+	DroppedItems.deleteAll();
+}
+
+function startTimedPop(%obj, %time) {
+	cancel(%obj.timedPopLoop);
+	
+	if (%time < 0) {
+		%obj.delete();
+		return;
 	}
+
+	%obj.setShapeNameDistance(500);
+	%obj.setShapeName(%obj.getDatablock().uiName @ " - " @ %time);
+
+	%obj.timedPopLoop = schedule(1000, %obj, startTimedPop, %obj, %time - 1);
 }

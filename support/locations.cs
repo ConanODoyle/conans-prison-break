@@ -47,7 +47,7 @@ function GameConnection::isOutside(%cl) {
 	}
 
 	%loc = getLocation(%pl);
-	if (%loc $= "Outside" || %loc $= "Yard") {
+	if (%loc $= "Outside" || %loc $= "Yard" || getSubStr(%loc, 0, 5) $= "Tower") {
 		return 1;
 	}
 	return 0;

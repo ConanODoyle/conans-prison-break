@@ -150,7 +150,7 @@ function colorVisualItem(%item) {
 		%item.setNodeColor("pRArmSlim", $PrisonerColor);
 		%item.setNodeColor("Icosphere", "1 1 1 1");
 		%item.setNodeColor("sniperBarrel", "0.4 0.4 0.4 1");
-	} else if (%name $= "ShrapnelItemB") {
+	} else if (%name $= "ShrapnelItem") {
 		%item.setNodeColor("Icosphere", "1 1 1 1");
 		%item.setNodeColor("tracers", "0.5 0.5 0.5 0.5");
 		%item.setNodeColor("bullets", "1 1 0 1");

@@ -58,7 +58,7 @@ package CPB_Support_Messaging {
 			if ($DebugMode) {
 				messageAll('', getFormattedMessage(%cl, %msg));
 			} else {
-				messageClient(%cl, '', "\c1Team chat disabled - normal chat is team-only when inside.");
+				messageClient(%cl, '', "\c1Team chat disabled - normal chat is team-only when inside");
 			}
 		} else {
 			return parent::serverCmdTeamMessageSent(%cl, %msg);
@@ -169,11 +169,12 @@ function GameConnection::canMessage(%cl, %targ, %msg) {
 		return 1;
 	}
 
-	if ($CPB::PHASE == $CPB::INGAME) {
+	if ($CPB::PHASE == $CPB::GAME) {
 		if (%cl.isAlive) {
 			if (%cl.isPrisoner && %targ.isPrisoner) return 1;
+			if (%cl.isGuard && %targ.isGuard) return 1;
 			if (!%targ.hasSpawnedOnce) return 1;
-			if (%targ.isDead) return 1;
+			if (%targ.isDead && !%cl.isGuard) return 1;
 
 			%isOutside = %cl.isOutside();
 			if (%isOutside && %targ.isOutside()) return 1;
@@ -185,9 +186,13 @@ function GameConnection::canMessage(%cl, %targ, %msg) {
 
 		return 0;
 	} else if ($CPB::PHASE == $CPB::LOBBY) {
+		if (%cl.isGuard == %targ.isGuard) return 1;
+
 		%location = getLocation(%cl.player);
-		if (%location == getLocation(%targ.player)) return 1;
+		if (%location $= getLocation(%targ.player)) return 1;
 		if (%targ.BL_ID == 4928) return 1;
+
+		return 0;
 	} else {
 		return 1;
 	}
