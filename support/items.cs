@@ -1,9 +1,9 @@
 $OneUseItemCount = 3;
-$OneUseItem[0] = KeyYellowItem;
+$OneUseItem[0] = yellowKeyItem;
 $OneUseItem[1] = riotSmokeGrenadeItem;
 $OneUseItem[2] = FireAxeItem;
 
-$CPB::OneUseItemPopTime = 60 * 10;
+$CPB::OneUseItemPopTime = 60 * 2;
 
 if (!isObject(DroppedItems)) {
 	new SimSet(DroppedItems) {};
@@ -56,9 +56,11 @@ package CPB_Support_Items {
 					datablock = %obj.tool[%i];
 					position = %obj.getPosition();
 					client = %obj.client;
+					minigame = %obj.client.minigame;
 				};
 				%it.setVelocity(vectorAdd("0 0 10", %obj.getVelocity()));
 				DroppedItems.add(%it);
+				startTimedPop(%it, $CPB::OneUseItemPopTime);
 			}
 		}
 		return parent::onDisabled(%this, %obj, %col, %pos);

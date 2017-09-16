@@ -27,6 +27,7 @@ $SPAWN::BRONSONDEATHCPPRIORITY = 9;
 //	resetInfirmarySpawnPointCounts
 //	getNextRespawnTime
 
+
 package CPB_Game_Spawn {
 	function GameConnection::onDeath(%cl, %sourceObj, %sourceCl, %damageType, %damLoc) {
 		if (!%cl.isPrisoner && !%cl.isGuard) {

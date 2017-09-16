@@ -43,6 +43,69 @@ datablock ItemData(LMGItem : HammerItem) {
 	uiName = "LMG Visual";
 };
 
+// datablock StaticShapeData(HelicopterShape)
+// {
+// 	shapeFile = "./shapes/helicopterShape/helicopter.dts";
+// };
+
+// datablock StaticShapeData(HelicopterShape2)
+// {
+// 	shapeFile = "./shapes/helicopterShape/helicopter2.dts";
+// };
+
+datablock StaticShapeData(HelicopterMountShape)
+{
+	shapeFile = "./shapes/helicopterShape/helicopterMount.dts";
+};
+
+datablock PlayerData(HelicopterArmor : PlayerStandardArmor) {
+	shapeFile = "./shapes/helicopterShape/helicopterShape.dts";
+
+	boundingBox = vectorScale("100 100 100", 4);
+	uiName = "Helicopter Bot Prop";
+};
+
+function spawnHelicopter(%pos) {
+	if (!isObject($CPB::HelicopterSpinShape)) {
+		$CPB::HelicopterSpinShape = new StaticShape() {
+			datablock = HelicopterMountShape;
+		};
+	}
+
+	if (!isObject($CPB::HelicopterBot)) {
+		$CPB::HelicopterBot = new AIPlayer() {
+			datablock = HelicopterArmor;
+		};
+	}
+
+	if (%pos $= "") {
+		%pos = _HelicopterCenter.getPosition();
+	}
+
+	$CPB::HelicopterSpinShape.setTransform(%pos);
+	$CPB::HelicopterSpinShape.playThread(0, circle);
+	$CPB::HelicopterSpinShape.mountObject($CPB::HelicopterBot, 1);
+}
+
+function a(%dt, %i)
+{
+    cancel($a);
+    $test.setTransform($test.position SPC "0 0 1" SPC %i * $pi / 3600);
+    //time: 360 / (0.05 * (1000/%dt))
+    $a = schedule(%dt, 0, a, %dt, (%i - 1 + 7200) % 7200);
+}
+
+function b(%dt, %i)
+{
+    cancel($b);
+   	%vec = mCos(%i * $pi / 3600) SPC mSin(%i * $pi / 3600) SPC 1;
+   	%pos = vectorAdd($center, vectorScale(%vec, 30));
+    $test2.setTransform(%pos SPC "0 0 1" SPC %i * $pi / 3600);
+    //time: 360 / (0.05 * (1000/%dt))
+    $b = schedule(%dt, 0, b, %dt, (%i - 1 + 7200) % 7200);
+}
+
+
 //Object parameters:
 //Client
 //	guardClass
@@ -81,6 +144,7 @@ activatePackage(CPB_Game_Classes);
 
 
 registerOutputEvent(GameConnection, "setGuardClass", "string 200 156", 1);
+registerOutputEvent(GameConnection, "setGuardEquipment", "string 200 156", 1);
 
 function GameConnection::setGuardClass(%cl, %name) {
 	if (containsWord($CPB::Classes::List, %name)) {

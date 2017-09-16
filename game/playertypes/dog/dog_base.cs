@@ -10,7 +10,7 @@ AddDamageType("Dog",	'<bitmap:Add-Ons/Gamemode_PPE/ci/Dog> %1',	 '%2 <bitmap:Add
 
 package CPB_DogAI {
 	function Armor::onCollision(%db, %this, %col, %vec, %speed) {
-		if (%db.getID() == ShepherdDogHoleBot.getID() || %db.getID() == ShepherdDogArmor) {
+		if (%db.getID() == ShepherdDogHoleBot.getID() || %db.getID() == ShepherdDogArmor.getID()) {
 			if (minigameCanDamage(%this, %col) && getSimTime() - %this.lastattacked > 1500) {
 				%this.dogAttack( %col );
 			}
@@ -19,7 +19,7 @@ package CPB_DogAI {
 	}
 
 	function Armor::Damage(%data, %obj, %sourceObject, %position, %damage, %damageType) {
-		if (%db.getID() == ShepherdDogHoleBot.getID() || %db.getID() == ShepherdDogArmor) {
+		if (%db.getID() == ShepherdDogHoleBot.getID() || %db.getID() == ShepherdDogArmor.getID()) {
 			schedule(2000, %obj, eval, %obj @ ".lastDamaged = " @ getSimTime() @ ";");
 			if (!%obj.isFollowingWhistle && !(%this.getDamagePercent() > 0.8 && getSimTime() - %this.lastDamaged < 8000)) {
 				%obj.chase(%sourceObject);
