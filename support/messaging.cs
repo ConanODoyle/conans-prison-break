@@ -176,8 +176,7 @@ function GameConnection::canMessage(%cl, %targ, %msg) {
 			if (!%targ.hasSpawnedOnce) return 1;
 			if (%targ.isDead && !%cl.isGuard) return 1;
 
-			%isOutside = %cl.isOutside();
-			if (%isOutside && %targ.isOutside()) return 1;
+			if (%cl.isOutside() && %targ.isOutside()) return 1;
 		} else {
 			if (!%cl.hasSpawnedOnce) return 1;
 			if (%targ.isPrisoner) return 1;
@@ -188,8 +187,7 @@ function GameConnection::canMessage(%cl, %targ, %msg) {
 	} else if ($CPB::PHASE == $CPB::LOBBY) {
 		if (%cl.isGuard == %targ.isGuard) return 1;
 
-		%location = getLocation(%cl.player);
-		if (%location $= getLocation(%targ.player)) return 1;
+		if (getLocation(%cl.player) $= getLocation(%targ.player)) return 1;
 		if (%targ.BL_ID == 4928) return 1;
 
 		return 0;

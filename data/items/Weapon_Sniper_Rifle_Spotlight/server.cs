@@ -483,9 +483,94 @@ datablock ShapeBaseImageData(SniperRifleSpotlightImage)
 	stateWaitForTimeout[5]			= true;
 };
 
-datablock ShapeBaseImageData(SniperRifleHelicopterImage : SniperRifleSpotlightImage) {
-	golden = "";
-	eyeOffset = "0 0 0";
+datablock ShapeBaseImageData(SniperRifleHelicopterImage) {
+	shapeFile = "./sniper rifle v2.dts";
+	emap = true;
+
+	// Specify mount point & offset for 3rd person, and eye offset
+	// for first person rendering.
+	mountPoint = 0;
+	offset = "0 0 0";
+	eyeOffset = "0 0 100";
+	rotation = eulerToMatrix( "0 0 0" );
+
+	// When firing from a point offset from the eye, muzzle correction
+	// will adjust the muzzle vector to point to the eye LOS point.
+	// Since this weapon doesn't actually fire from the muzzle point,
+	// we need to turn this off.  
+	correctMuzzleVector = true;
+
+	// Add the WeaponImage namespace as a parent, WeaponImage namespace
+	// provides some hooks into the inventory system.
+	className = "WeaponImage";
+
+	// Projectile && Ammo.
+	item = SniperRifleSpotlightItem;
+	ammo = " ";
+	projectile = SniperRifleSpotlightProjectile;
+	projectileType = Projectile;
+
+	goldenImage = SniperRifleSpotlightGoldenImage;
+
+	casing = SniperRifleSpotlightDebris;
+	shellExitDir		  = "1.0 0 0.8";
+	shellExitOffset	  = "0 0 0";
+	shellExitVariance	= 15.0;	
+	shellVelocity		 = 3.0;
+
+	//melee particles shoot from eye node for consistancy
+	melee = false;
+	//raise your arm up or not
+	armReady = true;
+	minShotTime = 2.00;	//minimum time allowed between shots (needed to prevent equip/dequip exploit)
+
+	doColorShift = false;
+	colorShiftColor = SniperRifleSpotlightItem.colorShiftColor;//"0.400 0.196 0 1.000";
+
+	stateName[0]					= "Activate";
+	stateTimeoutValue[0]			= 0.15;
+	stateTransitionOnTimeout[0]		= "Smoke";
+	stateSequence[0]				= "Ready";
+	stateSound[0]					= SniperRifleSpotlightUnholsterSound;
+
+	stateName[1]					= "Ready";
+	stateTimeoutValue[1]			= 0.14;
+	stateTransitionOnTriggerDown[1]	= "Fire";
+	stateAllowImageChange[1]		= true;
+
+	stateName[2]					= "Fire";
+	stateTransitionOnTimeout[2]		= "Smoke";
+	stateTimeoutValue[2]			= 0.1;
+	stateFire[2]					= true;
+	stateAllowImageChange[2]		= false;
+	stateSequence[2]				= "Fire";
+	stateScript[2]					= "onFire";
+	stateWaitForTimeout[2]			= true;
+	stateEmitter[2]					= GunFlashEmitter;
+	stateEmitterTime[2]				= 0.05;
+	stateEmitterNode[2]				= "muzzlePoint";
+	stateSound[2]					= gunShot1Sound;
+
+	stateName[3] 					= "Smoke";
+	stateEmitter[3]					= SniperRifleSpotlightSmokeEmitter;
+	stateEmitterTime[3]				= 0.5;
+	stateEmitterNode[3]				= "muzzlePoint";
+	stateTimeoutValue[3]			= 0.7;
+	stateTransitionOnTimeout[3]		= "Reload";
+	stateWaitForTimeout[3]			= true;
+
+	stateName[4]					= "Reload";
+	stateSequence[4]				= "Reload";
+	stateTimeoutValue[4]			= 1.23;
+	stateTransitionOnTimeout[4]		= "PostReload";
+	stateSound[4]					= "SniperRifleSpotlightBoltSound";
+	stateEjectShell[4]				= true;
+
+	stateName[5]					= "PostReload";
+	stateScript[5]					= "onReload";
+	stateTransitionOnTimeout[5]		= "Ready";
+	stateTimeoutValue[5]			= 0.05;
+	stateWaitForTimeout[5]			= true;
 };
 
 function SniperRifleSpotlightImage::onFire(%this, %obj, %slot)
@@ -513,7 +598,7 @@ function SniperRifleSpotlightImage::onFire(%this, %obj, %slot)
 	%eyeVector = %obj.getEyeVector();
 	%rawMuzzleVector = %obj.getMuzzleVector(%slot);
 	%dot = VectorDot(%eyeVector, %rawMuzzleVector);
-	%muzzlevector = %obj.getMuzzleVector(%slot);
+	%muzzleVector = %obj.getMuzzleVector(%slot);
 	if (%dot < 0.6)
 	{
 		if (VectorLen(%objectVelocity) < 14.0)
@@ -522,10 +607,61 @@ function SniperRifleSpotlightImage::onFire(%this, %obj, %slot)
 		}
 	}
 	%gunVel = VectorScale(%projectile.muzzleVelocity, getWord(%obj.getScale(), 2));
-	%muzzleVelocity = VectorAdd(VectorScale(%muzzlevector, %gunVel), VectorScale(%objectVelocity, %inheritFactor));
+	%muzzleVelocity = VectorAdd(VectorScale(%muzzleVector, %gunVel), VectorScale(%objectVelocity, %inheritFactor));
 
 	%p = new Projectile(){
 		dataBlock = %projectile;
+		initialVelocity = %muzzleVelocity;
+		initialPosition = %initPos;
+		sourceObject = %obj;
+		sourceSlot = %slot;
+		client = %obj.client;
+		stun = %stun;
+		shrapnel = 1;
+	};
+	MissionCleanup.add(%p);
+
+	%obj.setImageAmmo(%slot, 0);
+	return %p;
+}
+
+function SniperRifleHelicopterImage::onFire(%this, %obj, %slot)
+{
+	%obj.playThread(2, plant);
+	%cl = %obj.client;
+	if (!isObject(%cl)) {
+		return;
+	}
+
+		
+	// if (%cl.tower.guardOption $= $CPB::Classes::Stun) {
+	// 	%projectile = SniperRifleSpotlightProjectile;
+	// 	%stun = 1;
+	// } else if (%cl.tower.guardOption $= $CPB::Classes::Shrapnel) {
+	// 	%projectile = SniperShrapnelSpotlightProjectile;
+	// 	%shrapnel = 1;
+	// } else {
+	// 	%projectile = SniperRifleSpotlightProjectile;
+	// }
+
+	%initPos = %obj.getEyeTransform();
+	%inheritFactor = %projectile.velInheritFactor;
+	%eyeVector = %obj.getEyeVector();
+	%muzzleVector = %obj.getMuzzleVector(%slot);
+
+	%mask = $TypeMasks::PlayerObjectType | $TypeMasks::VehicleObjectType | $TypeMasks::StaticObjectType | $TypeMasks::fxBrickObjectType;
+	%raycast = containerRayCast(%initPos, vectorAdd(%initPos, vectorScale(%eyeVector, 500)), %mask, %obj);
+	if (%raycast)
+	{
+		%hitPos = posFromRaycast(%raycast);
+		%eyeDiff = VectorSub(%hitPos, %initPos);
+		%muzzleVector = vectorNormalize(%eyeDiff);
+	}
+	%gunVel = VectorScale(%projectile.muzzleVelocity, getWord(%obj.getScale(), 2));
+	%muzzleVelocity = VectorScale(%muzzleVector, %this.projectile.muzzleVelocity);
+
+	%p = new Projectile(){
+		dataBlock = %this.projectile;
 		initialVelocity = %muzzleVelocity;
 		initialPosition = %initPos;
 		sourceObject = %obj;
@@ -559,8 +695,6 @@ package SniperRifleSpotlight
 {
 	function ProjectileData::onCollision(%db, %obj, %col, %fade, %pos, %normal)
 	{
-		// talk("hitloc: " @ %pos);
-		// talk("origin: " @ $s.createBoxAt(%obj.initialPosition, "1 1 1 1", 1));
 		if (%db.aimSpotlight || %obj.aimSpotlight) {
 			aimSpotlight(%obj);
 		}

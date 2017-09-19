@@ -130,7 +130,7 @@ datablock ShapeBaseImageData(PumpShotgunGoldenImage)
 	stateTransitionOnTriggerUp[5]	= "LoadCheckB";
 						
 	stateName[6]					= "LoadCheckB";
-	stateTransitionOnTimeout[6]		= 0.55;
+	stateTimeoutValue[6]			= 0.55;
 	stateWaitForTimeout[6]			= true;
 	stateTransitionOnAmmo[6]		= "Ready";
 	stateTransitionOnNoAmmo[6]		= "Reload";

@@ -21,7 +21,6 @@ exec("./game/spawn.cs"); //needs lowest package priority
 
 exec("./support/barber.cs");
 exec("./support/bottomprint.cs");
-exec("./support/electrocute.cs");
 exec("./support/EmptyHoleBot.cs");
 exec("./support/globalcams.cs");
 exec("./support/items.cs");
@@ -37,6 +36,7 @@ exec("./game/cameras.cs");
 exec("./game/classes.cs");
 exec("./game/damage.cs");
 exec("./game/guards.cs");
+exec("./game/helicopterSniper.cs");
 exec("./game/info.cs");
 exec("./game/load.cs");
 exec("./game/logo.cs");

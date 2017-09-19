@@ -95,7 +95,21 @@ package CPB_Game_Spawn {
 			}
 		}
 
-		return parent::createPlayer(%cl, %t);
+		%ret = parent::createPlayer(%cl, %t);
+
+		if (%cl.isPrisoner) {
+			if ($CPB::PHASE == $CPB::LOBBY) {
+				%cl.player.setShapeNameDistance(400);
+			} else {
+				%cl.player.setShapeNameDistance(12);
+			}
+			%cl.player.setShapeNameColor($PRISONER::CHATCOLOR);
+		} else if (%cl.isGuard) {
+			%cl.player.setShapeNameDistance(400);
+			%cl.player.setShapeNameColor($GUARD::CHATCOLOR);
+		}
+
+		return %ret;
 	}
 
 	function serverCmdCreateMinigame(%cl, %a, %b, %c, %d, %e, %f, %g, %h, %i, %j, %k, %l, %m, %n) {

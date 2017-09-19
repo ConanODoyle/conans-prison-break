@@ -9,11 +9,10 @@ exec("./Item_Chisel/server.cs");
 exec("./Item_Soap/server.cs");
 exec("./Item_Steak/server.cs");
 exec("./Item_PosTool/posTool.cs");
-exec("./Weapon_Grenade/server.cs");
 exec("./Weapon_Shotgun/server.cs");
 exec("./Weapon_LMG/server.cs");
 exec("./Weapon_Sniper_Rifle_Spotlight/server.cs");
-exec("./Hat_Croc/server.cs");
+exec("./Weapon_Grenade/server.cs"); //needs sniper rifle emitter assets
 
 datablock ParticleData(goldenParticleA)
 {
@@ -127,6 +126,7 @@ datablock ParticleEmitterData(projectileGoldenEmitter)
 };
 
 
+exec("./Hat_Croc/server.cs"); //needs golden emitter datablocks
 exec("./Item_Tray/golden/server.cs");
 exec("./Item_Bucket/golden/server.cs");
 exec("./Item_Soap/golden/server.cs");

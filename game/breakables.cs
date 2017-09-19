@@ -134,6 +134,10 @@ function fxDTSBrick::damage(%b, %damage, %player) {
 		%b.origColorID = $CPB::BrickType::SupportColor[%b.colorStage];
 	}
 
+	if (%b.type == $CPB::BrickType::Window) {
+		serverPlay3D(tierFragGrenadeBounceSound, %b.getPosition());
+	}
+
 	%b.setColor($damageFlashColor);
 	%b.recolorSchedule = %b.schedule(50, setColor, %b.origColorID);
 }

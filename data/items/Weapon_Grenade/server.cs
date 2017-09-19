@@ -63,7 +63,7 @@ datablock ParticleEmitterData(tierstickGrenadeExplosionEmitter)
 	ejectionVelocity = 20;
 	velocityVariance = 10.0;
 	ejectionOffset   = 1.0;
-	thetaMin         = -180;
+	thetaMin         = 0;
 	thetaMax         = 180;
 	phiReferenceVel  = 0;
 	phiVariance      = 360;
@@ -412,7 +412,7 @@ datablock ShapeBaseImageData(tierfragGrenadeImage)
 	stateName[2]			= "Tick";
 	stateTransitionOnTimeout[2]	= "Charge";
 	stateAllowImageChange[2]	= false;
-	stateSound[2]				= block_moveBrick_Sound;
+	stateSound[2]				= BrickMoveSound;
 	stateScript[2]                  = "onTick";
 	stateTimeoutValue[2]		= 0.05;
 
@@ -467,8 +467,8 @@ function tierfragGrenadeImage::onAbortCharge(%this, %obj, %slot)
 function tierfragGrenadeImage::onFire(%this, %obj, %slot)
 {
 	 
-	Parent::OnFire(%this, %obj, %slot);
-	%obj.client.quantity["fragnades"] -= 1;
+	Parent::onFire(%this, %obj, %slot);
+	// %obj.client.quantity["fragnades"] -= 1;
 
 	serverPlay3D(tierfraggrenadetossSound,%obj.getPosition());
 	%obj.removeItem(%obj.currTool);
