@@ -43,16 +43,6 @@ datablock ItemData(LMGItem : HammerItem) {
 	uiName = "LMG Visual";
 };
 
-// datablock StaticShapeData(HelicopterShape)
-// {
-// 	shapeFile = "./shapes/helicopterShape/helicopter.dts";
-// };
-
-// datablock StaticShapeData(HelicopterShape2)
-// {
-// 	shapeFile = "./shapes/helicopterShape/helicopter2.dts";
-// };
-
 datablock StaticShapeData(HelicopterMountShape)
 {
 	shapeFile = "./shapes/helicopterShape/helicopterMount.dts";
@@ -136,6 +126,65 @@ function b(%dt, %i)
     //time: 360 / (0.05 * (1000/%dt))
     $b = schedule(%dt, 0, b, %dt, (%i - 1 + 7200) % 7200);
 }
+
+datablock ItemData(SniperControlItem : HammerItem) {
+	shapeFile = "./shapes/helicopterShape/SniperControl.dts";
+
+	image = SniperControlImage;
+
+	uiName = "Sniper Controller";
+
+	doColorShift = false;
+};
+
+datablock ShapeBaseImageData(SniperControlImage) {
+	shapeFile = "./shapes/helicopterShape/SniperControl.dts";
+	emap = true;
+	
+	className = "WeaponImage";
+
+	item = SniperControlItem;
+
+	stateName[0]					= "Activate";
+	stateTimeoutValue[0]			= 0.15;
+	stateTransitionOnTimeout[0]		= "Ready";
+	stateScript[0]					= "onActivate";
+
+	stateName[1]					= "Ready";
+	stateTransitionOnTriggerDown[1]	= "Fire";
+	stateAllowImageChange[1]		= true;
+
+	stateName[2]					= "Fire";
+	stateScript[2]					= "onFire";
+	stateTransitionOnTriggerUp[2]	= "Ready";
+};
+
+function SniperControlImage::onReady(%this, %obj, %slot) {
+	%obj.playThread(1, armReadyBoth);
+}
+
+function SniperControlImage::onFire(%this, %obj, %slot) {
+	%cl = %obj.client;
+
+	if (!isObject(%cl)) {
+		return;
+	}
+
+	%obj.isUsingSniperPlatform = 1;
+	%cl.setControlObject($CPB::HelicopterSniper1);
+}
+
+package HelicopterSniper {
+	function serverCmdLight(%cl) {
+		if (isObject(%pl = %cl.player) && %pl.isUsingSniperPlatform) {
+			%cl.setControlObject(%pl);
+			return;
+		}
+
+		parent::serverCmdLight(%cl);
+	}
+}; 
+activatePackage(HelicopterSniper);
 
 //Object parameters:
 //Client
