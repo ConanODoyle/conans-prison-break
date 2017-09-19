@@ -483,6 +483,11 @@ datablock ShapeBaseImageData(SniperRifleSpotlightImage)
 	stateWaitForTimeout[5]			= true;
 };
 
+datablock ShapeBaseImageData(SniperRifleHelicopterImage : SniperRifleSpotlightImage) {
+	golden = "";
+	eyeOffset = "0 0 0";
+};
+
 function SniperRifleSpotlightImage::onFire(%this, %obj, %slot)
 {
 	%obj.playThread(2, plant);
@@ -554,6 +559,8 @@ package SniperRifleSpotlight
 {
 	function ProjectileData::onCollision(%db, %obj, %col, %fade, %pos, %normal)
 	{
+		// talk("hitloc: " @ %pos);
+		// talk("origin: " @ $s.createBoxAt(%obj.initialPosition, "1 1 1 1", 1));
 		if (%db.aimSpotlight || %obj.aimSpotlight) {
 			aimSpotlight(%obj);
 		}

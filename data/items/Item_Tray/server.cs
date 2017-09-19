@@ -199,6 +199,16 @@ function PrisonTrayImage::onFire(%this, %obj, %slot)
 	%ray = containerRaycast(%start, %end, $TypeMasks::PlayerObjectType, %obj);
 	if (isObject(%hit = getWord(%ray, 0))) {
 		if (%hit.getDatablock().getName() !$= "PlayerNoJet") {
+			%sound = getRandom(1, 3);
+			%sound = "trayDeflect" @ %sound @ "Sound";
+			serverPlay3D(%sound, %col.getHackPosition());
+
+			%p = new Projectile() {
+				datablock = HammerProjectile;
+				initialPosition = getWords(%ray, 1, 3);
+			};
+			%p.explode();
+
 			return;
 		}
 
@@ -248,7 +258,6 @@ function PrisonTrayImage::onReFire(%this, %obj, %slot) {
 			%obj.unMountImage(0);
 		}
 	} else if (%obj.isGivingTray) {
-		talk("stopping audio");
 		%obj.stopAudio(1);
 		%obj.client.centerprint("Tray attaching canceled", 2);
 		if (isObject(%obj.givingTrayTarget)) {
@@ -264,6 +273,16 @@ function PrisonTrayImage::onReFire(%this, %obj, %slot) {
 		%ray = containerRaycast(%start, %end, $TypeMasks::PlayerObjectType, %obj);
 		if (isObject(%hit = getWord(%ray, 0))) {
 			if (%hit.getDatablock().getName() !$= "PlayerNoJet") {
+				%sound = getRandom(1, 3);
+				%sound = "trayDeflect" @ %sound @ "Sound";
+				serverPlay3D(%sound, %col.getHackPosition());
+
+				%p = new Projectile() {
+					datablock = HammerProjectile;
+					initialPosition = getWords(%ray, 1, 3);
+				};
+				%p.explode();
+				
 				return;
 			}
 
@@ -294,7 +313,7 @@ function PrisonTrayImage::onReFire(%this, %obj, %slot) {
 	}
 }
 
-$timeToAttachTray = 6; //multiply by 0.4 to get time to attach tray
+$timeToAttachTray = 5; //multiply by 0.4 to get time to attach tray
 
 function checkTrayAttached(%player, %target) {
 	%target.client.centerprint("\c6" @ %player.client.name @ " is attaching a tray to you...<br>" @ getColoredBars(%player.progress, $timeToAttachTray), 2);

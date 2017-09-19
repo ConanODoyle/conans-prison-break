@@ -62,7 +62,20 @@ datablock PlayerData(HelicopterArmor : PlayerStandardArmor) {
 	shapeFile = "./shapes/helicopterShape/helicopterShape.dts";
 
 	boundingBox = vectorScale("100 100 100", 4);
-	uiName = "Helicopter Bot Prop";
+	uiName = "";
+};
+
+datablock StaticShapeData(HelicopterShape) {
+	shapeFile = "./shapes/helicopterShape/helicopterShape.dts";
+};
+
+datablock PlayerData(SniperPlatformArmor : PlayerStandardArmor) {
+	shapeFile = "./shapes/helicopterShape/sniperRemotePlatform.dts";
+
+	boundingBox = vectorScale("2 2 2", 4);
+	uiName = "";
+	firstPersonOnly = 1;
+	renderFirstPerson = 1;
 };
 
 function spawnHelicopter(%pos) {
@@ -78,13 +91,32 @@ function spawnHelicopter(%pos) {
 		};
 	}
 
+	if (!isObject($CPB::HelicopterSniper1)) {
+		$CPB::HelicopterSniper1 = new AIPlayer() {
+			datablock = SniperPlatformArmor;
+		};
+	}
+
+	if (!isObject($CPB::HelicopterSniper2)) {
+		$CPB::HelicopterSniper2 = new AIPlayer() {
+			datablock = SniperPlatformArmor;
+		};
+	}
+
 	if (%pos $= "") {
 		%pos = _HelicopterCenter.getPosition();
 	}
 
 	$CPB::HelicopterSpinShape.setTransform(%pos);
-	$CPB::HelicopterSpinShape.playThread(0, circle);
+	// $CPB::HelicopterSpinShape.playThread(0, circle);
+	$CPB::HelicopterSpinShape.hideNode("ALL");
 	$CPB::HelicopterSpinShape.mountObject($CPB::HelicopterBot, 1);
+
+	$CPB::HelicopterBot.mountObject($CPB::HelicopterSniper1, 3);
+	$CPB::HelicopterBot.mountObject($CPB::HelicopterSniper2, 4);
+
+	$CPB::HelicopterSniper1.mountImage(SniperRifleHelicopterImage, 0);
+	$CPB::HelicopterSniper2.mountImage(SniperRifleHelicopterImage, 0);
 }
 
 function a(%dt, %i)
@@ -104,7 +136,6 @@ function b(%dt, %i)
     //time: 360 / (0.05 * (1000/%dt))
     $b = schedule(%dt, 0, b, %dt, (%i - 1 + 7200) % 7200);
 }
-
 
 //Object parameters:
 //Client

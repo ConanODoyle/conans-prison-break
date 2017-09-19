@@ -51,7 +51,7 @@ function displayLogo(%camPos, %targetPos, %logo, %bg) {
 	
 	if (isObject($LogoDish) && %bg) {
 		$LogoDish.delete();
-	} 
+	}
 
 	%pos = %targetPos;
 	%delta = vectorSub(%camPos, %pos);
@@ -171,5 +171,5 @@ function clearLogo() {
 	
 	if (isObject($LogoDish)) {
 		$LogoDish.delete();
-	} 
+	}
 }
