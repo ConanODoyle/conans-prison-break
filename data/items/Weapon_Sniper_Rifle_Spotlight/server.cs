@@ -617,7 +617,7 @@ function SniperRifleSpotlightImage::onFire(%this, %obj, %slot)
 		sourceSlot = %slot;
 		client = %obj.client;
 		stun = %stun;
-		shrapnel = 1;
+		shrapnel = %shrapnel;
 	};
 	MissionCleanup.add(%p);
 
@@ -667,8 +667,6 @@ function SniperRifleHelicopterImage::onFire(%this, %obj, %slot)
 		sourceObject = %obj;
 		sourceSlot = %slot;
 		client = %obj.client;
-		stun = %stun;
-		shrapnel = 1;
 	};
 	MissionCleanup.add(%p);
 

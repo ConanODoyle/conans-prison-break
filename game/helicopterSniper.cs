@@ -67,14 +67,15 @@ $CPB::HelicopterCircleTime = 30; //in seconds
 //	rotateHelicopter2
 //	SniperControlImage::onActivate
 //	SniperControlImage::onFire
+//	SniperControlImage::onUnmount
+//	enterSniperPlatform
+//	exitSniperPlatform
 
 
 package HelicopterSniper {
 	function serverCmdLight(%cl) {
 		if (isObject(%pl = %cl.player) && %pl.isUsingSniperPlatform) {
-			%cl.setControlObject(%pl);
-			%pl.isUsingSniperPlatform = 0;
-			$CPB::HelicopterSniper1.client = "";
+			exitSniperPlatform(%pl);
 			return;
 		}
 
@@ -161,7 +162,7 @@ function rotateHelicopter()
 function SniperControlImage::onActivate(%this, %obj, %slot) {
 	%obj.playThread(1, armReadyBoth);
 	if (isObject(%cl = %obj.client) && !%obj.alertSniperControlImage) {
-		messageClient(%cl, '', "<font:Arial Bold:24>\c3Use the controller to take control of the helicopter sniper. Press Light to exit the sniper control");
+		messageClient(%cl, '', "<font:Arial Bold:24>\c3Click to take control of the helicopter sniper. Press Light or unequip the item to exit the sniper control");
 	}
 	%obj.alertSniperControlImage = 1;
 }
@@ -171,12 +172,12 @@ function SniperControlImage::onFire(%this, %obj, %slot) {
 
 	if (!isObject(%cl)) {
 		return;
+	} else if ($CPB::HelicopterSniper1.client !$= "") {
+		messageClient(%cl, '', "The helicopter sniper is currently in use!");
+		return;
 	}
 
-	%obj.isUsingSniperPlatform = 1;
-	%cl.setControlObject($CPB::HelicopterSniper1);
-	$CPB::HelicopterSniper1.client = %cl;
-	messageClient(%cl, '', "\c2[Camera in Free Mode] \c6Press Light to exit");
+	enterSniperPlatform(%obj);
 }
 
 function SniperControlImage::onUnmount(%this, %obj, %slot) {
@@ -186,9 +187,36 @@ function SniperControlImage::onUnmount(%this, %obj, %slot) {
 		return parent::onUnmount(%this, %obj, %slot);
 	}
 
-	%obj.isUsingSniperPlatform = 0;
-	%cl.setControlObject(%obj);
-	$CPB::HelicopterSniper1.client = "";
+	exitSniperPlatform(%obj);
 
 	return parent::onUnmount(%this, %obj, %slot);
+}
+
+function enterSniperPlatform(%pl) {
+	%cl = %pl.client;
+	if (!isObject(%cl)) {
+		return;
+	} else if ($CPB::HelicopterSniper1.client !$= "") {
+		return;
+	}
+
+	$CPB::HelicopterSniper1.client = %cl;
+	%pl.isUsingSniperPlatform = 1;
+	%cl.setControlObject($CPB::HelicopterSniper1);
+	messageClient(%cl, '', "\c2[Sniper Platform Enabled] \c6Press Light to exit");
+	messageGuards("\c2" @ %cl.name @ " \c6has taken control of the helicopter sniper");
+}
+
+function exitSniperPlatform(%pl) {
+	%cl = %pl.client;
+	if (!isObject(%cl)) {
+		return;
+	} else if (%cl != $CPB::HelicopterSniper1.client) {
+		return;
+	}
+
+	$CPB::HelicopterSniper1.client = "";
+	%pl.isUsingSniperPlatform = 0;
+	%cl.setControlObject(%pl);
+	messageGuards("\c2" @ %cl.name @ " \c6has exited out of the helicopter sniper");
 }

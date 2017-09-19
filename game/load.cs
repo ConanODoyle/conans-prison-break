@@ -146,6 +146,7 @@ function collectTowerBrick(%b, %n) {
 	} else if (strPos(%name, "info") >= 0) {
 		InfoPopups.add(%b);
 	} else if (isObject(%b.vehicle)) {
+		%b.respawnVehicle();
 		%tower.spotlightBot = %b.vehicle;
 		%b.vehicle.setScale("2 2 2");
 		%b.vehicle.setShapeName("Tower " @ %n + 1, "8564862");
