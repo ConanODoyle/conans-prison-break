@@ -491,7 +491,7 @@ datablock ShapeBaseImageData(SniperRifleHelicopterImage) {
 	// for first person rendering.
 	mountPoint = 0;
 	offset = "0 0 0";
-	eyeOffset = "0 0 100";
+	eyeOffset = "0 0 0";
 	rotation = eulerToMatrix( "0 0 0" );
 
 	// When firing from a point offset from the eye, muzzle correction

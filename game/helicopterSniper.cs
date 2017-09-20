@@ -11,31 +11,43 @@ datablock PlayerData(HelicopterArmor : PlayerStandardArmor) {
 };
 
 datablock TSShapeConstructor(sniperRemotePlatformDTS) {
-	baseShape  = "./shapes/helicopterShape/sniperRemotePlatform.dts";
-	sequence0  = "./shapes/helicopterShape/sniperRemotePlatform.dsq";
+	baseShape  = "./shapes/platform/sniperRemotePlatform.dts";
+	sequence0  = "./shapes/platform/s_plat.dsq";
 };
 
 datablock PlayerData(SniperPlatformArmor : PlayerStandardArmor) {
-	shapeFile = "./shapes/helicopterShape/sniperRemotePlatform.dts";
+	shapeFile = "./shapes/platform/sniperRemotePlatform.dts";
 
-	boundingBox = vectorScale("100 100 100", 4);
+	boundingBox = vectorScale("50 50 10", 4);
 	uiName = "";
 	firstPersonOnly = 1;
 	// renderFirstPerson = 1;
 };
 
-datablock ItemData(SniperControlItem : HammerItem) {
-	shapeFile = "./shapes/helicopterShape/SniperControl.dts";
+datablock ItemData(SniperControlItem) {
+	category = "Weapon";  // Mission editor category
+	className = "Weapon"; // For inventory system
+
+	shapeFile = "./shapes/helicopterShape/controller/SniperControl.dts";
+	rotate = false;
+	mass = 1;
+	density = 0.2;
+	elasticity = 0.2;
+	friction = 0.6;
+	emap = true;
 
 	image = SniperControlImage;
+	iconName = "Add-ons/Gamemode_PPE/icons/sniper";
 
 	uiName = "Sniper Controller";
 
 	doColorShift = false;
+	colorShiftColor = "0.25 0.25 0.25 1.000";
+	canDrop = true;
 };
 
 datablock ShapeBaseImageData(SniperControlImage) {
-	shapeFile = "./shapes/helicopterShape/SniperControl.dts";
+	shapeFile = "./shapes/helicopterShape/controller/SniperControl.dts";
 	emap = true;
 	
 	className = "WeaponImage";
@@ -48,12 +60,16 @@ datablock ShapeBaseImageData(SniperControlImage) {
 	stateScript[0]					= "onActivate";
 
 	stateName[1]					= "Ready";
-	stateTransitionOnTriggerDown[1]	= "Fire";
+	stateTransitionOnTriggerDown[1]	= "PreFire";
 	stateAllowImageChange[1]		= true;
 
-	stateName[2]					= "Fire";
-	stateScript[2]					= "onFire";
-	stateTransitionOnTriggerUp[2]	= "Ready";
+	stateName[2]					= "PreFire";
+	stateTransitionOnTriggerUp[2]	= "Fire";
+
+	stateName[3]					= "Fire";
+	stateScript[3]					= "onFire";
+	stateTransitionOnTimeout[3]		= "Ready";
+	stateTimeoutValue[3]			= 0.1;
 };
 
 $CPB::HelicopterCircleTime = 30; //in seconds
@@ -124,10 +140,13 @@ function spawnHelicopter(%pos) {
 	$CPB::HelicopterSpinShape.hideNode("ALL");
 	$CPB::HelicopterSpinShape.mountObject($CPB::HelicopterBot, 1);
 
-	$CPB::HelicopterBot.mountObject($CPB::HelicopterSniper1, 3);
+	$CPB::HelicopterBot.unMountObject($CPB::HelicopterSniper1);
+	$CPB::HelicopterBot.setNodeColor("ALL", "0 0.1 0.6 1");
 	// $CPB::HelicopterBot.mountObject($CPB::HelicopterSniper2, 4);
 
+	$CPB::HelicopterSniper1.setTransform("0 0 1000");
 	$CPB::HelicopterSniper1.mountImage(SniperRifleHelicopterImage, 0);
+	$CPB::HelicopterBot.mountObject($CPB::HelicopterSniper1, 3);
 	// $CPB::HelicopterSniper2.mountImage(SniperRifleHelicopterImage, 0);
 }
 
@@ -162,7 +181,7 @@ function rotateHelicopter()
 function SniperControlImage::onActivate(%this, %obj, %slot) {
 	%obj.playThread(1, armReadyBoth);
 	if (isObject(%cl = %obj.client) && !%obj.alertSniperControlImage) {
-		messageClient(%cl, '', "<font:Arial Bold:24>\c3Click to take control of the helicopter sniper. Press Light or unequip the item to exit the sniper control");
+		messageClient(%cl, '', "<font:Arial Bold:24>\c3Click to take control of the helicopter sniper. Press Light or unequip the item to exit.");
 	}
 	%obj.alertSniperControlImage = 1;
 }
@@ -203,7 +222,7 @@ function enterSniperPlatform(%pl) {
 	$CPB::HelicopterSniper1.client = %cl;
 	%pl.isUsingSniperPlatform = 1;
 	%cl.setControlObject($CPB::HelicopterSniper1);
-	messageClient(%cl, '', "\c2[Sniper Platform Enabled] \c6Press Light to exit");
+	messageClient(%cl, '', "\c2[Sniper Platform Enabled] \c6Press Light or unequip the item to exit");
 	messageGuards("\c2" @ %cl.name @ " \c6has taken control of the helicopter sniper");
 }
 

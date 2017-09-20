@@ -1,4 +1,4 @@
-$HairCount = 46;
+$HairCount = 47;
 $Hair[0]	= "None";
 $Hair[1]	= "Comb-Over Hair";
 $Hair[2]	= "Corn Rows Hair";
@@ -45,6 +45,7 @@ $Hair[42]	= "Fat Hair";
 $Hair[43]	= "Dastardly Hair";
 $Hair[44]	= "Clown Hair";
 $Hair[45]	= "Important Hair";
+$Hair[46]	= "Luke Hair";
 
 if(!isObject(CPB_HairSet)) {
 	new SimSet(CPB_HairSet);
