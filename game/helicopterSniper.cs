@@ -10,7 +10,7 @@ datablock PlayerData(HelicopterArmor : PlayerStandardArmor) {
 	uiName = "";
 };
 
-datablock TSShapeConstructor(sniperRemotePlatformDTS) {
+datablock TSShapeConstructor(SniperRemotePlatformDTS) {
 	baseShape  = "./shapes/platform/sniperRemotePlatform.dts";
 	sequence0  = "./shapes/platform/s_plat.dsq";
 };
@@ -18,7 +18,7 @@ datablock TSShapeConstructor(sniperRemotePlatformDTS) {
 datablock PlayerData(SniperPlatformArmor : PlayerStandardArmor) {
 	shapeFile = "./shapes/platform/sniperRemotePlatform.dts";
 
-	boundingBox = vectorScale("50 50 10", 4);
+	boundingBox = vectorScale("100 100 10", 4);
 	uiName = "";
 	firstPersonOnly = 1;
 	// renderFirstPerson = 1;
@@ -97,6 +97,10 @@ package HelicopterSniper {
 
 		parent::serverCmdLight(%cl);
 	}
+
+	// function Armor::onRemove(%this, %obj) {
+	// 	ret
+	// }
 }; 
 activatePackage(HelicopterSniper);
 
@@ -105,23 +109,34 @@ activatePackage(HelicopterSniper);
 
 
 function spawnHelicopter(%pos) {
-	if (!isObject($CPB::HelicopterSpinShape)) {
-		$CPB::HelicopterSpinShape = new StaticShape() {
-			datablock = HelicopterMountShape;
-		};
+	if (isObject($CPB::HelicopterSpinShape)) {
+		$CPB::HelicopterSpinShape.delete();
 	}
 
-	if (!isObject($CPB::HelicopterBot)) {
-		$CPB::HelicopterBot = new AIPlayer() {
-			datablock = HelicopterArmor;
-		};
+	if (isObject($CPB::HelicopterBot)) {
+		$CPB::HelicopterBot.delete();
 	}
 
-	if (!isObject($CPB::HelicopterSniper1)) {
-		$CPB::HelicopterSniper1 = new AIPlayer() {
-			datablock = SniperPlatformArmor;
-		};
+	if (isObject($CPB::HelicopterSniper)) {
+		$CPB::HelicopterSniper.delete();
 	}
+
+
+	$CPB::HelicopterSpinShape = new StaticShape() {
+		datablock = HelicopterMountShape;
+	};
+	$CPB::HelicopterBot = new AIPlayer() {
+		datablock = HelicopterArmor;
+	};
+	$CPB::HelicopterSniper = new AIPlayer() {
+		datablock = SniperPlatformArmor;
+	};
+
+	// if (!isObject($CPB::HelicopterSpotlight)) {
+	// 	$CPB::HelicopterSpotlight = new AIPlayer() {
+	// 		datablock = SpotlightArmor;
+	// 	};
+	// }
 
 	// if (!isObject($CPB::HelicopterSniper2)) {
 	// 	$CPB::HelicopterSniper2 = new AIPlayer() {
@@ -140,13 +155,14 @@ function spawnHelicopter(%pos) {
 	$CPB::HelicopterSpinShape.hideNode("ALL");
 	$CPB::HelicopterSpinShape.mountObject($CPB::HelicopterBot, 1);
 
-	$CPB::HelicopterBot.unMountObject($CPB::HelicopterSniper1);
+	$CPB::HelicopterBot.unMountObject($CPB::HelicopterSniper);
 	$CPB::HelicopterBot.setNodeColor("ALL", "0 0.1 0.6 1");
 	// $CPB::HelicopterBot.mountObject($CPB::HelicopterSniper2, 4);
 
-	$CPB::HelicopterSniper1.setTransform("0 0 1000");
-	$CPB::HelicopterSniper1.mountImage(SniperRifleHelicopterImage, 0);
-	$CPB::HelicopterBot.mountObject($CPB::HelicopterSniper1, 3);
+	$CPB::HelicopterSniper.setTransform("0 0 1000");
+	$CPB::HelicopterSniper.mountImage(SniperRifleHelicopterImage, 0);
+	$CPB::HelicopterBot.mountObject($CPB::HelicopterSniper, 3);
+	// $CPB::HelicopterBot.mountObject($CPB::HelicopterSpotlight, 4);
 	// $CPB::HelicopterSniper2.mountImage(SniperRifleHelicopterImage, 0);
 }
 
@@ -191,8 +207,12 @@ function SniperControlImage::onFire(%this, %obj, %slot) {
 
 	if (!isObject(%cl)) {
 		return;
-	} else if ($CPB::HelicopterSniper1.client !$= "") {
+	} else if ($CPB::HelicopterSniper.client !$= "") {
 		messageClient(%cl, '', "The helicopter sniper is currently in use!");
+		return;
+	} else if (!isObject($CPB::HelicopterSniper)) {
+		messageClient(%cl, '', "There is no helicopter sniper!");
+		messageAdmins("!!! \c6There is no helicopter sniper!");
 		return;
 	}
 
@@ -215,13 +235,13 @@ function enterSniperPlatform(%pl) {
 	%cl = %pl.client;
 	if (!isObject(%cl)) {
 		return;
-	} else if ($CPB::HelicopterSniper1.client !$= "") {
+	} else if ($CPB::HelicopterSniper.client !$= "") {
 		return;
 	}
 
-	$CPB::HelicopterSniper1.client = %cl;
+	$CPB::HelicopterSniper.client = %cl;
 	%pl.isUsingSniperPlatform = 1;
-	%cl.setControlObject($CPB::HelicopterSniper1);
+	%cl.setControlObject($CPB::HelicopterSniper);
 	messageClient(%cl, '', "\c2[Sniper Platform Enabled] \c6Press Light or unequip the item to exit");
 	messageGuards("\c2" @ %cl.name @ " \c6has taken control of the helicopter sniper");
 }
@@ -230,11 +250,11 @@ function exitSniperPlatform(%pl) {
 	%cl = %pl.client;
 	if (!isObject(%cl)) {
 		return;
-	} else if (%cl != $CPB::HelicopterSniper1.client) {
+	} else if (%cl != $CPB::HelicopterSniper.client) {
 		return;
 	}
 
-	$CPB::HelicopterSniper1.client = "";
+	$CPB::HelicopterSniper.client = "";
 	%pl.isUsingSniperPlatform = 0;
 	%cl.setControlObject(%pl);
 	messageGuards("\c2" @ %cl.name @ " \c6has exited out of the helicopter sniper");

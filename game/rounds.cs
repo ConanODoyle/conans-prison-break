@@ -61,6 +61,8 @@ function _setPhaseGAME() {
 	centerprintAll("", 0);
 	// startDataCollection($Data::GameNum);
 
+	spawnHelicopter(_HelicopterCenter.getPosition());
+
 	despawnAll();
 	spawnAllGuards();
 	spawnAllPrisoners();

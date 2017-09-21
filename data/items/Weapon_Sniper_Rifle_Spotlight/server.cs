@@ -694,7 +694,7 @@ package SniperRifleSpotlight
 	function ProjectileData::onCollision(%db, %obj, %col, %fade, %pos, %normal)
 	{
 		if (%db.aimSpotlight || %obj.aimSpotlight) {
-			aimSpotlight(%obj);
+			aimSpotlight(%obj, %col);
 		}
 
 		if (%obj.shrapnel > 0) {
@@ -718,8 +718,8 @@ package SniperRifleSpotlight
 };
 activatePackage(SniperRifleSpotlight);
 
-function aimSpotlight(%obj) {
-	%guardPos = %obj.originPoint;
+function aimSpotlight(%obj, %col) {
+	%guardPos = %obj.sourceObject.getPosition();
 	%type = $TypeMasks::PlayerObjectType;
 	%radius = 12;
 
@@ -760,7 +760,7 @@ function aimSpotlight(%obj) {
 			}
 		}
 
-		if (!isObject(%pl) && !%pl.isGuard) {
+		if (!isObject(%pl) && !%pl.isGuard && %pl.isPrisoner) {
 			%target.spotLightTarget = 0;
 			%target.spotLightTargetLocation = %pos;	
 		} else {
@@ -768,6 +768,8 @@ function aimSpotlight(%obj) {
 			%target.spotLightTargetLocation = "";	
 		}
 	}
+
+	AIPlayer::lookAtPlayer_Spotlight(%target, 3);
 }
 
 function spawnShrapnel(%db, %pos, %obj) {

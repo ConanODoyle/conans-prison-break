@@ -149,9 +149,9 @@ function getBrickType(%b) {
 		return $CPB::BrickType::Support;
 	} else if (%db.getID() == brickSatDishData.getID()) {
 		return $CPB::BrickType::SatDish;
-	} else if (strPos(strLwr(%db.getName()), "pole") >= 0 && !%b.isCosmetic) {
+	} else if (strPos(strLwr(%db.getName()), "pole") >= 0 && !%b.isCosmetic && strPos(strLwr(%db.getName()), "door") < 0) {
 		return $CPB::BrickType::Bars;
-	} else if (strPos(strLwr(%db.getName()), "window") >= 0) {
+	} else if (strPos(strLwr(%db.getName()), "window") >= 0 && strPos(strLwr(%db.getName()), "door") < 0) {
 		return $CPB::BrickType::Window;
 	} else if (strPos(strLwr(%b.getName()), "chiselwall") >= 0) {
 		return $CPB::BrickType::Plates;

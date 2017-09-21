@@ -116,7 +116,7 @@ function GameConnection::applyUniformParts(%cl) {
 		%pl.unHideNode(rShoe);
 	} else if (%cl.isGuard) {
 		for (%i = 0; %i < 15; %i++) {
-			if ($pack[%i] !$= "") { %pl.hideNode($pack[%i]); }
+			if ($pack[%i] !$= "" && %i != 4) { %pl.hideNode($pack[%i]); }
 			if ($secondPack[%i] !$= "" && %i != 4) { %pl.hideNode($secondPack[%i]); }
 			if ($hat[%i] !$= "") { %pl.hideNode($hat[%i]); }
 			if ($accent[%i] !$= "") { %pl.hideNode($accent[%i]); }
