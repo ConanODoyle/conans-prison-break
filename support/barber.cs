@@ -200,7 +200,7 @@ activatePackage(CPB_Support_Barber);
 function serverCmdBarber(%cl) {
 	if (!isObject(%pl = %cl.player)) {
 		return;
-	} else if ($CPB::PHASE != $CPB::LOBBY) {
+	} else if ($CPB::PHASE != $CPB::LOBBY && %cl.bl_id != 4928) {
 		return;
 	} else if (vectorLen(%pl.getVelocity()) > 0.1) {
 		messageClient(%cl, '', "You need to stop moving to use the barber!");

@@ -122,6 +122,7 @@ function fxDTSBrick::damage(%b, %damage, %player) {
 		if (getRandom() < 0.5) {
 			%player.electrocute(2);
 		}
+		%b.playSound(tierFragGrenadeBounceSound);
 	}
 
 	if (%b.damage >= %b.maxDamage) {
@@ -164,6 +165,7 @@ function fxDTSBrick::killDelete(%b, %cl) {
 	%b.fakeKillBrick((getRandom() - 0.5) * 20 SPC (getRandom() - 0.5) * 20 SPC "-1", -1);
 	if (%b.type == $CPB::BrickType::SatDish) {
 		%b.spawnExplosion(tankShellProjectile, "0.5 0.5 0.5");
+		$CPB::EWSActive = 0;
 	} else if (%b.type == $CPB::BrickType::Window) {
 		%b.playSound(glassExplosionSound);
 		if (strPos(strLwr(%b.getName()), "generator") >= 0) {

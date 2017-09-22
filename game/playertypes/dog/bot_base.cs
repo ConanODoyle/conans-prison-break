@@ -397,11 +397,15 @@ package BotHole_Dogs
 
 	function ShepherdDogArmor::onTrigger(%this, %player, %slot, %val)
 	{
-		if (isObject(%player.client) && %player.getDatablock().getName() $= "ShepherdDogArmor" && %slot == 0 && %val)
-		{
-			serverPlay3D("ShepherdDogBark" @ getRandom(1, 3) @ "Sound", %player.getPosition());
-		}
 		parent::onTrigger(%this, %player, %slot, %val);
+	}
+
+	function Player::activateStuff(%this) {
+		if (%this.getDatablock().getName() $= "ShepherdDogArmor") {
+			%this.dogAttack();
+			return;
+		}
+		return parent::activateStuff(%this);
 	}
 
 	function ShepherdDogHoleBot::hSpazzClick(%obj, %amount, %panic)
@@ -429,6 +433,55 @@ package BotHole_Dogs
 	}
 };
 activatePackage(BotHole_Dogs);
+
+$CPB::DogAttackTimeout = 2500;
+$CPB::DogAttackRecovery = -1000;
+$CPB::DogAttackRange = 2.5;
+$CPB::DOGATTACKDAMAGE = 20;
+
+function Player::dogAttack(%this) {
+	if (getSimTime() - %this.lastAttackTime < $CPB::DogAttackTimeout) {
+		// %this.emote(alarmProjectile, 1);
+		return;
+	}
+
+	%this.lastAttackTime = getSimTime();
+	%this.playThread(1, activate);
+	serverPlay3D("ShepherdDogBark" @ getRandom(1, 3) @ "Sound", %this.getPosition());
+
+	%masks = $TypeMasks::FxBrickObjectType | $TypeMasks::PlayerObjectType | $TypeMasks::StaticObjectType;
+	%start = %this.getEyeTransform();
+	%end = vectorAdd(%start, vectorScale(%this.getEyeVector(), $CPB::DogAttackRange));
+	%ray = containerRaycast(%start, %end, %masks, %this);
+
+	if (isObject(%hit = getWord(%ray, 0))) {
+		if (%hit.client.isPrisoner) {
+			%hit.damage(%obj.hFakeProjectile, %col.getposition(), $CPB::DOGATTACKDAMAGE, $DamageType::Dog);
+			stun(%hit, 2);
+		}
+
+		%p = new Projectile() {
+			datablock = pushBroomProjectile;
+			initialPosition = getWords(%ray, 1, 3);
+		};
+		%p.setScale("0.8 0.8 0.8");
+		%p.explode();
+
+		schedule($CPB::DogAttackTimeout, %this, centerprint, %this.client, "\c6Attack recharged!", 1);
+	} else {
+		%this.lastAttackTime = getSimTime() + $CPB::DogAttackRecovery;
+		schedule($CPB::DogAttackTimeout + $CPB::DogAttackRecovery, %this, centerprint, %this.client, "\c6Attack recharged!", 1);
+
+
+		%p = new Projectile() {
+			datablock = pushBroomProjectile;
+			initialPosition = %end;
+		};
+		%p.setScale("0.8 0.8 0.8");
+		%p.explode();
+
+	}
+}
 
 datablock ShapeBaseImageData(healingImage)
 {

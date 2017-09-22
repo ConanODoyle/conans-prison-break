@@ -72,7 +72,7 @@ datablock ShapeBaseImageData(SniperControlImage) {
 	stateTimeoutValue[3]			= 0.1;
 };
 
-$CPB::HelicopterCircleTime = 30; //in seconds
+$CPB::HelicopterCircleTime = 120; //in seconds
 
 //Functions:
 //Packaged:

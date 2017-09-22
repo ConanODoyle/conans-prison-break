@@ -49,7 +49,7 @@ exec("./game/win.cs");
 exec("./game/playertypes/spotlight/server.cs");
 exec("./game/playertypes/laundrycart/server.cs");
 exec("./game/playertypes/bronson/server.cs");
-//exec("./game/playertypes/dog/server.cs");
+exec("./game/playertypes/dog/server.cs");
 
 exec("./data/hair.cs");
 exec("./data/items/server.cs");

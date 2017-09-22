@@ -24,6 +24,10 @@ package CPB_Game_Damage {
 			if (%cl1.isGuard || %cl2.isGuard) {
 				return 0;
 			}
+		} else if (%db1 $= "ShepherdDogArmor" || %db2 $= "ShepherdDogArmor") {
+			if (!%cl1.isPrisoner && !%cl2.isPrisoner) {
+				return 0;
+			}
 		} else if (getMinigameFromObject(%obj1) != getMinigameFromObject(%obj2)) {
 			return 0;
 		} else if (%cl1.isGuard == %cl2.isGuard || %cl1.isPrisoner == %cl2.isPrisoner) {

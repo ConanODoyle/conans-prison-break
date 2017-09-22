@@ -43,22 +43,46 @@ function GameConnection::bottomPrintInfo(%cl) {
 				%prisonersOutside = getNumPrisonersOutside();
 
 				if (%prisonersOutside > $CPB::EWSAlertThreshold) {
-					if (!%lastColor) {
-						%lastColor = "\c6";
+
+					if (!%cl.playedAlarmSound) {
+						%cl.play3D(AlarmSound, %cl.player.getPosition());
+						%cl.play3D(brickPlantSound, %cl.player.getPosition());
+						%cl.play3D(brickRotateSound, %cl.player.getPosition());
+						%cl.play3D(brickMoveSound, %cl.player.getPosition());
+					}
+					%cl.playedAlarmSound = 1;
+
+					if (%cl.lastColor $= "") {
+						%cl.lastColor = "\c6";
 					}
 
-					if (%lastColor $= "\c6") {
+					if (%cl.lastColor $= "\c6") {
 						%color = "<font:Consolas:24>\c0";
-						%lastColor = "\c0";
+						%cl.lastColor = "\c0";
 					} else {
 						%color = "<font:Consolas:24>\c6";
-						%lastColor = "\c6";
+						%cl.lastColor = "\c6";
 					}
 					%cl.EWSAlertBottomprintSched = %cl.schedule(500, bottomPrintInfo);
+				} else {
+					if (%cl.playedAlarmSound) {
+						%cl.play3D(Beep_Popup_Sound, %cl.player.getPosition());
+						%cl.play3D(brickPlantSound, %cl.player.getPosition());
+						%cl.play3D(brickRotateSound, %cl.player.getPosition());
+						%cl.play3D(brickMoveSound, %cl.player.getPosition());
+					}
+					%cl.playedAlarmSound = 0;
 				}
 
 				%info = %color @ "[" @ %prisonersOutside SPC "Prisoners Outside] ";
 			} else {
+				if (%cl.playedAlarmSound) {
+					%cl.play3D(Beep_Popup_Sound, %cl.player.getPosition());
+					%cl.play3D(brickPlantSound, %cl.player.getPosition());
+					%cl.play3D(brickRotateSound, %cl.player.getPosition());
+					%cl.play3D(brickMoveSound, %cl.player.getPosition());
+				}
+				%cl.playedAlarmSound = 0;
 				%info = "<font:Arial Bold:34>Satellite Dish Inactive";
 			}
 
@@ -85,7 +109,7 @@ function GameConnection::bottomPrintInfo(%cl) {
 		}
 		
 		%timeString = "<just:center>" @ %timeString;
-		%cl.bottomprint(%timeString @ " <br><just:center>" @ %info, 500, %cl.hideBottomprintBar);
+		%cl.bottomprint(%timeString @ " <br><just:center>" @ %info @ "<br>", 500, %cl.hideBottomprintBar);
 	} else if ($CPB::PHASE == $CPB::GWIN || $CPB::PHASE == $CPB::PWIN) { 
 		if ($CPB::PHASE == $CPB::PWIN) {
 			%color = "<color:" @ $PRISONER::CHATCOLOR @ ">";

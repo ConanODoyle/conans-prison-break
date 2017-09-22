@@ -261,13 +261,14 @@ function SimSet::destroy(%this) {
 	if (isObject(%brick.item)) {
 		%brick.item.delete();
 	}
-	if (isObject(%brick.vehicle)){
+	if (isObject(%brick.vehicle)) {
+		clearLightBeam(%brick.vehicle);
 		%brick.vehicle.kill();
 	}
-	if (isObject(%brick.emitter)){
+	if (isObject(%brick.emitter)) {
 		%brick.emitter.delete();
 	}
-	if (isObject(%brick.light)){
+	if (isObject(%brick.light)) {
 		%brick.light.delete();
 	}
 

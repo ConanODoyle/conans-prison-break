@@ -90,7 +90,7 @@ function collectAllPrisonBricks(%bg, %i) {
 	%db = %b.getDatablock().getName();
 	%b.damage = 0;
 
-	if (%b.getDatablock().isOpen) { //close open doors
+	if (%b.getDatablock().isDoor) { //close open doors
 		%b.door(4);
 	}
 
