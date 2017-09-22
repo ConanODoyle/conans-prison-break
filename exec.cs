@@ -1,7 +1,7 @@
 $LEFTCLICK = 0;
 $RIGHTCLICK = 4;
 $ClientVariableCount = 0; //use to add client vars for resetting
-$CurrMap = "SkillPrison";
+$CurrMap = "DarkPrison";
 
 //colortest http://i.imgur.com/Ofi3BvW.png
 
@@ -54,6 +54,7 @@ exec("./game/playertypes/dog/server.cs");
 exec("./data/hair.cs");
 exec("./data/items/server.cs");
 exec("./data/locations_skillPrison.cs");
+exec("./data/locations_darkPrison.cs");
 
 exec("./assets/bricks/server.cs");
 

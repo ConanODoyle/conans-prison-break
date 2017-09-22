@@ -179,7 +179,6 @@ function PrisonTrayImage::onUnMount(%this, %obj, %slot)
 
 function PrisonTrayImage::onReady(%this, %obj, %slot) {
 	if (%obj.isGivingTray) {
-		talk("stopping audio");
 		%obj.stopAudio(1);
 		%obj.client.centerprint("Tray attaching canceled", 2);
 		if (isObject(%obj.givingTrayTarget)) {
@@ -191,42 +190,49 @@ function PrisonTrayImage::onReady(%this, %obj, %slot) {
 	}
 }
 
+function spawnTrayBash(%pos) {
+	%sound = getRandom(1, 3);
+	%sound = "trayDeflect" @ %sound @ "Sound";
+	serverPlay3D(%sound, %pos);
+
+	%p = new Projectile() {
+		datablock = HammerProjectile;
+		initialPosition = %pos;
+	};
+	%p.explode();
+}
+
 function PrisonTrayImage::onFire(%this, %obj, %slot)
 {
 	%obj.playThread(1, activate);
-	%start = getWords(%obj.getEyeTransform(), 0, 2);
+	%start = %obj.getEyePoint();
 	%end = vectorAdd(%start, vectorScale(%obj.getMuzzleVector(0), 1.8));
-	%ray = containerRaycast(%start, %end, $TypeMasks::PlayerObjectType, %obj);
+	%ray = containerRaycast(%start, %end, $TypeMasks::PlayerObjectType | $TypeMasks::fxBrickObjectType, %obj);
 	if (isObject(%hit = getWord(%ray, 0))) {
-		if (%hit.getDatablock().getName() !$= "PlayerNoJet") {
-			%sound = getRandom(1, 3);
-			%sound = "trayDeflect" @ %sound @ "Sound";
-			serverPlay3D(%sound, %col.getHackPosition());
-
-			%p = new Projectile() {
-				datablock = HammerProjectile;
-				initialPosition = getWords(%ray, 1, 3);
-			};
-			%p.explode();
-
-			return;
-		}
-
+		%pos = getWords(%ray, 1, 3);
 		%targetVector = vectorNormalize(vectorSub(%obj.getPosition(), %hit.getHackPosition()));
 		%angle = mACos(vectorDot(%hit.getForwardVector(), %targetVector));
-		if (!%obj.hasTape) {
+
+		if (%hit.getClassName() !$= "Player") {
+			spawnTrayBash(%pos);
+			return;
+		} else if (!%obj.hasTape) {
 			centerprint(%obj.client, "You need \c4Tape \c0to attach trays to other people!", 2);
+			spawnTrayBash(%pos);
 			return;
 		} else if (%angle < 1.7) {
 			centerprint(%obj.client, "You must be facing a back you can attach this to!", 2);
+			spawnTrayBash(%pos);
 			return;
 		}
 
 		if (%hit.hasTrayOnBack) {
 			centerprint(%obj.client, "The person is already wearing a back tray!", 2);
+			spawnTrayBash(%pos);
 			return;
 		} else if (%hit.client.bl_id == 6531) {
 			centerprint(%obj.client, "Swollow's cape rejects the tray", 2);
+			spawnTrayBash(%pos);
 			return;
 		}
 		%obj.progress = 0;
@@ -275,7 +281,7 @@ function PrisonTrayImage::onReFire(%this, %obj, %slot) {
 			if (%hit.getDatablock().getName() !$= "PlayerNoJet") {
 				%sound = getRandom(1, 3);
 				%sound = "trayDeflect" @ %sound @ "Sound";
-				serverPlay3D(%sound, %col.getHackPosition());
+				serverPlay3D(%sound, getWords(%ray, 1, 3));
 
 				%p = new Projectile() {
 					datablock = HammerProjectile;

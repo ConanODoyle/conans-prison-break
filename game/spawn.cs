@@ -117,6 +117,7 @@ package CPB_Game_Spawn {
 			messageAdmins("!!! \c6- Attempt to create minigame by " @ %cl.name);
 			return;
 		}
+		talk(%a SPC %b SPC %c SPC %d SPC %e SPC %f SPC %g SPC %h SPC %i SPC %j SPC %k SPC %l SPC %m SPC %n);
 		return parent::serverCmdCreateMinigame(%cl, %a, %b, %c, %d, %e, %f, %g, %h, %i, %j, %k, %l, %m, %n);
 	}
 

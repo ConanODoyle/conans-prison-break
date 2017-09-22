@@ -151,6 +151,7 @@ function collectTowerBrick(%b, %n) {
 		%b.vehicle.setScale("2 2 2");
 		%b.vehicle.setShapeName("Tower " @ %n + 1, "8564862");
 		%b.vehicle.setShapeNameDistance(500);
+		startLightBeamLoop(%b.vehicle);
 	}
 }
 

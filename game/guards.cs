@@ -132,6 +132,8 @@ function spawnGuard(%tower) {
 	%tower.guard.createPlayer(%tower.spawn.getTransform());
 	messageAll('', "\c3" @ %tower.guard.name @ "\c4 has been spawned at \c5Tower " @ %tower.towerNum + 1);
 
+	giveGuardItems(%tower.guard.player);
+
 	return 1;
 }
 

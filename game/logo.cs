@@ -37,6 +37,7 @@ function displayNewLogo(%pos) {
 	};
 
 	$LogoShape.setTransform(%pos);
+	$LogoShape.playThread(0, rotate);
 	applyLogoColors($LogoShape, 1);
 }
 

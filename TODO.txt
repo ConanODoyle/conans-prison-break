@@ -1,8 +1,6 @@
 Think up and write up better method to handle guard pre-round-planning. Slash commands OK.
 	Maybe TP to a room?
 	Room has class buttons and descriptions!
-EWS Color Flash when # of prisoners outside is high
-Make sure bucket replaces hair and then re-adds it after de-equipping
 Add client variable recording for clearing post-round
 Update kill ci directories
 Some package that covers serverCmdDropTool doesnt check if tool exists before running, results in console spam
@@ -10,7 +8,6 @@ Some package that covers serverCmdDropTool doesnt check if tool exists before ru
 Modularizing-required files:
 killzone
 locations
-
 
 Completed moved files:
 chat.cs

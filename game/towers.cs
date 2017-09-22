@@ -36,6 +36,7 @@ datablock ItemData(TowerItemA : HammerItem) {
 //	spotlightBot
 //	origBrickCount
 //	guardOption
+//	guardEquipment
 //	supportCount
 
 //Functions:

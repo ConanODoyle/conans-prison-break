@@ -76,6 +76,12 @@ function _setPhaseLOBBY() {
 	// displayLogo(_LobbyLogoCam.getPosition(), _LobbyLogoCamTarget.getPosition(), LogoClosedShape, 1);
 	displayNewLogo(_newLogoPos.getPosition());
 
+	if (!isObject($DefaultMinigame)) {
+		CreateMiniGameSO(fcn(Conan), "Prison Break", 1, 0);
+		$DefaultMinigame = fcn(Conan).minigame;
+		$DefaultMinigame.schedule(100, Reset, fcn(Conan));
+	}
+
 	for (%i = 0; %i < ClientGroup.getCount(); %i++){
 		%cl = ClientGroup.getObject(%i);
 		// %cl.clearStatistics();
@@ -89,8 +95,11 @@ function _setPhaseLOBBY() {
 		%cl.guardClass = "";
 		%cl.guardEquipment = "";
 
+		%cl.lastColor = "";
+		%cl.playedAlarmSound = "";
+
 		if (isObject(%cl.minigame)) {
-			if (getRandom() < 0.2) {
+			if (getRandom() < 0.5) {
 				messageClient(%cl, '', "\c6You have recieved a random hairdo loot drop!");
 				%cl.giveRandomHair(1);
 			}

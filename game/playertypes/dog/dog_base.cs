@@ -1,7 +1,6 @@
 $MOVEDELTATHRESHOLD = 3;
 $MOVEDELTATHRESHOLDTIME = 5000;
 
-$CPB::DOGATTACKDAMAGE = 20;
 AddDamageType("Dog",	'<bitmap:Add-Ons/Gamemode_PPE/ci/Dog> %1',	 '%2 <bitmap:Add-Ons/Gamemode_PPE/ci/Dog> %1', 0.5, 1);
 //useful functions:
 //obj.setAimObject/Vector/Location

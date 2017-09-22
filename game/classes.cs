@@ -46,6 +46,7 @@ datablock ItemData(LMGItem : HammerItem) {
 //Object parameters:
 //Client
 //	guardClass
+//	guardEquipment
 
 //Functions:
 //Packaged:
@@ -111,7 +112,7 @@ function GameConnection::setGuardEquipment(%cl, %name) {
 	}
 }
 
-function giveGuardItems(%pl, %item) {
+function giveGuardItems(%pl) {
 	%cl = %pl.client;
 	if (!%cl.isGuard) {
 		return;
