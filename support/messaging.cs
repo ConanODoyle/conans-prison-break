@@ -38,6 +38,17 @@ package CPB_Support_Messaging {
 			if (CPB_SpamFilter(%cl, %msg) && !%cl.isAdmin) {
 				messageClient(%cl, '', "\c5Do not repeat yourself");
 				return;
+			} else if (isObject(%cl.player) && %cl.player.getDatablock().getID() == ShepherdDogArmor.getID()) {
+				for (%i = 0; %i < getWordCount(%msg) / 3 + 1; %i++) {
+					%j = getRandom(0, 3);
+					switch (%j) {
+						case 0: %msg = %msg SPC "Woof";
+						case 1: %msg = %msg SPC "Bark";
+						case 2: %msg = %msg SPC "Borf";
+					}
+				}
+				messageAll('', "\c2Dog\c6:" @ %msg @ "!");
+				return;
 			}
 
 			%finalMsg = getFormattedMessage(%cl, %msg);

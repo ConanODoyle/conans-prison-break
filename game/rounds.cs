@@ -65,7 +65,7 @@ function _setPhaseGAME() {
 	despawnAll();
 	spawnAllGuards();
 	spawnAllPrisoners();
-	spawnDog();
+	// spawnDog();
 
 	schedule(500, 0, spawnHelicopter, _HelicopterCenter.getPosition());
 }
