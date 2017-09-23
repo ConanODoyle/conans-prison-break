@@ -155,9 +155,17 @@ function serverCmdReplaceGuard(%cl, %towerNum, %name) {
 	}
 
 	if (isObject(%tower.guard)) {
+		if (%cl.lastReplaceGuard != %tower.guard) {
+			messageClient(%cl, '', "!!! \c6There is a guard currently on this tower! Repeat command to continue...");
+			%cl.lastReplaceGuard = %tower.guard;
+			cancel(%cl.replaceGuardSched);
+			%cl.replaceGuardSched = schedule(10000, %cl, eval, %cl @ ".lastReplaceGuard = \"\";");
+			return;
+		}
 		%tower.guard.isGuard = 0;
 		%tower.guard.isPrisoner = 1;
 		%tower.guard.tower = "";
+		%cl.lastReplaceGuard = "";
 	}
 
 	%tower.guard = %cl;

@@ -896,7 +896,7 @@ datablock ExplosionData(StunBulletExplosion)
 	lightEndColor = "1 1 1";
 	
 	impulseRadius = 3;
-	impulseForce = 1000;
+	impulseForce = 2000;
 };
 
 datablock ProjectileData(StunBulletProjectile) {
