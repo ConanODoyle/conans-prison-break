@@ -1,9 +1,26 @@
 //Functions:
 //Packaged:
+//	GameConnection::onDeath
 //	minigameCanDamage
 
 
+AddDamageType("Satellite",	'<bitmap:Add-Ons/Gamemode_CPB/data/ci/CI_Satellite> %1',	 '%2 <bitmap:Add-Ons/Gamemode_CPB/data/ci/CI_Satellite> %1',0.2,1);
+AddDamageType("Generator",	'<bitmap:Add-Ons/Gamemode_CPB/data/ci/CI_Generator> %1',	 '%2 <bitmap:Add-Ons/Gamemode_CPB/data/ci/CI_Generator> %1',0.2,1);
+AddDamageType("Tower",	'<bitmap:Add-Ons/Gamemode_CPB/data/ci/CI_Tower> %1',	 '%2 <bitmap:Add-Ons/Gamemode_CPB/data/ci/CI_Tower> %1',0.2,1);
+AddDamageType("Dog",	'<bitmap:Add-Ons/Gamemode_CPB/data/ci/Dog> %1',	 '%2 <bitmap:Add-Ons/Gamemode_CPB/data/ci/Dog> %1',0.2,1);
+
 package CPB_Game_Damage {
+	function GameConnection::onDeath(%cl, %sourceObj, %sourceCl, %damageType, %damLoc) {
+		if (%sourceCl == %cl) {
+			messageClient(%cl, '', "<bitmap:" @ $DamageType::SuicideBitmap[%damageType] @ "> " @ %cl.name);
+		} else {
+			messageClient(%cl, '', %sourceCl.name @ " <bitmap:" @ $DamageType::MurderBitmap[%damageType] @ "> " @ %cl.name);
+			messageClient(%sourceCl, '', %sourceCl.name @ " <bitmap:" @ $DamageType::MurderBitmap[%damageType] @ "> " @ %cl.name);
+		}
+
+		return parent::onDeath(%cl, %sourceObj, %sourceCl, %damageType, %damLoc);
+	}
+
 	function minigameCanDamage(%obj1, %obj2) {
 		if (%obj1.getClassName() !$= "GameConnection") {
 			%cl1 = %obj1.client;

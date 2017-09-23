@@ -26,8 +26,8 @@ datablock ParticleData(TearGasSmokeParticleA)
 	spinRandomMax = 0.0;
 
 	colors[0]	  = "1 0.35 0.35 0.0";
-	colors[1]	  = "1 0.35 0.35 0.25";
-	colors[2]	  = "1 0.22 0.19 0.1";
+	colors[1]	  = "1 0.35 0.35 0.45";
+	colors[2]	  = "1 0.22 0.19 0.3";
 	colors[3]	  = "1 0.22 0.19 0";
 
 	sizes[0]		= 2;
@@ -37,7 +37,7 @@ datablock ParticleData(TearGasSmokeParticleA)
 
 	times[0]		= 0.0;
 	times[1]		= 0.02;
-	times[2]		= 0.8;
+	times[2]		= 0.9;
 	times[3]		= 1.0;
 };
 
@@ -72,13 +72,13 @@ datablock ParticleData(TearGasDotParticleA)
 
 datablock ParticleEmitterData(TearGasSmokeAEmitter)
 {
-	ejectionPeriodMS = 20;
+	ejectionPeriodMS = 18;
 	periodVarianceMS = 0;
 
 	ejectionOffset = 0;
 	ejectionOffsetVariance = 0.0;
 	
-	ejectionVelocity = 10;
+	ejectionVelocity = 11;
 	velocityVariance = 3.0;
 
 	thetaMin			= 10.0;

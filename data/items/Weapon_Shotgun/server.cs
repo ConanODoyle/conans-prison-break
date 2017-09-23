@@ -148,7 +148,7 @@ AddDamageType("PumpShotgun",   '<bitmap:add-ons/Weapon_Package_Tier1/CI_L4Shotgu
 datablock ProjectileData(PumpShotgunProjectile)
 {
    projectileShapeName = "add-ons/Weapon_Gun/bullet.dts";
-   directDamage        = 9; //14;
+   directDamage        = 20; //14;
    directDamageType    = $DamageType::PumpShotgun;
    radiusDamageType    = $DamageType::PumpShotgun;
 

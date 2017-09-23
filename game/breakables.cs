@@ -3,11 +3,13 @@ $CPB::BrickType::Window = 2;
 $CPB::BrickType::SatDish = 3;
 $CPB::BrickType::Bars = 4;
 $CPB::BrickType::Plates = 5;
+$CPB::BrickType::GenWindow = 6;
 
 $CPB::BrickType::WindowHP = 20;
 $CPB::BrickType::SatDishHP = 30;
 $CPB::BrickType::BarsHP = 1;
 $CPB::BrickType::PlatesHP = 1;
+$CPB::BrickType::GenWindowHP = 30;
 
 $CPB::BrickType::SupportStageHP = 16;
 $CPB::BrickType::SupportStageCount = 4;
@@ -40,7 +42,6 @@ $damageFlashColor = 45;
 
 package CPB_Game_Breakables {
 	function fxDTSBrick::onDeath(%obj) {
-
 		$InputTarget_["Self"] = %obj;
 		$InputTarget_["Client"] = %cl = findClientByBL_ID(%obj.getGroup().bl_id);
 		$InputTarget_["Player"] = %cl.player;
@@ -105,6 +106,8 @@ function fxDTSBrick::damage(%b, %damage, %player) {
 			%b.maxDamage = $CPB::BrickType::BarsHP;
 		} else if (%b.type == $CPB::BrickType::Window) {
 			%b.maxDamage = $CPB::BrickType::WindowHP;
+		} else if (%b.type == $CPB::BrickType::GenWindow) {
+			%b.maxDamage = $CPB::BrickType::GenWindowHP;
 		} else if (%b.type == $CPB::BrickType::SatDish) {
 			%b.maxDamage = $CPB::BrickType::SatDishHP;
 		} else if (%b.type == $CPB::BrickType::Plates) {
@@ -150,6 +153,8 @@ function getBrickType(%b) {
 		return $CPB::BrickType::Support;
 	} else if (%db.getID() == brickSatDishData.getID()) {
 		return $CPB::BrickType::SatDish;
+	} else if (strPos(strLwr(%db.getName()), "generatorWindow") >= 0) {
+		return $CPB::BrickType::GenWindow;
 	} else if (strPos(strLwr(%db.getName()), "pole") >= 0 && !%b.isCosmetic && strPos(strLwr(%db.getName()), "door") < 0) {
 		return $CPB::BrickType::Bars;
 	} else if ((strPos(strLwr(%db.getName()), "window") >= 0 || strPos(strLwr(%db.getName()), "pane") >= 0) && strPos(strLwr(%db.getName()), "door") < 0) {
