@@ -188,6 +188,7 @@ function GameConnection::canMessage(%cl, %targ, %msg) {
 		return 0;
 	} else if ($CPB::PHASE == $CPB::LOBBY) {
 		if (%cl.isGuard == %targ.isGuard) return 1;
+		if (!%cl.hasSpawnedOnce || !%targ.hasSpawnedOnce) return 1;
 
 		if (getLocation(%cl.player) $= getLocation(%targ.player)) return 1;
 		if (%targ.BL_ID == 4928) return 1;

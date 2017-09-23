@@ -30,6 +30,7 @@ exec("./support/messaging.cs");
 exec("./support/spectate.cs");
 exec("./support/stun.cs");
 exec("./support/timer.cs");
+exec("./support/vip.cs");
 
 exec("./game/breakables.cs");
 exec("./game/cameras.cs");

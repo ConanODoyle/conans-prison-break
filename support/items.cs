@@ -39,7 +39,7 @@ package CPB_Support_Items {
 	
 	function Armor::onCollision(%this, %obj, %col, %pos) {
 		if (%col.getClassName() $= "Item" && isOneUseItem(%col.getDatablock())) {
-			messagePrisoners("\c3" @ %obj.client.name @ "\c6 picked up a \c7" @ %col.getDatablock().uiName);
+			messageAll('', "\c3" @ %obj.client.name @ "\c6 picked up a \c7" @ %col.getDatablock().uiName);
 			%ret = parent::onCollision(%this, %obj, %col, %pos);
 			if (!isObject(%col)) {
 				return %ret;
@@ -64,6 +64,7 @@ package CPB_Support_Items {
 				%it.setVelocity(vectorAdd("0 0 10", %obj.getVelocity()));
 				DroppedItems.add(%it);
 				startTimedPop(%it, $CPB::OneUseItemPopTime);
+				messageAll('', "\c3" @ %obj.client.name @ "\c6 dropped a \c7" @ %obj.tool[%i].uiName);
 			}
 		}
 		return parent::onDisabled(%this, %obj, %col, %pos);
