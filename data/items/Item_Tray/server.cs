@@ -191,9 +191,9 @@ function PrisonTrayImage::onReady(%this, %obj, %slot) {
 }
 
 function spawnTrayBash(%pos) {
-	%sound = getRandom(1, 3);
-	%sound = "trayDeflect" @ %sound @ "Sound";
-	serverPlay3D(%sound, %pos);
+	// %sound = getRandom(1, 3);
+	// %sound = "trayDeflect" @ %sound @ "Sound";
+	// serverPlay3D(%sound, %pos);
 
 	%p = new Projectile() {
 		datablock = HammerProjectile;

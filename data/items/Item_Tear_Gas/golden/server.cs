@@ -67,7 +67,7 @@ datablock ShapeBaseImageData(tearGasGrenadeGoldenImage)
 	//raise your arm up or not
 	armReady = true;
 
-	maxTearGasShots = 2;
+	maxTearGasShots = 3;
 
 	//casing = " ";
 	doColorShift = true;

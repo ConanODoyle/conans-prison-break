@@ -171,7 +171,7 @@ datablock ProjectileData(PumpShotgunProjectile)
    bounceElasticity    = 0.5;
    bounceFriction      = 0.20;
    isBallistic         = true;
-   gravityMod = 0.4;
+   gravityMod = 0.2;
 
    hasLight    = false;
    lightRadius = 3.0;
@@ -380,6 +380,9 @@ datablock ShapeBaseImageData(PumpShotgunImage)
 	stateTransitionOnNoAmmo[13]		= "Reload";
 };
 
+$CPB::ShotgunNumProjectiles = 18;
+$CPB::ShotgunSpread = 0.0030;
+
 function PumpShotgunImage::onFire(%this,%obj,%slot) {
 	if(%obj.shotgunAmmo > 0) {
 		%fvec = %obj.getForwardVector();
@@ -404,8 +407,8 @@ function PumpShotgunImage::onFire(%this,%obj,%slot) {
             		
 
 		%projectile = %this.projectile;
-		%spread = 0.0038;
-		%shellcount = 10;
+		%spread = $CPB::ShotgunSpread;
+		%shellcount = $CPB::ShotgunNumProjectiles;
 
 		for(%shell=0; %shell<%shellcount; %shell++)
 		{

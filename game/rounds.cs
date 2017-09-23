@@ -9,6 +9,8 @@ $CPB::LastRoundWinners = ""; //"Prisoners" or "Guards"
 $CPB::SelectedGuards = "";
 
 //Functions:
+//Packaged:
+//	GameConnection::spawnPlayer
 //Created:
 //	setPhase
 //	resetPhase

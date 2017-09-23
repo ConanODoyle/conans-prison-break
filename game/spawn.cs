@@ -29,6 +29,7 @@ $SPAWN::BRONSONDEATHCPPRIORITY = 9;
 
 
 package CPB_Game_Spawn {
+
 	function GameConnection::onDeath(%cl, %sourceObj, %sourceCl, %damageType, %damLoc) {
 		if (!%cl.isPrisoner && !%cl.isGuard) {
 			return parent::onDeath(%cl, %sourceObj, %sourceCl, %damageType, %damLoc);

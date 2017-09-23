@@ -257,7 +257,7 @@ datablock ShapeBaseImageData(tearGasGrenadeImage)
 	//raise your arm up or not
 	armReady = true;
 
-	maxTearGasShots = 2;
+	maxTearGasShots = 3;
 
 	//casing = " ";
 	doColorShift = true;
@@ -378,7 +378,7 @@ function tearGasGrenadeImage::onAbortCharge(%this, %obj, %slot)
 	%obj.playthread(2, activate);
 }
 
-$tearGasShotRechargeTime = 2;
+$tearGasShotRechargeTime = 1;
 
 function rechargeTearGasShots(%obj) {
 	if (isObject(%obj)) {
@@ -417,9 +417,9 @@ function tearGasGrenadeProjectile::onCollision(%this, %obj, %col, %fade, %pos, %
 }
 
 $tearGasTime = 30000;
-$tearGasRadius = 6;
+$tearGasRadius = 7;
 $tearGasSlowTime = 6000;
-$tearGasSlowSpeed = 0.3;
+$tearGasSlowSpeed = 0.2;
 
 
 function tearGasGrenadeProjectile::onExplode(%this, %proj, %pos) {

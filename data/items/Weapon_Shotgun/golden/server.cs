@@ -202,8 +202,8 @@ function PumpShotgunGoldenImage::onFire(%this,%obj,%slot) {
             		
 
 		%projectile = %this.projectile;
-		%spread = 0.0038;
-		%shellcount = 10;
+		%spread = $CPB::ShotgunSpread;
+		%shellcount = $CPB::ShotgunNumProjectiles;
 
 		for(%shell=0; %shell<%shellcount; %shell++)
 		{

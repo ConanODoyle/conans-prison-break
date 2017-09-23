@@ -15,6 +15,7 @@ if (!isObject(DroppedItems)) {
 //	Armor::onCollision
 //	Armor::onDisabled
 //	Item::schedulePop
+//	Player::changeDatablock
 //Created:
 //	Player::removeItem
 //	Player::addItem
@@ -38,10 +39,12 @@ package CPB_Support_Items {
 	
 	function Armor::onCollision(%this, %obj, %col, %pos) {
 		if (%col.getClassName() $= "Item" && isOneUseItem(%col.getDatablock())) {
+			messagePrisoners("\c3" @ %obj.client.name @ "\c6 picked up a \c7" @ %col.getDatablock().uiName);
 			%ret = parent::onCollision(%this, %obj, %col, %pos);
-			if (!isEventPending(%col.fadeInSchedule) || !%col.isStatic()) {
+			if (!isObject(%col)) {
 				return %ret;
 			}
+			
 			%col.spawnBrick.oneUseItem = %col.getDatablock().getName();
 			%col.delete();
 			return %ret;
@@ -74,6 +77,13 @@ package CPB_Support_Items {
 			return;
 		}
 		return parent::schedulePop(%obj);
+	}
+
+	function Player::changeDatablock(%pl, %db) {
+		if (%db.getID() == BuffArmor.getID()) {
+			%pl.addItem(BuffBashItem);
+		}
+		return parent::changeDatablock(%pl, %db);
 	}
 };
 activatePackage(CPB_Support_Items);

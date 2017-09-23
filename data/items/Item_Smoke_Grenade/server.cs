@@ -340,13 +340,3 @@ function smokeShape_fadeIn(%shape, %alpha) {
 	%shape.setNodeColor("ALL", "1 1 1 " @ %alpha);
 	%shape.fadeOutLoop = schedule(30, %shape, smokeShape_fadeIn, %shape, %alpha + 0.01);
 }
-
-package CPB_SmokeGrenade_Pickup {
-	function Armor::onCollision(%this, %obj, %col, %pos) {
-		if (%col.getClassName() $= "Item" && %col.getDatablock().getID() == riotSmokeGrenadeItem.getID()) {
-			messagePrisoners("\c3" @ %obj.client.name @ "\c6 picked up a \c7Smoke Grenade");
-		}
-		return parent::onCollision(%this, %obj, %col, %pos);
-	}
-};
-activatePAckage(CPB_SmokeGrenade_Pickup);

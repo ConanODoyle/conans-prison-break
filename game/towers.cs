@@ -222,8 +222,8 @@ function killTower(%tower) {
 	//destroy the bricks but sequentially as to not lag everyone to death
 	%tower.destroy();
 
-	priorityCenterprintAll("<font:Impact:40>\c4Tower \c3" @ %id @ "\c4 has fallen!", 10, $TOWER::DEATHALERTCPPRIORITY);
-	schedule(80, 0, priorityCenterprintAll, "<font:Impact:35>\c4Tower \c3" @ %id @ "\c4 has fallen!", 10, $TOWER::DEATHALERTCPPRIORITY);
+	priorityCenterprintAll("<font:Impact:40>\c4Tower \c3" @ %id + 1 @ "\c4 has fallen!", 10, $TOWER::DEATHALERTCPPRIORITY);
+	schedule(80, 0, priorityCenterprintAll, "<font:Impact:35>\c4Tower \c3" @ %id + 1 @ "\c4 has fallen!", 10, $TOWER::DEATHALERTCPPRIORITY);
 
 	//chatlog death
 	%type = $DamageType::MurderBitmap[$DamageType::Tower];

@@ -10,6 +10,7 @@ $ClientVariable[$ClientVariableCount++] = "spectatingClientIDX";
 
 //Functions:
 //Packaged:
+//	GameConnection::spawnPlayer
 //	Observer::onTrigger
 //	SimObject::onCameraEnterOrbit
 //	SimObject::onCameraLeaveOrbit
@@ -24,6 +25,19 @@ $ClientVariable[$ClientVariableCount++] = "spectatingClientIDX";
 
 
 package CPB_Support_Spectate {
+	function GameConnection::spawnPlayer(%cl) {
+		if ($CPB::PHASE == $CPB::GAME) {
+			%cl.setControlObject(%cl.camera);
+			%cl.camera.setControlObject(%cl.camera);
+			%cl.isDead = 1;
+
+			%cl.isSpectating = 1;
+			spectateNextPlayer(%cl, 1);
+			return;
+		}
+		return parent::spawnPlayer(%cl);
+	}
+
 	function Observer::onTrigger(%this, %obj, %trig, %state) {
 		%cl = %obj.getControllingClient();
 

@@ -1,7 +1,7 @@
-$STUNBLINDRADIUS = 10;
-$STUNBLINDBONUS = 0.4;
-$STUNDISTANCE = 2;
-$STUNMAX = 3;
+$STUNBLINDRADIUS = 15;
+$STUNBLINDBONUS = 0.5;
+$STUNDISTANCE = 5;
+$STUNMAX = 5;
 
 
 datablock AudioProfile(SniperRifleSpotlightBoltSound)
@@ -304,7 +304,7 @@ datablock ProjectileData(SniperShrapnelSpotlightProjectile : SniperRifleSpotligh
 	directDamageType = $DamageType::ShrapnelSniper;
 	radiusDamageType = $DamageType::ShrapnelSniper;
 
-	shrapnelCount = 8;
+	shrapnelCount = 5;
 	shrapnelScale = "1 1 1";
 };
 
@@ -314,7 +314,7 @@ datablock ProjectileData(SniperShrapnelSpotlightProjectile : SniperRifleSpotligh
 
 datablock ProjectileData(ShrapnelProjectile) {
 	projectileShapeName = "./sniperShrapnel.dts";
-	directDamage = 30;
+	directDamage = 10;
 	directDamageType = $DamageType::Shrapnel;
 	radiusDamageType = $DamageType::Shrapnel;
 
@@ -884,16 +884,19 @@ datablock ExplosionData(StunBulletExplosion)
 	explosionScale = "0.7 0.7 0.7";
 
 	shakeCamera = true;
-	camShakeFreq = "6.0 8.0 6.0";
-	camShakeAmp = "18.0 18.0 18.0";
-	camShakeDuration = 5.5;
-	camShakeRadius = 15.0;
+	camShakeFreq = "3.0 4.0 3.0";
+	camShakeAmp = "28.0 28.0 28.0";
+	camShakeDuration = 12.5;
+	camShakeRadius = 18.0;
 
 	// Dynamic light
 	lightStartRadius = 1;
 	lightEndRadius = 0;
 	lightStartColor = "1 1 1";
 	lightEndColor = "1 1 1";
+	
+	impulseRadius = 3;
+	impulseForce = 1000;
 };
 
 datablock ProjectileData(StunBulletProjectile) {
@@ -902,7 +905,6 @@ datablock ProjectileData(StunBulletProjectile) {
 };
 
 function spawnStunExplosion(%pos, %obj) {
-
 	for (%i = 0; %i < ClientGroup.getCount(); %i++) {
 		%cl = ClientGroup.getObject(%i);
 		if (isObject(%pl = %cl.player) && !%cl.isGuard && !%cl.player.isWearingBucket) {
