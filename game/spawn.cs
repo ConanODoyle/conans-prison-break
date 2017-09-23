@@ -103,11 +103,12 @@ package CPB_Game_Spawn {
 			} else {
 				%cl.player.setShapeNameDistance(12);
 			}
-			%cl.player.setShapeNameColor($PRISONER::CHATCOLOR);
+			%cl.player.setShapeNameColor($PRISONER::RGBCOLOR);
 		} else if (%cl.isGuard) {
 			%cl.player.setShapeNameDistance(400);
-			%cl.player.setShapeNameColor($GUARD::CHATCOLOR);
+			%cl.player.setShapeNameColor($GUARD::RGBCOLOR);
 		}
+		%cl.bottomPrintInfo();
 
 		return %ret;
 	}
@@ -122,6 +123,9 @@ package CPB_Game_Spawn {
 	}
 
 	function serverCmdLeaveMinigame(%cl) {
+		if (!%cl.isAdmin) {
+			return;
+		}
 		%cl.isPrisoner = 0;
 		%cl.isGuard = 0;
 		parent::serverCmdLeaveMinigame(%cl);
@@ -131,6 +135,12 @@ package CPB_Game_Spawn {
 		%cl.isPrisoner = 1;
 		%cl.isGuard = 0;
 		parent::serverCmdLeaveMinigame(%cl, %mg);
+	}
+
+	function MinigameSO::addMember(%mg, %cl) {
+		%cl.isPrisoner = 1;
+		%cl.isGuard = 0;
+		parent::addMember(%mg, %cl);
 	}
 };
 activatePackage(CPB_Game_Spawn);
@@ -197,6 +207,7 @@ function spawnAllPrisoners() {
 		%b = getPrisonerCellSpawnPoint();
 		if (!isObject(%cl.player) && %cl.isPrisoner) {
 			%cl.createPlayer(%b.getTransform());
+			%cl.player.addItem(ChiselItem);
 			%count++;
 		}
 	}
@@ -209,6 +220,7 @@ function respawnPrisonersInfirmary() {
 		%cl = ClientGroup.getObject(%i);
 		if (!isObject(%cl.player) && %cl.isPrisoner) {
 			%cl.createPlayer(getInfirmarySpawnPoint().getTransform());
+			%cl.player.addItem(ChiselItem);
 			%count++;
 		}
 	}

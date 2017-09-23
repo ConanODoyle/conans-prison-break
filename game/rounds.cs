@@ -61,14 +61,17 @@ function _setPhaseGAME() {
 	centerprintAll("", 0);
 	// startDataCollection($Data::GameNum);
 
-	spawnHelicopter(_HelicopterCenter.getPosition());
 
 	despawnAll();
 	spawnAllGuards();
 	spawnAllPrisoners();
+	spawnDog();
+
+	schedule(500, 0, spawnHelicopter, _HelicopterCenter.getPosition());
 }
 
 function _setPhaseLOBBY() {
+	resetSavedBrickData();
 	cancelAllRoundSchedules();
 	despawnAll();
 
@@ -80,6 +83,7 @@ function _setPhaseLOBBY() {
 		CreateMiniGameSO(fcn(Conan), "Prison Break", 1, 0);
 		$DefaultMinigame = fcn(Conan).minigame;
 		$DefaultMinigame.schedule(100, Reset, fcn(Conan));
+		$DefaultMinigame.playerDatablock = PlayerNoJet.getID();
 	}
 
 	for (%i = 0; %i < ClientGroup.getCount(); %i++){
@@ -115,7 +119,7 @@ function _setPhaseLOBBY() {
 	bottomPrintInfoAll();
 
 	//TODO: make this use "map type"
-	serverDirectSaveFileLoad("Add-ons/Gamemode_CPB/data/prison.bls", 3, "", 0, 1);
+	serverDirectSaveFileLoad("saves/autosaver/prison.bls", 3, "", 0, 1);
 
 	$CPB::SelectedGuards = "";
 	$CPB::GeneratorOpened = 0;
@@ -143,6 +147,7 @@ function _setPhaseINTRO() {
 		doIntro();
 		$CPB::hasCollectedBricks = 0;
 	}
+	setPhase("GAME");
 }
 
 function _setPhaseGWIN() {

@@ -1,7 +1,9 @@
 $MessagingEnabled = 0;
 $DONATOR::CHATMODIFIER = "<color:ffaaaa>";
 $PRISONER::CHATCOLOR = "ff8724";
+$PRISONER::RGBCOLOR = 255 / 255 SPC 135 / 255 SPC 36/255;
 $GUARD::CHATCOLOR = "8ad88d";
+$GUARD::RGBCOLOR = 138 / 255 SPC 138 / 255 SPC 141 / 255;
 
 $ClientVariable[$ClientVariableCount++] = "cpPriority";
 
@@ -208,6 +210,10 @@ function GameConnection::getTeam(%cl) {
 
 ////////////////////
 
+
+function serverCmdAC(%cl, %a, %b, %c, %d, %e, %f, %g, %h, %i, %j) {
+	messageAdmins("\c4" @ %cl.name @ "\c5: " @ trim(%a SPC %b SPC %c SPC %d SPC %e SPC %f SPC %g SPC %h SPC %i SPC %j));
+}
 
 function serverCmdMessageAdmins(%cl, %msg) {
 	messageAdmins("\c6[\c0ADMIN\c6] \c2" @ %cl.name @ "\c6: " @ %msg);

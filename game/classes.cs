@@ -132,8 +132,8 @@ function giveGuardItems(%pl) {
 
 	switch (%cl.tower.guardEquipment) {
 		case $CPB::Equipment::Shotgun: %pl.addItem(PumpShotgunItem);
-		case $CPB::Classes::Flash: %pl.addItem(tierFragGrenadeItem); %pl.addItem(tierFragGrenadeItem); %pl.addItem(tierFragGrenadeItem);
-		case $CPB::Classes::Heli: %pl.addItem(SniperControlItem);
+		case $CPB::Equipment::Flash: %pl.addItem(tierFragGrenadeItem); %pl.addItem(tierFragGrenadeItem); %pl.addItem(tierFragGrenadeItem);
+		case $CPB::Equipment::Heli: %pl.addItem(SniperControlItem);
 	}
 }
 

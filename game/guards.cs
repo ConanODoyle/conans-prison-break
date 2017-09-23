@@ -129,6 +129,7 @@ function spawnGuard(%tower) {
 	if (isObject(%pl = %tower.guard.player)) {
 		%pl.delete();
 	}
+	%tower.guard.isSelectedToBeGuard = 0;
 	%tower.guard.createPlayer(%tower.spawn.getTransform());
 	messageAll('', "\c3" @ %tower.guard.name @ "\c4 has been spawned at \c5Tower " @ %tower.towerNum + 1);
 
@@ -141,4 +142,14 @@ function spawnAllGuards() {
 	for (%i = 0; %i < $CPB::GUARDCOUNT; %i++) {
 		spawnGuard(%i);
 	}
+}
+
+function spawnDog() {
+	if (isObject($CPB::DogPlayer)) {
+		$CPB::DogPlayer.player.delete();
+	}
+
+	$CPB::DogPlayer.createPlayer(_DogSpawnPoint.getTransform());
+	$CPB::DogPlayer.isGuard = 1;
+	$CPB::DogPlayer.setNodeColor("ALL", "0.98 0.86 0.67 1");
 }

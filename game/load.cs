@@ -53,13 +53,12 @@ function resetSavedBrickData() {
 	PrisonerSpawnPoints.clear();
 	InfoPopups.clear();
 	SecurityCameras.clear();
-	LobbySpawnPoints.clear();
+	// LobbySpawnPoints.clear();
 }
 
 function collectAllPrisonBricks(%bg, %i) {
 	if (%i == 0) { 
 		messageAdmins("Initiating prison brick collection...");
-		resetSavedBrickData();
 	}
 	cancel($CPB::CollectBricksSchedule);
 
@@ -174,8 +173,8 @@ function collectGeneratorWindowBrick(%b) { //lock generator doors
 
 function collectGarageDoorBrick(%b) { %b.door(4); } //close garage doors
 function collectGarageDoorSwitchBrick(%b) { //reset garage doors buttons
-	%b.setEventEnabled("2 5 6", 0);
-	%b.setEventEnabled("1 3 4", 1);
+	%b.setEventEnabled("0 2 3", 0);
+	%b.setEventEnabled("1 4 5", 1);
 	%b.setColor(4);
 }
 

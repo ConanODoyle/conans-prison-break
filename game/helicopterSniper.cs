@@ -208,7 +208,7 @@ function SniperControlImage::onFire(%this, %obj, %slot) {
 	if (!isObject(%cl)) {
 		return;
 	} else if ($CPB::HelicopterSniper.client !$= "") {
-		messageClient(%cl, '', "The helicopter sniper is currently in use!");
+		messageClient(%cl, '', "The helicopter sniper is currently in use by " @ $CPB::HelicopterSniper.client.name @ "!");
 		return;
 	} else if (!isObject($CPB::HelicopterSniper)) {
 		messageClient(%cl, '', "There is no helicopter sniper!");
