@@ -60,6 +60,7 @@ datablock ItemData(TowerItemA : HammerItem) {
 //	fxDTSBrick::softClearTower
 //	fxDTSBrick::onSetTower
 //	fxDTSBrick::onClearTower
+//	resetTowerSelectionBricks
 //	getClosestTower
 
 
@@ -315,8 +316,8 @@ function fxDTSBrick::setTower(%b, %tower, %cl) {
 }
 
 function fxDTSBrick::clearTower(%b, %cl) {
-	%cl.pickedTowerBrick.item.setShapeName("");
-	%cl.pickedTowerBrick.onClearTower(%cl.player, %cl);
+	%b.item.setShapeName("");
+	%b.onClearTower(%cl.player, %cl);
 	%cl.pickedTowerBrick = "";
 	%cl.tower.guardOption = "";
 	%cl.tower.guardEquipment = "";
@@ -325,8 +326,8 @@ function fxDTSBrick::clearTower(%b, %cl) {
 }
 
 function fxDTSBrick::softClearTower(%b, %cl) {
-	%cl.pickedTowerBrick.item.setShapeName("");
-	%cl.pickedTowerBrick.onClearTower(%cl.player, %cl);
+	%b.item.setShapeName("");
+	%b.onClearTower(%cl.player, %cl);
 	%cl.pickedTowerBrick = "";
 }
 
@@ -346,6 +347,13 @@ function fxDTSBrick::onClearTower(%b, %pl, %cl, %pos, %vec) {
 	$InputTarget_["MiniGame"] = getMiniGameFromObject(%cl);
 
 	%b.processInputEvent("onClearTower", %cl);
+}
+
+function resetTowerSelectionBricks() {
+	for (%i = 1; %i < 5; %i++) {
+		%b = "_Tower" @ %i @ "SelectBrick";
+		%b.softClearTower(FakeClient);
+	}
 }
 
 function getClosestTower(%pos) {

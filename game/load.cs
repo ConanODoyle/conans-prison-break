@@ -173,8 +173,8 @@ function collectGeneratorWindowBrick(%b) { //lock generator doors
 
 function collectGarageDoorBrick(%b) { %b.door(4); } //close garage doors
 function collectGarageDoorSwitchBrick(%b) { //reset garage doors buttons
-	%b.setEventEnabled("0 2 3", 0);
-	%b.setEventEnabled("1 4 5", 1);
+	%b.setEventEnabled("1 4 5", 0);
+	%b.setEventEnabled("0 2 3 6", 1);
 	%b.setColor(4);
 }
 

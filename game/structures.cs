@@ -37,6 +37,10 @@ function destroyGenerator(%cl, %brick) {
 }
 
 function destroyEWS(%cl) {
+	Tower0.guard.player.setDamageFlash(30);
+	Tower1.guard.player.setDamageFlash(30);
+	Tower2.guard.player.setDamageFlash(30);
+	Tower3.guard.player.setDamageFlash(30);
 
 	//messaging and recording
 	%type = $DamageType::Satellite;
@@ -49,5 +53,5 @@ function destroyEWS(%cl) {
 		%msg = $DamageType::MurderBitmap[%type];
 	}
 
-	messageAll('MsgStartUpload', %cl.name @ " <bitmap:" @ %msg @ "> [" @ getTimeString($CPB::CurrRoundTime-1) @ "]");
+	messageAll('MsgStartUpload', %cl.name @ " <bitmap:" @ %msg @ "> [" @ getTimeString($CPB::CurrRoundTime) @ "]");
 }

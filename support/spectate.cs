@@ -1,4 +1,4 @@
-$SPECTATE::CONTROLCPPRIORITY = 10;
+$SPECTATE::CONTROLCPPRIORITY = 3;
 
 $ClientVariable[$ClientVariableCount++] = "isSpectating";
 $ClientVariable[$ClientVariableCount++] = "spectatingClientIDX";

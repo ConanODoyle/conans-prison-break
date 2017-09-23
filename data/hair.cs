@@ -1,7 +1,7 @@
 $HairData::currentHair113407 = 2;
 $HairData::currentHair138552 = 2;
 $HairData::currentHair1768 = 0;
-$HairData::currentHair18569 = 6;
+$HairData::currentHair18569 = 0;
 $HairData::currentHair186197 = 1;
 $HairData::currentHair196636 = 1;
 $HairData::currentHair215788 = 1;
@@ -42,7 +42,7 @@ $HairData::currentHair9890 = 0;
 $HairData::savedHair113407 = "2";
 $HairData::savedHair138552 = "2";
 $HairData::savedHair1768 = "0";
-$HairData::savedHair18569 = "6";
+$HairData::savedHair18569 = "0";
 $HairData::savedHair186197 = "2";
 $HairData::savedHair196636 = "1";
 $HairData::savedHair219505 = "2";

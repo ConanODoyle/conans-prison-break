@@ -171,6 +171,8 @@ function fxDTSBrick::killDelete(%b, %cl) {
 	if (%b.type == $CPB::BrickType::SatDish) {
 		%b.spawnExplosion(tankShellProjectile, "0.5 0.5 0.5");
 		$CPB::EWSActive = 0;
+
+		disableCameras(%cl);
 	} else if (%b.type == $CPB::BrickType::Window) {
 		%b.playSound(glassExplosionSound);
 		if (strPos(strLwr(%b.getName()), "generator") >= 0) {

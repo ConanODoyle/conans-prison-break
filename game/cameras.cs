@@ -16,6 +16,7 @@ $CAMERAS::INFOCPPRIORITY = 1;
 //	fxDTSBrick::endDoorToggleLoop
 //	fxDTSBrick::previewCameras
 //	getFormattedCameraCenterprint
+//	disableCameras
 
 
 package CPB_Game_Cameras {
@@ -211,4 +212,23 @@ function getFormattedCameraCenterprint(%b, %index) {
 	%name = strReplace(%name, "_", " ");
 	%final = "<br><br><br><br><br>\c6" @ %name @ " <br><font:Palatino Linotype:18>\c3Left Click <font:Consolas:18>" @ %slots @ "<font:Palatino Linotype:18>\c3 Right Click ";
 	return %final;
+}
+
+function disableCameras(%client) {
+	if (Tower1.guard.player.isInCamera) {
+		serverCmdLight(Tower1.guard);
+	}
+	if (Tower2.guard.player.isInCamera) {
+		serverCmdLight(Tower2.guard);
+	}
+	if (Tower3.guard.player.isInCamera) {
+		serverCmdLight(Tower3.guard);
+	}
+	if (Tower4.guard.player.isInCamera) {
+		serverCmdLight(Tower4.guard);
+	}
+
+	$Server::PrisonEscape::CamerasDisabled = 1;
+
+	messageAll('MsgStartUpload', %client.name @ " <bitmap:" @ %msg @ "> [" @ getTimeString($CPB::CurrRoundTime) @ "]");
 }

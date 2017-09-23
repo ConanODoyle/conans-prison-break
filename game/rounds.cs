@@ -9,8 +9,6 @@ $CPB::LastRoundWinners = ""; //"Prisoners" or "Guards"
 $CPB::SelectedGuards = "";
 
 //Functions:
-//Packaged:
-//	GameConnection::spawnPlayer
 //Created:
 //	setPhase
 //	resetPhase
@@ -80,6 +78,8 @@ function _setPhaseLOBBY() {
 	//show logo, reset guards selected
 	// displayLogo(_LobbyLogoCam.getPosition(), _LobbyLogoCamTarget.getPosition(), LogoClosedShape, 1);
 	displayNewLogo(_newLogoPos.getPosition());
+
+	resetTowerSelectionBricks();
 
 	if (!isObject($DefaultMinigame)) {
 		CreateMiniGameSO(fcn(Conan), "Prison Break", 1, 0);
