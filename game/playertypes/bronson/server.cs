@@ -81,6 +81,8 @@ datablock PlayerData(BuffArmor)
 
    aiAvoidThis = true;
 
+   cannotPickupItems = 1;
+
    minLookAngle = -1.5708;
    maxLookAngle = 1.5708;
    maxFreelookAngle = 3.0;

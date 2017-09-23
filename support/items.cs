@@ -38,7 +38,9 @@ package CPB_Support_Items {
 	}
 	
 	function Armor::onCollision(%this, %obj, %col, %pos) {
-		if (%col.getClassName() $= "Item" && isOneUseItem(%col.getDatablock())) {
+		if (%col.getClassName() $= "Item" && %obj.getDatablock().cannotPickupItems) {
+			return;
+		} else if (%col.getClassName() $= "Item" && isOneUseItem(%col.getDatablock())) {
 			messageAll('', "\c3" @ %obj.client.name @ "\c6 picked up a \c7" @ %col.getDatablock().uiName);
 			%ret = parent::onCollision(%this, %obj, %col, %pos);
 			if (!isObject(%col)) {

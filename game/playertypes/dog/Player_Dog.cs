@@ -80,6 +80,8 @@ datablock PlayerData(ShepherdDogArmor)
    //debris = ShepherdDogDebris;
 
    aiAvoidThis = true;
+   
+   cannotPickupItems = 1;
 
    minLookAngle = -1.5708;
    maxLookAngle = 1.5708;
