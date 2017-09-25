@@ -21,7 +21,7 @@ function checkWinConditions() {
 
 function checkPrisonerWinCondition() {
 	for (%i = 0; %i < $CPB::GUARDCOUNT; %i++) {
-		if (!("Tower" @ %i).guard.isDead) {
+		if (!("Tower" @ %i).isDestroyed) {
 			return 0;
 		}
 	}

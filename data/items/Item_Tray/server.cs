@@ -193,7 +193,7 @@ function PrisonTrayImage::onReady(%this, %obj, %slot) {
 function spawnTrayBash(%pos) {
 	// %sound = getRandom(1, 3);
 	// %sound = "trayDeflect" @ %sound @ "Sound";
-	// serverPlay3D(%sound, %pos);
+	serverPlay3D(HammerHitSound, %pos);
 
 	%p = new Projectile() {
 		datablock = HammerProjectile;
@@ -210,13 +210,16 @@ function PrisonTrayImage::onFire(%this, %obj, %slot)
 	%ray = containerRaycast(%start, %end, $TypeMasks::PlayerObjectType | $TypeMasks::fxBrickObjectType, %obj);
 	if (isObject(%hit = getWord(%ray, 0))) {
 		%pos = getWords(%ray, 1, 3);
-		%targetVector = vectorNormalize(vectorSub(%obj.getPosition(), %hit.getHackPosition()));
-		%angle = mACos(vectorDot(%hit.getForwardVector(), %targetVector));
 
 		if (%hit.getClassName() !$= "Player") {
 			spawnTrayBash(%pos);
 			return;
-		} else if (!%obj.hasTape) {
+		}
+
+		%targetVector = vectorNormalize(vectorSub(%obj.getPosition(), %hit.getHackPosition()));
+		%angle = mACos(vectorDot(%hit.getForwardVector(), %targetVector));
+		
+		if (!%obj.hasTape) {
 			centerprint(%obj.client, "You need \c4Tape \c0to attach trays to other people!", 2);
 			spawnTrayBash(%pos);
 			return;
@@ -276,18 +279,10 @@ function PrisonTrayImage::onReFire(%this, %obj, %slot) {
 		%obj.playThread(1, activate);
 		%start = getWords(%obj.getEyeTransform(), 0, 2);
 		%end = vectorAdd(%start, vectorScale(%obj.getMuzzleVector(0), 1.8));
-		%ray = containerRaycast(%start, %end, $TypeMasks::PlayerObjectType, %obj);
+		%ray = containerRaycast(%start, %end, $TypeMasks::PlayerObjectType | $TypeMasks::fxBrickObjectType, %obj);
 		if (isObject(%hit = getWord(%ray, 0))) {
-			if (%hit.getDatablock().getName() !$= "PlayerNoJet") {
-				%sound = getRandom(1, 3);
-				%sound = "trayDeflect" @ %sound @ "Sound";
-				serverPlay3D(%sound, getWords(%ray, 1, 3));
-
-				%p = new Projectile() {
-					datablock = HammerProjectile;
-					initialPosition = getWords(%ray, 1, 3);
-				};
-				%p.explode();
+			if (%hit.getClassName() !$= "PlayerNoJet") {
+				spawnTrayBash(getWords(%ray, 1, 3));
 				
 				return;
 			}
