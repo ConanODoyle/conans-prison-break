@@ -45,6 +45,13 @@ package CPB_Game_Cameras {
 		return parent::onTrigger(%this, %obj, %trig, %state);
 	}
 
+	function GameConnection::onDeath(%cl, %sourceObj, %sourceCl, %slot, %part) {
+		if (%cl.player.isPreviewingCameras) {
+			SecurityCameras.getObject(%cl.currCamera).endDoorToggleLoop();
+		}
+		return parent::onDeath(%cl, %sourceObj, %sourceCl, %slot, %part);
+	}
+
 	function serverCmdLight(%cl) {
 		if (%cl.player.isInCamera && %cl.player.canLeaveCamera) {
 			if (isObject(%cl.player)) {
