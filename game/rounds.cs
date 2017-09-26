@@ -175,6 +175,12 @@ function _setPhasePWIN() {
 }
 
 function doIntro() {
+
+	//show logo open
+	displayLogo(_IntroCam1.getPosition(), _IntroCam1Target.getPosition(), LogoClosedShape, 0);
+
+	schedule(500, 0, _doIntro2);
+
 	setAllCamerasView(_IntroCam1.getPosition(), _IntroCam1Target.getPosition(), 1, 90);
 
 	schedule(2000, 0, setAllCamerasView, _IntroCam2.getPosition(), _IntroCam2Target.getPosition(), 1, 90);
@@ -183,3 +189,38 @@ function doIntro() {
 function endRound() {
 	checkWinConditions();
 }
+
+// 		$Server::PrisonEscape::GeneratorOpened = 0;
+// 		$Server::PrisonEscape::roundPhase = 1;
+// 		for (%i = 0; %i < ClientGroup.getCount(); %i++)
+// 		{
+// 			%t = ClientGroup.getObject(%i);
+// 			if (%t.isCustomizing) {
+// 				stopPlayerHairCustomization(%t.player);
+// 			}
+// 		}
+// 		spawnKillGround();
+// 		spawnGenRoomKill();
+// 		despawnAll();
+
+// 		setAllCamerasView($Server::PrisonEscape::LoadingCamBrick.getPosition(), $Server::PrisonEscape::LoadingCamBrickTarget.getPosition(), 50);
+// 		$nextRoundPhaseSchedule = schedule(100, 0, serverCmdSetPhase, %cl, 11);
+// 	}
+// 	else if (%phase == 11) //start the round caminations and spawn everyone but dont give them control of their bodies yet
+// 	{
+// 		displayLogo($Server::PrisonEscape::LoadingCamBrick.getPosition(), $Server::PrisonEscape::LoadingCamBrickTarget.getPosition(), LogoOpenShape, 0);
+// 		$LogoShape.setScale("2.2 2.2 2.2");
+// 		$LogoShape.schedule(100, setScale, "2 2 2");
+// 		serverPlay3d(Beep_Siren_Sound, $LogoDish.getPosition());
+// 		serverPlay3d(BrickBreakSound, $LogoDish.getPosition());
+// 		schedule(50, 0, serverPlay3d, BrickBreakSound, $LogoDish.getPosition());
+// 		schedule(100, 0, serverPlay3d, BrickBreakSound, $LogoDish.getPosition());
+
+// 		cancel($Server::PrisonEscape::statisticLoop);
+// 		clearStatistics();
+// 		createLocationsLookupTable();
+// 		clearCenterprintAll();
+// 		clearBottomprintAll();
+
+// 		schedule(2000, 0, displayIntroCenterprint);
+// 		$nextRoundPhaseSchedule = schedule(5000, 0, serverCmdSetPhase, $fakeClient, 15);

@@ -111,7 +111,7 @@ function validateGuardSelection() {
 		}
 		%isTaken[%cl.tower.getName()] = 1;
 		if (isObject(%cl.pickedTowerBrick)) {
-			%cl.pickedTowerBrick.softClearTower(%cl);
+			// %cl.pickedTowerBrick.softClearTower(%cl);
 		} else {
 			messageAdmins("!!! \c6Client has no towerbrick to soft clear!");
 		}
