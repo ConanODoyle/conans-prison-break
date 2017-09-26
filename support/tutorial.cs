@@ -122,7 +122,7 @@ activatePackage(CPB_Support_Tutorial);
 registerOutputEvent("GameConnection", "showTutorial", "int 0 100 0");
 
 function GameConnection::showTutorial(%cl, %int) {
-	if (%cl.player.isViewingTutorial && %cl.currGroup == %int) {
+	if (%cl.player.isViewingTutorial) {
 		return;
 	}
 	%cl.currGroup = %int;
