@@ -223,7 +223,7 @@ datablock DebrisData(SniperRifleSpotlightDebris)
 ////////////////////
 
 
-AddDamageType("SniperRifleSpotlight",	'<bitmap:Add-Ons/Gamemode_PPE/ci/CI_Sniper> %1',	 '%2 <bitmap:Add-Ons/Gamemode_PPE/ci/CI_Sniper> %1', 0.5, 1);
+AddDamageType("SniperRifleSpotlight",	'<bitmap:Add-Ons/Gamemode_CPB/data/ci/CI_Sniper> %1',	 '%2 <bitmap:Add-Ons/Gamemode_CPB/data/ci/CI_Sniper> %1', 0.5, 1);
 datablock ProjectileData(SniperRifleSpotlightProjectile)
 {
 	projectileShapeName = "./bullet.dts";

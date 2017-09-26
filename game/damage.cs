@@ -17,6 +17,7 @@ package CPB_Game_Damage {
 			messageClient(%cl, '', %sourceCl.name @ " <bitmap:" @ $DamageType::MurderBitmap[%damageType] @ "> " @ %cl.name);
 			messageClient(%sourceCl, '', %sourceCl.name @ " <bitmap:" @ $DamageType::MurderBitmap[%damageType] @ "> " @ %cl.name);
 		}
+		talk(%sourceCl SPC %damageType SPC %damLoc);
 
 		return parent::onDeath(%cl, %sourceObj, %sourceCl, %damageType, %damLoc);
 	}

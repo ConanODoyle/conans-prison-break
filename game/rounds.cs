@@ -19,6 +19,7 @@ $CPB::SelectedGuards = "";
 //	_setPhaseINTRO
 //	_setPhaseGWIN
 //	_setPhasePWIN
+//	endRound
 //	doIntro
 
 
@@ -146,10 +147,13 @@ function _setPhaseINTRO() {
 	spawnKillGround();
 
 	if (validateGuardSelection()) {
-		doIntro();
+		// doIntro();
 		$CPB::hasCollectedBricks = 0;
+		resetTowerSelectionBricks();
+		setPhase("GAME");
+	} else {
+		messageAdmins("!!! - Cannot start game, guard selection not valid!");
 	}
-	setPhase("GAME");
 }
 
 function _setPhaseGWIN() {
@@ -174,23 +178,37 @@ function _setPhasePWIN() {
 	schedule(5000, 0, setPhase, "LOBBY");
 }
 
-function doIntro() {
-
-	//show logo open
-	displayLogo(_IntroCam1.getPosition(), _IntroCam1Target.getPosition(), LogoClosedShape, 0);
-
-	schedule(500, 0, _doIntro2);
-
-	setAllCamerasView(_IntroCam1.getPosition(), _IntroCam1Target.getPosition(), 1, 90);
-
-	schedule(2000, 0, setAllCamerasView, _IntroCam2.getPosition(), _IntroCam2Target.getPosition(), 1, 90);
-}
-
 function endRound() {
 	checkWinConditions();
 }
 
-// 		$Server::PrisonEscape::GeneratorOpened = 0;
+function doIntro() {
+	//show logo open
+	whiteOutAll(0.6);
+	displayLogo(_IntroCam1.getPosition(), _IntroCam1Target.getPosition(), LogoClosedShape, 0);
+
+	setAllCamerasView(_IntroCam1.getPosition(), _IntroCam1Target.getPosition(), 1, 50);
+
+	schedule(500, 0, _doIntro2);
+}
+
+function _doIntro2() {
+	displayLogo(_IntroCam1.getPosition(), _IntroCam1Target.getPosition(), LogoOpenShape, 0);
+	$LogoShape.setScale("2.2 2.2 2.2");
+	$LogoShape.schedule(100, setScale, "2 2 2");
+
+	serverPlay3d(Beep_Siren_Sound, $LogoDish.getPosition());
+	serverPlay3d(BrickBreakSound, $LogoDish.getPosition());
+	schedule(50, 0, serverPlay3d, BrickBreakSound, $LogoDish.getPosition());
+	schedule(100, 0, serverPlay3d, BrickBreakSound, $LogoDish.getPosition());
+
+	schedule(5000, 0, _doIntro3);
+}
+
+function _doIntro3() {
+
+}
+
 // 		$Server::PrisonEscape::roundPhase = 1;
 // 		for (%i = 0; %i < ClientGroup.getCount(); %i++)
 // 		{
@@ -224,3 +242,43 @@ function endRound() {
 
 // 		schedule(2000, 0, displayIntroCenterprint);
 // 		$nextRoundPhaseSchedule = schedule(5000, 0, serverCmdSetPhase, $fakeClient, 15);
+
+// $Server::PrisonEscape::roundPhase = 2;
+// 		for (%i = 0; %i < ClientGroup.getCount(); %i++) {
+// 			%cl = ClientGroup.getObject(%i);
+// 			%cl.camera.setWhiteOut(0.5);
+// 		}
+// 		setRiotMusic(3);
+// 		if (!isObject($Server::PrisonEscape::commDish) || !isObject($Server::PrisonEscape::generator) || $Server::PrisonEscape::PrisonerSpawnPoints.getCount() <= 0) {
+// 			PPE_messageAdmins("!!! \c5Cannot start round: Bricks missing!");
+// 			return;	
+// 		} else if (!$Server::PrisonEscape::haveAssignedBricks) {
+// 			PPE_messageAdmins("!!! \c5Cannot start round: bricks have not been assigned!");
+// 			return;
+// 		}
+// 		//reset statistics here because alivetime matters
+
+// 		//assign guards
+// 		for (%i = 0; %i < 4; %i++)
+// 		{
+// 			%guardClient = getWord($Server::PrisonEscape::Guards, %i);
+// 			assignGuard(%guardClient);
+// 		}
+// 		//spawn guards
+// 		spawnGuards();
+// 		spawnEmittersLoop(0);
+
+// 		//spawn prisoners through timer start code.
+
+// 		//play music
+// 		//camera on prison
+// 		displayIntroCenterprint();
+// 		setAllCamerasView($Server::PrisonEscape::PrisonPreview.getPosition(), $Server::PrisonEscape::PrisonPreviewTarget.getPosition(), 50);
+
+// 		//camera for each guard - give guards control of their body here
+
+// 		//autocall phase 2
+// 		//call through the caminations, when they're done
+// 		$nextRoundPhaseSchedule = schedule(10000, $fakeClient, serverCmdSetPhase, $fakeClient, 2);
+
+// 		startSpotlights();

@@ -88,6 +88,7 @@ function collectAllPrisonBricks(%bg, %i) {
 	%b = %bg.getObject(%i);
 	%db = %b.getDatablock().getName();
 	%b.damage = 0;
+	%b.respawnVehicle();
 
 	if (%b.getDatablock().isDoor) { //close open doors
 		%b.door(4);
@@ -145,11 +146,12 @@ function collectTowerBrick(%b, %n) {
 	} else if (strPos(%name, "info") >= 0) {
 		InfoPopups.add(%b);
 	} else if (isObject(%b.vehicle)) {
-		%b.respawnVehicle();
 		%tower.spotlightBot = %b.vehicle;
 		%b.vehicle.setScale("2 2 2");
 		%b.vehicle.setShapeName("Tower " @ %n + 1, "8564862");
 		%b.vehicle.setShapeNameDistance(500);
+		%randVec = getRandom(-20, 20) SPC getRandom(-20, 20) SPC 0;
+		%b.vehicle.setAimLocation(vectorAdd(_BronsonDoor.getPosition(), %randVec));
 		startLightBeamLoop(%b.vehicle);
 	}
 }

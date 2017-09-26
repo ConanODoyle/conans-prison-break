@@ -94,6 +94,13 @@ function setAllCameraControlNone(){
 	}
 }
 
+function whiteOutAll(%val) {
+	for (%i = 0; %i < ClientGroup.getCount(); %i++) {
+		%cl = ClientGroup.getObject(%i);
+		%cl.getObjectControl().setWhiteOut(%val);
+	}
+}
+
 // function allCameraPan(%pos1, %pos2, %speed, %targetPos)
 // {
 // 	if (vectorDist(%pos1, %pos2) < 0.01)
