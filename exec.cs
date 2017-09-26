@@ -164,6 +164,16 @@ package ReDownload
 activatePackage(ReDownload);
 
 
+//Does not handle unregistered events properly as that requires client cooperation
+function transmitNewEvents() {
+	for (%i = 0; %i < ClientGroup.getCount(); %i++) {
+		%cl = ClientGroup.getObject(%i);
+		serverCmdRequestEventTables(%cl);
+	}
+	messageAll('', "\c6Event tables have been updated on all clients...");
+}
+
+
 function Player::setLargeScale(%this,%iter)
 {
 	%iter = mClamp(%iter,0,13);

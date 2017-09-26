@@ -7,6 +7,7 @@ $SPAWN::BRONSONDEATHCPPRIORITY = 9;
 
 //Functions:
 //Packaged:
+//	GameConnection::onClientEnterGame
 //	GameConnection::onDeath
 //	roundTimer
 //	Observer::onTrigger
@@ -29,6 +30,14 @@ $SPAWN::BRONSONDEATHCPPRIORITY = 9;
 
 
 package CPB_Game_Spawn {
+	function GameConnection::onClientEnterGame(%cl) {
+		%mini = $DefaultMinigame;
+		if ($CPB::PHASE < 0 && isObject($DefaultMinigame)) {
+			$DefaultMinigame = "";
+		}
+		parent::onClientEnterGame(%cl);
+		$DefaultMinigame = %mini;
+	}
 
 	function GameConnection::onDeath(%cl, %sourceObj, %sourceCl, %damageType, %damLoc) {
 		if (!%cl.isPrisoner && !%cl.isGuard || $CPB::PHASE != $CPB::GAME) {
