@@ -27,18 +27,18 @@ datablock StaticShapeData(LogoDishShape)
 //  clearLogo
 
 function displayNewLogo(%pos) {
-	if (isObject($LogoShape)) {
-		$LogoShape.delete();
+	if (isObject($NewLogoShape)) {
+		$NewLogoShape.delete();
 	}
 
-	$LogoShape = new StaticShape(Logo) {
+	$NewLogoShape = new StaticShape(Logo) {
 		datablock = NewLogoShape;
 		scale = "2.0 2.0 2.0";
 	};
 
-	$LogoShape.setTransform(%pos);
-	$LogoShape.playThread(0, rotate);
-	applyLogoColors($LogoShape, 1);
+	$NewLogoShape.setTransform(%pos);
+	$NewLogoShape.playThread(0, rotate);
+	applyLogoColors($NewLogoShape, 1);
 }
 
 function displayLogo(%camPos, %targetPos, %logo, %bg) {
@@ -78,7 +78,7 @@ function displayLogo(%camPos, %targetPos, %logo, %bg) {
 		}
 		$LogoDish = new StaticShape(Logo) {
 			datablock = LogoDishShape;
-			scale = "0.7 0.7 0.7";
+			scale = "1 1 1";
 		};
 		MissionCleanup.add($LogoDish);
 		$LogoDish.startFade(0, 0, 1);

@@ -184,8 +184,8 @@ function endRound() {
 
 function doIntro() {
 	//show logo open
+	displayLogo(_IntroCam1.getPosition(), _IntroCam1Target.getPosition(), LogoClosedShape, 1);
 	whiteOutAll(0.6);
-	displayLogo(_IntroCam1.getPosition(), _IntroCam1Target.getPosition(), LogoClosedShape, 0);
 
 	setAllCamerasView(_IntroCam1.getPosition(), _IntroCam1Target.getPosition(), 1, 50);
 
@@ -193,7 +193,7 @@ function doIntro() {
 }
 
 function _doIntro2() {
-	displayLogo(_IntroCam1.getPosition(), _IntroCam1Target.getPosition(), LogoOpenShape, 0);
+	displayLogo(_IntroCam1.getPosition(), _IntroCam1Target.getPosition(), LogoOpenShape, 1);
 	$LogoShape.setScale("2.2 2.2 2.2");
 	$LogoShape.schedule(100, setScale, "2 2 2");
 
@@ -206,7 +206,12 @@ function _doIntro2() {
 }
 
 function _doIntro3() {
+	$LogoShape.delete();
+	$LogoDish.delete();
 
+	setAllCamerasView(_IntroCam2.getPosition(), _IntroCam2Target.getPosition(), 1, 60);
+
+	schedule(5000, 0, resetAllClientsFOV);
 }
 
 // 		$Server::PrisonEscape::roundPhase = 1;

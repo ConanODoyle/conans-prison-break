@@ -97,7 +97,9 @@ function setAllCameraControlNone(){
 function whiteOutAll(%val) {
 	for (%i = 0; %i < ClientGroup.getCount(); %i++) {
 		%cl = ClientGroup.getObject(%i);
-		%cl.getObjectControl().setWhiteOut(%val);
+		if (isObject(%cl.getControlObject())) {
+			%cl.getControlObject().setWhiteOut(%val);
+		}
 	}
 }
 
