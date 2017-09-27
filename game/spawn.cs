@@ -59,7 +59,7 @@ package CPB_Game_Spawn {
 			warn("WARNING: No player object in GameConnection::onDeath() for client \'" @ %cl @ "\'");
 		}
 
-		if (isObject(%cam = %cl.camera) && isObject(%cl.Player)) {
+		if (isObject(%cam = %cl.camera) && isObject(%cl.player)) {
 			if (%cl.getControlObject() == %cam && %cam.getControlObject() > 0.0) {
 				%cam.setControlObject(%cl.dummycamera);
 			} else {
