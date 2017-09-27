@@ -23,6 +23,20 @@ package CPB_Game_Damage {
 		return parent::onDeath(%cl, %sourceObj, %sourceCl, %damageType, %damLoc);
 	}
 
+	function Armor::damage(%db, %obj, %sourceObj, %pos, %damage, %damageType) {
+		if (%db.getID() == BuffArmor.getID() && isObject(%obj.client)) {
+			%obj.client.bottomPrintInfo();
+		}
+		return parent::damage(%db, %obj, %sourceObj, %pos, %damage, %damageType);
+	}
+
+	function Player::setDamageLevel(%obj, %val) {
+		parent::setDamageLevel(%obj, %val);
+		if (%obj.getDatablock().getID() == BuffArmor.getID() && isObject(%obj.client)) {
+			%obj.client.bottomPrintInfo();
+		}
+	}
+
 	function minigameCanDamage(%obj1, %obj2) {
 		if (%obj1.getClassName() !$= "GameConnection") {
 			%cl1 = %obj1.client;
