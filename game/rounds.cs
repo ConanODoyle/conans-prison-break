@@ -87,6 +87,7 @@ function _setPhaseLOBBY() {
 		$DefaultMinigame = fcn(Conan).minigame;
 		$DefaultMinigame.schedule(100, Reset, fcn(Conan));
 		$DefaultMinigame.playerDatablock = PlayerNoJet.getID();
+		$DefaultMinigame.useAllPlayersBricks = 1;
 	}
 
 	for (%i = 0; %i < ClientGroup.getCount(); %i++){
@@ -212,6 +213,7 @@ function _doIntro3() {
 	setAllCamerasView(_IntroCam2.getPosition(), _IntroCam2Target.getPosition(), 1, 60);
 
 	schedule(5000, 0, resetAllClientsFOV);
+	schedule(5000, 0, setPhase, "GAME");
 }
 
 // 		$Server::PrisonEscape::roundPhase = 1;

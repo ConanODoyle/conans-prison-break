@@ -1,7 +1,7 @@
 $STUNBLINDRADIUS = 15;
 $STUNBLINDBONUS = 0.5;
-$STUNDISTANCE = 5;
-$STUNMAX = 5;
+$STUNDISTANCE = 4;
+$STUNMAX = 3;
 
 
 datablock AudioProfile(SniperRifleSpotlightBoltSound)
@@ -234,7 +234,7 @@ datablock ProjectileData(SniperRifleSpotlightProjectile)
 	brickExplosionRadius = 0;
 	brickExplosionImpact = false;			 //destroy a brick if we hit it directly?
 	brickExplosionForce  = 0;
-	brickExplosionMaxVolume = 0;			 //max volume of bricks that we can destroy
+	brickExplosionMaxVolume = 0;			 //max volume of bricks that we  can destroy
 	brickExplosionMaxVolumeFloating = 0;  //max volume of bricks that we can destroy if they aren't connected to the ground
 
 	impactImpulse		  = 0;
