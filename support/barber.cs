@@ -407,6 +407,11 @@ function getHairName(%id) {
 }
 
 function Player::equipHair(%pl, %hair) {
+	if ($count > 20) {
+		talk($count);
+		return;
+	}
+	$Count++;
 	%cl = %pl.client;
 	if (%hair $= "" || %hair $= "None") {
 		%pl.unMountImage(2);
@@ -416,7 +421,9 @@ function Player::equipHair(%pl, %hair) {
 	} else if (%hair $= "Saved") {
 		%list = $HairData::Unlocked[%cl.bl_id];
 		%currHairName = getHairName(getWord(%list, $HairData::savedHair[%cl.bl_id]));
+		%pl.client.skipHairEquip = 1;
 		%pl.equipHair(%currHairName);
+		%pl.client.skipHairEquip = 0;
 	} else {
 		%pl.mountImage("Hat" @ stripchars(%hair, " -1234567890_+=.,;':?!@#$%&*()[]{}\"/<>") @ "Data", 2);
 
