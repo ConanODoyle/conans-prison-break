@@ -42,6 +42,7 @@ exec("./game/helicopterSniper.cs");
 exec("./game/info.cs");
 exec("./game/load.cs");
 exec("./game/logo.cs");
+exec("./game/minigame.cs");
 exec("./game/rounds.cs");
 exec("./game/structures.cs");
 exec("./game/towers.cs");

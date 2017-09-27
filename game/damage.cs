@@ -24,10 +24,11 @@ package CPB_Game_Damage {
 	}
 
 	function Armor::damage(%db, %obj, %sourceObj, %pos, %damage, %damageType) {
+		%ret = parent::damage(%db, %obj, %sourceObj, %pos, %damage, %damageType);
 		if (%db.getID() == BuffArmor.getID() && isObject(%obj.client)) {
 			%obj.client.bottomPrintInfo();
 		}
-		return parent::damage(%db, %obj, %sourceObj, %pos, %damage, %damageType);
+		return %ret;
 	}
 
 	function Player::setDamageLevel(%obj, %val) {

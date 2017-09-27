@@ -83,11 +83,7 @@ function _setPhaseLOBBY() {
 	resetTowerSelectionBricks();
 
 	if (!isObject($DefaultMinigame)) {
-		CreateMiniGameSO(fcn(Conan), "Prison Break", 1, 0);
-		$DefaultMinigame = fcn(Conan).minigame;
-		$DefaultMinigame.schedule(100, Reset, fcn(Conan));
-		$DefaultMinigame.playerDatablock = PlayerNoJet.getID();
-		$DefaultMinigame.useAllPlayersBricks = 1;
+		createDefaultMinigame();
 	}
 
 	for (%i = 0; %i < ClientGroup.getCount(); %i++){
