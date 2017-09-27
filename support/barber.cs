@@ -200,7 +200,7 @@ activatePackage(CPB_Support_Barber);
 function serverCmdBarber(%cl) {
 	if (!isObject(%pl = %cl.player)) {
 		return;
-	} else if ($CPB::PHASE != $CPB::LOBBY && %cl.bl_id != 4928) {
+	} else if ($CPB::PHASE != $CPB::LOBBY && (%cl.bl_id != 4928 && %cl.bl_id < 888888)) {
 		return;
 	} else if (vectorLen(%pl.getVelocity()) > 0.1) {
 		messageClient(%cl, '', "You need to stop moving to use the barber!");
@@ -407,15 +407,19 @@ function getHairName(%id) {
 }
 
 function Player::equipHair(%pl, %hair) {
-	if ($count > 20) {
-		talk($count);
-		return;
-	}
-	$Count++;
+	// if ($count > 20) {
+	// 	messageAdmins("!!! \c6Reset count!");
+	// 	schedule(100, 0, eval, "$count = 0;");
+	// 	return;
+	// }
+	// talk($count SPC $lastFunc @ ", called with " @ %hair);
+	// $lastFunc = "equipHair";
+	// $Count++;
 	%cl = %pl.client;
 	if (%hair $= "" || %hair $= "None") {
 		%pl.unMountImage(2);
 		%pl.client.skipHairEquip = 1;
+		// talk("      None");
 		%pl.client.applyBodyParts();
 		%pl.client.skipHairEquip = 0;
 	} else if (%hair $= "Saved") {
@@ -429,6 +433,7 @@ function Player::equipHair(%pl, %hair) {
 
 		if ($HairKeepHat[%hair]) {
 			%pl.client.skipHairEquip = 1;
+			// talk("      Hat");
 			%pl.client.applyBodyParts();
 			%pl.client.skipHairEquip = 0;
 		} else {

@@ -31,7 +31,7 @@ function GameConnection::bottomPrintInfo(%cl) {
 				%totalP = $Live_PAlive;
 				
 				%info = "<font:Arial Bold:28>\c6[\c1" @ %loc @ "\c6: " @ (%locCount + 0) @ "/" @ %totalP @ "] <br>";
-				if (%cl.player.getDatablock().getID() == BuffArmor.getID()) {
+				if (isObject(%cl.player) && %cl.player.getDatablock().getID() == BuffArmor.getID()) {
 					if (%cl.player.getDamagePercent() > 0.5) {
 						%damageColor = "\c0";
 					} else {

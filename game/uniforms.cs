@@ -20,6 +20,7 @@ $SpecialUniforms = "12307 6531 1768 4382";
 
 package CPB_Game_Uniforms {
 	function GameConnection::applyBodyParts(%cl) {
+		$lastFunc = "applyBodyParts";
 		%pl = %cl.player;
 		if (!isObject(%pl)) {
 			return parent::applyBodyParts(%cl);
@@ -33,17 +34,11 @@ package CPB_Game_Uniforms {
 
 		if (%pl.getDatablock().getName() $= "BuffArmor") {
 			%pl.unhideNode("ALL");
-
-			if (!%cl.isDonator) {
-				%pl.equipHair("Saved");
-			} else {
-				%pl.mountImage(CrocHatImage, 1);
-			}
 		}
 		
 		if (!%cl.skipHairEquip && %cl.player.getDatablock().getID() != BuffArmor.getID()) {
 			%pl.equipHair("Saved");
-		} else if (%cl.player.getDatablock().getID() == BuffArmor.getID()) {
+		} else if (!%cl.skipHairEquip && %cl.player.getDatablock().getID() == BuffArmor.getID()) {
 			if (%cl.isDonator) {
 				%cl.player.mountImage(CrocHatImage, 2);
 			} else {
