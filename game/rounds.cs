@@ -119,7 +119,12 @@ function _setPhaseLOBBY() {
 	bottomPrintInfoAll();
 
 	//TODO: make this use "map type"
-	serverDirectSaveFileLoad("saves/autosaver/prison.bls", 3, "", 0, 1);
+	if ($currMap $= "") {
+		messageAdmins("!!! \c6No map is currently set!");
+		return;
+	}
+		
+	serverDirectSaveFileLoad("saves/autosaver/" @ $currMap @ ".bls", 3, "", 0, 1);
 
 	$CPB::SelectedGuards = "";
 	$CPB::GeneratorOpened = 0;

@@ -125,7 +125,7 @@ function GameConnection::bottomPrintInfo(%cl) {
 		}
 		%cl.bottomprint("<just:center><font:Arial Bold:34>\c6" @ %timeString @ " <br><just:center>" @ %info, 500, 0);
 	} else {
-		%header = "<just:center><font:Courier New Bold:48><shadowcolor:000000><shadow:0:4><color:E65714>Conan's Prison Break <br><font:Arial Bold:30>\c7-      - <br>";
+		%header = "<just:center><font:Courier New Bold:48><shadowcolor:000000><shadow:0:3><color:E65714>Conan's Prison Break <br><font:Arial Bold:30><shadow:0:0>\c7-------- <br>";
 		%footer = "<shadow:0:3><color:ffffff>Please wait for the next round to start<font:Impact:1> <br>";
 		%cl.bottomprint(%header @ %footer, -1, 1);
 	}

@@ -12,7 +12,7 @@ AddDamageType("Dog",	'<bitmap:Add-Ons/Gamemode_CPB/data/ci/Dog> %1',	 '%2 <bitma
 package CPB_Game_Damage {
 	function GameConnection::onDeath(%cl, %sourceObj, %sourceCl, %damageType, %damLoc) {
 		if ($CPB::PHASE == $CPB::GAME) {
-			if (!isObject(%sourceCl)) {
+			if (!isObject(%sourceCl) || %cl == %sourceCl) {
 				messageClient(%cl, '', "<bitmap:" @ $DamageType::SuicideBitmap[%damageType] @ "> " @ %cl.name);
 			} else {
 				messageClient(%cl, '', %sourceCl.name @ " <bitmap:" @ $DamageType::MurderBitmap[%damageType] @ "> " @ %cl.name);
