@@ -12,16 +12,30 @@ AddDamageType("Dog",	'<bitmap:Add-Ons/Gamemode_CPB/data/ci/Dog> %1',	 '%2 <bitma
 package CPB_Game_Damage {
 	function GameConnection::onDeath(%cl, %sourceObj, %sourceCl, %damageType, %damLoc) {
 		if ($CPB::PHASE == $CPB::GAME) {
-			if (!isObject(%sourceCl)) {
+			if (!isObject(%sourceCl) || %cl == %sourceCl) {
 				messageClient(%cl, '', "<bitmap:" @ $DamageType::SuicideBitmap[%damageType] @ "> " @ %cl.name);
 			} else {
 				messageClient(%cl, '', %sourceCl.name @ " <bitmap:" @ $DamageType::MurderBitmap[%damageType] @ "> " @ %cl.name);
 				messageClient(%sourceCl, '', %sourceCl.name @ " <bitmap:" @ $DamageType::MurderBitmap[%damageType] @ "> " @ %cl.name);
 			}
-			return;
 		}
 
 		return parent::onDeath(%cl, %sourceObj, %sourceCl, %damageType, %damLoc);
+	}
+
+	function Armor::damage(%db, %obj, %sourceObj, %pos, %damage, %damageType) {
+		%ret = parent::damage(%db, %obj, %sourceObj, %pos, %damage, %damageType);
+		if (%db.getID() == BuffArmor.getID() && isObject(%obj.client)) {
+			%obj.client.bottomPrintInfo();
+		}
+		return %ret;
+	}
+
+	function Player::setDamageLevel(%obj, %val) {
+		parent::setDamageLevel(%obj, %val);
+		if (%obj.getDatablock().getID() == BuffArmor.getID() && isObject(%obj.client)) {
+			%obj.client.bottomPrintInfo();
+		}
 	}
 
 	function minigameCanDamage(%obj1, %obj2) {

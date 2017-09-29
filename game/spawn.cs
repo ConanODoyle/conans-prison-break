@@ -7,7 +7,6 @@ $SPAWN::BRONSONDEATHCPPRIORITY = 9;
 
 //Functions:
 //Packaged:
-//	GameConnection::onClientEnterGame
 //	GameConnection::onDeath
 //	roundTimer
 //	Observer::onTrigger
@@ -30,21 +29,16 @@ $SPAWN::BRONSONDEATHCPPRIORITY = 9;
 
 
 package CPB_Game_Spawn {
-	function GameConnection::onClientEnterGame(%cl) {
-		%mini = $DefaultMinigame;
-		if ($CPB::PHASE < 0 && isObject($DefaultMinigame)) {
-			$DefaultMinigame = "";
-		}
-		parent::onClientEnterGame(%cl);
-		$DefaultMinigame = %mini;
-	}
-
 	function GameConnection::onDeath(%cl, %sourceObj, %sourceCl, %damageType, %damLoc) {
-		if (!%cl.isPrisoner && !%cl.isGuard || $CPB::PHASE != $CPB::GAME) {
+		if ((!%cl.isPrisoner && !%cl.isGuard) || $CPB::PHASE != $CPB::GAME) {
 			return parent::onDeath(%cl, %sourceObj, %sourceCl, %damageType, %damLoc);
 		}
 
+		%cl.setControlObject(%cl.camera);
+
 		if (isObject(%pl = %cl.player)) {
+			%pl.client = "";
+			%cl.player = "";
 			%pl.setShapeName("", 8564862);
 			if (isObject(%pl.tempBrick)) {
 				%pl.tempBrick.delete();
@@ -59,14 +53,14 @@ package CPB_Game_Spawn {
 			warn("WARNING: No player object in GameConnection::onDeath() for client \'" @ %cl @ "\'");
 		}
 
-		if (isObject(%cam = %cl.camera) && isObject(%cl.player)) {
-			if (%cl.getControlObject() == %cam && %cam.getControlObject() > 0.0) {
-				%cam.setControlObject(%cl.dummycamera);
-			} else {
-				%cam.setMode("Corpse", %cl.Player);
+		if (isObject(%cam = %cl.camera)) {
+			// if (%cl.getControlObject() == %cam && %cam.getControlObject() > 0.0) {
+			// 	%cam.setControlObject(%cl.dummycamera);
+			// } else {
+				%cam.setMode("Corpse", %pl);
 				%cl.setControlObject(%cam);
-				%cam.setControlObject(0);
-			}
+				%cam.setControlObject(%cam);
+			// }
 		}
 		%cl.player = 0;
 		%cl.isDead = 1;

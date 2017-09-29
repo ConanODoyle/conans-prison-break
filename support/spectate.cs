@@ -26,7 +26,7 @@ $ClientVariable[$ClientVariableCount++] = "spectatingClientIDX";
 
 package CPB_Support_Spectate {
 	function GameConnection::spawnPlayer(%cl) {
-		if ($CPB::PHASE == $CPB::GAME) {
+		if ($CPB::PHASE == $CPB::GAME && isObject(%cl.minigame)) {
 			%cl.setControlObject(%cl.camera);
 			%cl.camera.setControlObject(%cl.camera);
 			%cl.isDead = 1;
@@ -41,7 +41,7 @@ package CPB_Support_Spectate {
 	function Observer::onTrigger(%this, %obj, %trig, %state) {
 		%cl = %obj.getControllingClient();
 
-		if (%cl.isSpectating) {
+		if (%cl.isSpectating && isObject(%cl.minigame)) {
 			if (%trig == $LEFTCLICK && !%state) {
 				spectateNextPlayer(%cl, 1);
 			} else if (%trig == $RIGHTCLICK && !%state) {

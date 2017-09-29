@@ -13,6 +13,7 @@ if (!isObject(DroppedItems)) {
 //Packaged:
 //	collectAllPrisonBricks
 //	Armor::onCollision
+//	fxDTSBrick::onKeyMismatch
 //	Armor::onDisabled
 //	Item::schedulePop
 //	Player::changeDatablock
@@ -53,6 +54,11 @@ package CPB_Support_Items {
 		}
 		return parent::onCollision(%this, %obj, %col, %pos);
 	}
+
+	function fxDTSBrick::onKeyMismatch(%this, %pl) {
+		%pl.removeItem(%pl.currTool);
+		return parent::onKeyMismatch(%this, %pl);
+	}
 	
 	function Armor::onDisabled(%this, %obj, %col, %pos) {
 		for (%i = 0; %i < %this.maxTools; %i++) {
@@ -91,11 +97,12 @@ package CPB_Support_Items {
 };
 activatePackage(CPB_Support_Items);
 
-function Player::removeItem(%player, %i) {
-	%client = %player.client;
-	%player.tool[%i] = 0;
-	if (isObject(%client)) {
-		messageClient(%client, 'MsgItemPickup', "", %i, 0, 1);
+function Player::removeItem(%pl, %i) {
+	%cl = %pl.client;
+	%pl.tool[%i] = 0;
+	if (isObject(%cl)) {
+		messageClient(%cl, 'MsgItemPickup', "", %i, 0, 1);
+		serverCmdUnuseTool(%cl);
 	}
 }
 

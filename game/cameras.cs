@@ -48,8 +48,17 @@ package CPB_Game_Cameras {
 	function GameConnection::onDeath(%cl, %sourceObj, %sourceCl, %slot, %part) {
 		if (%cl.player.isPreviewingCameras) {
 			SecurityCameras.getObject(%cl.currCamera).endDoorToggleLoop();
+			%cl.player.isPreviewingCameras = 0;
 		}
 		return parent::onDeath(%cl, %sourceObj, %sourceCl, %slot, %part);
+	}
+
+	function Armor::onRemove(%db, %obj) {
+		if (%obj.isPreviewingCameras) {
+			SecurityCameras.getObject(%obj.client.currCamera).endDoorToggleLoop();
+			%obj.isPreviewingCameras = 0;
+		}
+		return parent::onRemove(%db, %obj);
 	}
 
 	function serverCmdLight(%cl) {

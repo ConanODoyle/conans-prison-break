@@ -84,9 +84,7 @@ function serverCmdRemoveGuard(%cl, %name) {
 }
 
 function validateGuardSelection() {
-	if ($CPB::PHASE != $CPB::LOBBY) {
-		return;
-	} else if (getWordCount($CPB::SelectedGuards) != $CPB::GUARDCOUNT) {
+	if (getWordCount($CPB::SelectedGuards) != $CPB::GUARDCOUNT) {
 		messageAdmins("!!! \c6Cannot lock in guards - not enough guards selected!");
 		return;
 	}
