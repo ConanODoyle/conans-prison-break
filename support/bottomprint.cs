@@ -50,7 +50,7 @@ function GameConnection::bottomPrintInfo(%cl) {
 				if (%prisonersOutside > $CPB::EWSAlertThreshold) {
 
 					if (!%cl.playedAlarmSound) {
-						%cl.play3D(AlarmSound, %cl.player.getPosition());
+						%cl.play3D(Beep_Siren_Sound, %cl.player.getPosition());
 						%cl.play3D(brickPlantSound, %cl.player.getPosition());
 						%cl.play3D(brickRotateSound, %cl.player.getPosition());
 						%cl.play3D(brickMoveSound, %cl.player.getPosition());

@@ -1,4 +1,4 @@
-$CPB::TutorialCount0 = 5;
+$CPB::TutorialCount0 = 4;
 
 $CPB::Tutorial0_0_0 = "\c6";
 $CPB::Tutorial0_0_1 = "<font:Courier New Bold:32><color:E65714>Prison Break Tutorial<font:Palatino Linotype:24>";

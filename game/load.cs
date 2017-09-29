@@ -151,7 +151,7 @@ function collectTowerBrick(%b, %n) {
 		%b.vehicle.setShapeName("Tower " @ %n + 1, "8564862");
 		%b.vehicle.setShapeNameDistance(500);
 		%randVec = getRandom(-20, 20) SPC getRandom(-20, 20) SPC getRandom(-10, 0);
-		%b.vehicle.setAimLocation(vectorAdd(_BronsonDoor.getPosition(), %randVec));
+		%b.vehicle.spotlightTargetLocation = vectorAdd(_BronsonDoor.getPosition(), %randVec);
 		startLightBeamLoop(%b.vehicle);
 	}
 }
