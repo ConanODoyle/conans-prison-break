@@ -184,4 +184,4 @@ $location9::DarkPrison::pos1 = "-18.5 42.5 35";
 $location0::DarkPrison::name = "Yard";
 $location0::DarkPrison::pos0 = "34.5 33.5 45.4";
 $location0::DarkPrison::pos1 = "69 20 38";
-$locationNum = 62;
+$locationNum::DarkPrison = 62;

@@ -31,7 +31,7 @@ function getLocation(%obj) {
 
 	%pos = %obj.getPosition();
 	%map = $currMap;
-	for (%i = 0; %i < $locationNum; %i++) {
+	for (%i = 0; %i < $locationNum["::" @ $currMap]; %i++) {
 		%pos0 = $location[%i @ "::" @ %map @ "::pos0"];
 		%pos1 = $location[%i @ "::" @ %map @ "::pos1"];
 		if (isPosInBounds(%pos, %pos0, %pos1)) {
