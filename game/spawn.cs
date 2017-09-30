@@ -1,4 +1,4 @@
-$CPB::RespawnWaveTime = 10 * 1.5;
+$CPB::RespawnWaveTime = 60 * 1.5;
 $SPAWN::BRONSONDEATHCPPRIORITY = 9;
 
 //Object properties:

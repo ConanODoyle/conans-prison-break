@@ -18,6 +18,8 @@ if (!isObject(DroppedItems)) {
 //	Item::schedulePop
 //	Player::changeDatablock
 //	serverCmdDropTool
+//	riotSmokeGrenadeImage::onFire
+//	riotSmokeGrenadeGoldenImage::onFire
 //Created:
 //	Player::removeItem
 //	Player::addItem
@@ -46,14 +48,20 @@ package CPB_Support_Items {
 			for (%i = 0; %i < %this.maxTools; %i++) {
 				if (%obj.tool[%i] == %col.getDatablock().getID()){
 					return;
+				} else if (isObject(%obj.tool[%i])) {
+					%count++;
 				}
 			}
+			if (%this.maxTools == %count) {
+				return;
+			}
+
 			messageAll('', "\c3" @ %obj.client.name @ "\c6 picked up a \c7" @ %col.getDatablock().uiName);
 			%obj.specialItemString = trim(%obj.specialItemString TAB %col.getDatablock().uiName);
 
 			%name = %obj.client.name SPC "(" @ strReplace(%obj.specialItemString, "\t", ", ") @ ")";
 			%obj.setShapeName(%name, 8564862);
-
+			
 			%ret = parent::onCollision(%this, %obj, %col, %pos);
 			if (!isObject(%col)) {
 				return %ret;
@@ -61,6 +69,7 @@ package CPB_Support_Items {
 			
 			%col.spawnBrick.oneUseItem = %col.getDatablock().getName();
 			%col.delete();
+
 			return %ret;
 		}
 		return parent::onCollision(%this, %obj, %col, %pos);
@@ -109,7 +118,7 @@ package CPB_Support_Items {
 
 	function serverCmdDropTool(%cl, %slot) {
 		%pl = %cl.player;
-		if (isOneUseItem(%pl.tool[%slot])) {
+		if (isObject(%pl.tool[%slot]) && isOneUseItem(%pl.tool[%slot])) {
 			messageAll('', "\c3" @ %cl.name @ "\c6 dropped a \c7" @ %pl.tool[%slot].uiName);
 			%pl.specialItemString = trim(strReplace(%pl.specialItemString, %pl.tool[%slot].uiName, ""));
 
