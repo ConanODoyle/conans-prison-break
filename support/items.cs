@@ -17,6 +17,7 @@ if (!isObject(DroppedItems)) {
 //	Armor::onDisabled
 //	Item::schedulePop
 //	Player::changeDatablock
+//	serverCmdDropTool
 //Created:
 //	Player::removeItem
 //	Player::addItem
@@ -39,10 +40,20 @@ package CPB_Support_Items {
 	}
 	
 	function Armor::onCollision(%this, %obj, %col, %pos) {
-		if (%col.getClassName() $= "Item" && %obj.getDatablock().cannotPickupItems) {
+		if (%col.getClassName() $= "Item" && (%obj.getDatablock().cannotPickupItems || %obj.cannotPickupItems)) {
 			return;
-		} else if (%col.getClassName() $= "Item" && isOneUseItem(%col.getDatablock())) {
+		} else if (%col.getClassName() $= "Item" && isOneUseItem(%col.getDatablock()) && %obj.getState() !$= "Dead") {
+			for (%i = 0; %i < %this.maxTools; %i++) {
+				if (%obj.tool[%i] == %col.getDatablock().getID()){
+					return;
+				}
+			}
 			messageAll('', "\c3" @ %obj.client.name @ "\c6 picked up a \c7" @ %col.getDatablock().uiName);
+			%obj.specialItemString = trim(%obj.specialItemString TAB %col.getDatablock().uiName);
+
+			%name = %obj.client.name SPC "(" @ strReplace(%obj.specialItemString, "\t", ", ") @ ")";
+			%obj.setShapeName(%name, 8564862);
+
 			%ret = parent::onCollision(%this, %obj, %col, %pos);
 			if (!isObject(%col)) {
 				return %ret;
@@ -76,7 +87,7 @@ package CPB_Support_Items {
 			}
 		}
 		return parent::onDisabled(%this, %obj, %col, %pos);
-	}
+	}	
 
 	function Item::schedulePop(%obj) {
 		if (isOneUseItem(%obj.getDatablock())) {
@@ -91,8 +102,40 @@ package CPB_Support_Items {
 	function Player::changeDatablock(%pl, %db) {
 		if (%db.getID() == BuffArmor.getID()) {
 			%pl.addItem(BuffBashItem);
+			%pl.unMountImage(0);
+			%pl.unMountImage(1);
 		}
 		return parent::changeDatablock(%pl, %db);
+	}
+
+	function serverCmdDropTool(%cl, %slot) {
+		%pl = %cl.player;
+		if (isOneUseItem(%pl.tool[%slot])) {
+			messageAll('', "\c3" @ %cl.name @ "\c6 dropped a \c7" @ %pl.tool[%slot].uiName);
+			%pl.specialItemString = trim(strReplace(%pl.specialItemString, %pl.tool[%slot].uiName, ""));
+
+			if (%pl.specialItemString !$= "") {
+				%name = %cl.name SPC "(" @ strReplace(%pl.specialItemString, "\t", ", ") @ ")";
+			} else {
+				%name = %cl.name;
+			}
+
+			%pl.setShapeName(%name, 8564862);
+		}
+
+		parent::serverCmdDropTool(%cl, %slot);
+	}
+
+
+	////////////////////
+
+
+	function riotSmokeGrenadeImage::onFire(%this, %obj, %slot) {
+		%obj.specialItemString = trim(strReplace(%obj.specialItemString, %obj.tool[%obj.currTool].uiName, ""));
+	}
+
+	function riotSmokeGrenadeGoldenImage::onFire(%this, %obj, %slot) {
+
 	}
 };
 activatePackage(CPB_Support_Items);

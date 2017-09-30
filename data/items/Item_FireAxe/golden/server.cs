@@ -129,7 +129,7 @@ datablock ShapeBaseImageData(fireAxeGoldenImage)
 // 	mountPoint = 1;
 // };
 
-function fireAxeImage::onMount(%this, %obj, %slot) {
+function fireAxeGoldenImage::onMount(%this, %obj, %slot) {
 	// if (%slot == 0) {
 	// 	if (%obj.getMountedImage(1).getID() == fireAxeLeftImage.getID()) {
 	// 		%obj.unMountImage(1);
@@ -139,9 +139,9 @@ function fireAxeImage::onMount(%this, %obj, %slot) {
 	return parent::onMount(%this, %obj, %slot);
 }
 
-function fireAxeImage::onUnMount(%this, %obj, %slot) {
+function fireAxeGoldenImage::onUnMount(%this, %obj, %slot) {
 	// if (%slot == 0) {
-	// 	%obj.mountImage(fireAxeImage, 1);
+	// 	%obj.mountImage(fireAxeGoldenImage, 1);
 	// }
 	return parent::onUnMount(%this, %obj, %slot);
 }
@@ -163,25 +163,25 @@ function fireAxeImage::onUnMount(%this, %obj, %slot) {
 // };
 // activatePackage(CPB_Items_FireAxe);
 
-function fireAxeImage::onCharge(%this, %obj, %slot)
+function fireAxeGoldenImage::onCharge(%this, %obj, %slot)
 {
 	%obj.playthread(1, armReadyRight);
 }
 
-function fireAxeImage::onArmed(%this, %obj, %slot)
+function fireAxeGoldenImage::onArmed(%this, %obj, %slot)
 {
 	%obj.playthread(2, plant);
 	serverPlay3D(brickPlantSound, %obj.getHackPosition());
 }
 
-function fireAxeImage::onFire(%this, %obj, %slot)
+function fireAxeGoldenImage::onFire(%this, %obj, %slot)
 {
 	%obj.playthread(2, shiftDown);
 	%obj.schedule(100, playthread, 1, root);
 	Parent::onFire(%this, %obj, %slot);
 }
 
-function fireAxeImage::onAbortCharge(%this, %obj, %slot)
+function fireAxeGoldenImage::onAbortCharge(%this, %obj, %slot)
 {
 	%obj.playthread(2, rotateLeft);
 	%obj.playthread(1, root);

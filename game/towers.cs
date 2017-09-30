@@ -226,6 +226,8 @@ function killTower(%tower) {
 	//remove the guard's items
 	if (isObject(%cl.player)) {
 		%cl.player.clearTools();
+		%cl.player.addItem(L4BBatonItem);
+		%cl.player.setDamageLevel(95);
 	}
 
 	//destroy the bricks but sequentially as to not lag everyone to death
