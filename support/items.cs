@@ -67,7 +67,6 @@ package CPB_Support_Items {
 	}
 
 	function fxDTSBrick::onKeyMismatch(%this, %pl) {
-		%pl.removeItem(%pl.currTool);
 		return parent::onKeyMismatch(%this, %pl);
 	}
 	
@@ -132,10 +131,28 @@ package CPB_Support_Items {
 
 	function riotSmokeGrenadeImage::onFire(%this, %obj, %slot) {
 		%obj.specialItemString = trim(strReplace(%obj.specialItemString, %obj.tool[%obj.currTool].uiName, ""));
+		if (%obj.specialItemString !$= "") {
+			%name = %obj.client.name SPC "(" @ strReplace(%obj.specialItemString, "\t", ", ") @ ")";
+		} else {
+			%name = %obj.client.name;
+		}
+
+		%obj.setShapeName(%name, 8564862);
+
+		return parent::onFire(%this, %obj, %slot);
 	}
 
 	function riotSmokeGrenadeGoldenImage::onFire(%this, %obj, %slot) {
+		%obj.specialItemString = trim(strReplace(%obj.specialItemString, %obj.tool[%obj.currTool].uiName, ""));
+		if (%obj.specialItemString !$= "") {
+			%name = %obj.client.name SPC "(" @ strReplace(%obj.specialItemString, "\t", ", ") @ ")";
+		} else {
+			%name = %obj.client.name;
+		}
 
+		%obj.setShapeName(%name, 8564862);
+
+		return parent::onFire(%this, %obj, %slot);
 	}
 };
 activatePackage(CPB_Support_Items);
@@ -147,6 +164,25 @@ function Player::removeItem(%pl, %i) {
 		messageClient(%cl, 'MsgItemPickup', "", %i, 0, 1);
 		serverCmdUnuseTool(%cl);
 	}
+}
+
+registerOutputEvent("Player", "removeCurrentItem", "", 0);
+
+function Player::removeCurrentItem(%pl) {
+	%cl = %pl.client;
+	if (isOneUseItem(%pl.tool[%pl.currTool])) {
+		messageAll('', "\c3" @ %cl.name @ "\c6 used a \c7" @ %pl.tool[%pl.currTool].uiName);
+		%pl.specialItemString = trim(strReplace(%pl.specialItemString, %pl.tool[%pl.currTool].uiName, ""));
+
+		if (%pl.specialItemString !$= "") {
+			%name = %cl.name SPC "(" @ strReplace(%pl.specialItemString, "\t", ", ") @ ")";
+		} else {
+			%name = %cl.name;
+		}
+
+		%pl.setShapeName(%name, 8564862);
+	}
+	%pl.removeItem(%pl.currTool);
 }
 
 function Player::addItem(%this, %item) {

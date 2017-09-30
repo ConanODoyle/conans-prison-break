@@ -407,6 +407,9 @@ function getHairName(%id) {
 }
 
 function Player::equipHair(%pl, %hair) {
+	if (!isObject(%pl.client)) {
+		return;
+	}
 	// if ($count > 20) {
 	// 	messageAdmins("!!! \c6Reset count!");
 	// 	schedule(100, 0, eval, "$count = 0;");

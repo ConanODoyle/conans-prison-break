@@ -1,5 +1,5 @@
 $CPB::RoundTimerSchedule = $CPB::RoundTimerSchedule;
-$CPB::RoundTime = 12 * 60;
+$CPB::RoundTime = 14 * 60;
 $CPB::CurrRoundTime = -1;
 
 //Functions:
