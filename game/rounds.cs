@@ -105,7 +105,7 @@ function _setPhaseLOBBY() {
 		if (isObject(%cl.minigame)) {
 			if (getRandom() < 0.5) {
 				messageClient(%cl, '', "\c6You have recieved a random hairdo loot drop!");
-				%cl.giveRandomHair(1);
+				%cl.giveRandomHair();
 			}
 			%cl.isPrisoner = 1;
 		}
@@ -149,10 +149,9 @@ function _setPhaseINTRO() {
 	spawnKillGround();
 
 	if (validateGuardSelection()) {
-		// doIntro();
+		doIntro();
 		$CPB::hasCollectedBricks = 0;
 		resetTowerSelectionBricks();
-		setPhase("GAME");
 	} else {
 		messageAdmins("!!! - Cannot start game, guard selection not valid!");
 	}
@@ -167,6 +166,11 @@ function _setPhaseGWIN() {
 	$CPB::LastRoundWinners = "Guards";
 
 	schedule(5000, 0, setPhase, "LOBBY");
+	for (%i = 0; %i < ClientGroup.getCount(); %i++) {
+		if ((%cl = ClientGroup.getObject(%i)).isGuard) {
+			%cl.giveRandomHair()
+		}
+	}
 }
 
 function _setPhasePWIN() {
