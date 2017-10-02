@@ -82,6 +82,9 @@ function _setPhaseLOBBY() {
 
 	resetTowerSelectionBricks();
 
+	_escapeDoor1.door(4);
+	_escapeDoor2.door(4);
+
 	if (!isObject($DefaultMinigame)) {
 		createDefaultMinigame();
 	}
@@ -168,7 +171,9 @@ function _setPhaseGWIN() {
 	schedule(5000, 0, setPhase, "LOBBY");
 	for (%i = 0; %i < ClientGroup.getCount(); %i++) {
 		if ((%cl = ClientGroup.getObject(%i)).isGuard) {
-			%cl.giveRandomHair()
+			%cl.giveRandomHair();
+			%cl.giveRandomHair();
+			messageAll('', "\c3" @ %cl.name @ "\c6 won two hairdos for winning the round as a guard!");
 		}
 	}
 }

@@ -59,6 +59,7 @@ function resetSavedBrickData() {
 function collectAllPrisonBricks(%bg, %i) {
 	if (%i == 0) { 
 		messageAdmins("Initiating prison brick collection...");
+		resetSavedBrickData();
 	}
 	cancel($CPB::CollectBricksSchedule);
 

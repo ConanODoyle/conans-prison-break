@@ -192,7 +192,7 @@ function serverCmdOffsetLocations(%cl, %x, %y, %z) {
 		$location[%i @ "::" @ $currMap @ "::pos0"] = vectorAdd($location[%i @ "::" @ $currMap @ "::pos0"], %x SPC %y SPC %z);
 		$location[%i @ "::" @ $currMap @ "::pos1"] = vectorAdd($location[%i @ "::" @ $currMap @ "::pos1"], %x SPC %y SPC %z);
 	}
-	export("$location::" @ $currMap @ "*", "Add-ons/Gamemode_CPB/locations_" @ $currMap @ ".cs");
+	export("$location*::" @ $currMap @ "*", "Add-ons/Gamemode_CPB/locations_" @ $currMap @ ".cs");
 }
 
 

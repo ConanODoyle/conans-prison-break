@@ -1,7 +1,7 @@
 $LEFTCLICK = 0;
 $RIGHTCLICK = 4;
 $ClientVariableCount = 0; //use to add client vars for resetting
-$CurrMap = "DarkPrison";
+$CurrMap = "SkillPrison";
 
 //colortest http://i.imgur.com/Ofi3BvW.png
 
