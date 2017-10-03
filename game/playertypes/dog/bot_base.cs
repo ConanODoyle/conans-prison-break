@@ -455,7 +455,7 @@ function Player::dogAttack(%this) {
 	%ray = containerRaycast(%start, %end, %masks, %this);
 
 	if (isObject(%hit = getWord(%ray, 0))) {
-		if (%hit.client.isPrisoner) {
+		if (%hit.client.isPrisoner && %hit.getClassName() $= "Player") {
 			%hit.damage(%obj.hFakeProjectile, %col.getposition(), $CPB::DOGATTACKDAMAGE, $DamageType::Dog);
 			stun(%hit, 2);
 		}

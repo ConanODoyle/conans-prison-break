@@ -33,8 +33,8 @@ datablock ShapeBaseImageData(LawsonJacketImage)
 	emap = true;
 	mountPoint = 7;
 	canMountToBronson = 1;
-	offset = "0 0 0";
-	eyeOffset = "0 0 0";
+	offset = "0 0.04 0";
+	eyeOffset = "0 0 0.01";
 	rotation = eulerToMatrix("0 0 0");
 	scale = "1 1 1";
 	doColorShift = false;
