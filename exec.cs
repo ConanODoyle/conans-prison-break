@@ -256,7 +256,7 @@ function makePlayerOnHead(%cl) {
 	%pl.mountObject(%oldPl, 5);
 }
 
-function clearAllPlayersOnHead(%cl) {{
+function clearAllPlayersOnHead(%cl) {
 	if (!%cl.canMakePlayerOnHead) {
 		return;
 	}
