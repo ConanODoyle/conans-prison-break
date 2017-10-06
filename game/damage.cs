@@ -32,6 +32,10 @@ package CPB_Game_Damage {
 	}
 
 	function Player::setDamageLevel(%obj, %val) {
+		if (%obj.client.isGuard && %obj.getDamageLevel() > %val && $CPB::PHASE == $CPB::GAME) {
+			messageClient(%obj.client, '', "You cannot heal as a guard!");
+			return;
+		}
 		parent::setDamageLevel(%obj, %val);
 		if (%obj.getDatablock().getID() == BuffArmor.getID() && isObject(%obj.client)) {
 			%obj.client.bottomPrintInfo();

@@ -227,7 +227,7 @@ function killTower(%tower) {
 	if (isObject(%cl.player)) {
 		%cl.player.clearTools();
 		%cl.player.addItem(L4BBatonItem);
-		%cl.player.setDamageLevel(95);
+		%cl.player.setDamageLevel(%cl.player.getDatablock().maxDamage * 0.91);
 	}
 
 	//destroy the bricks but sequentially as to not lag everyone to death

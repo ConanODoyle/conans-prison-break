@@ -26,6 +26,7 @@ if (!isObject(DroppedItems)) {
 //	isOneUseItem
 //	clearAllDroppedItems
 //	startTimedPop
+//	Player::equipImage
 
 
 package CPB_Support_Items {
@@ -66,7 +67,7 @@ package CPB_Support_Items {
 			if (!isObject(%col)) {
 				return %ret;
 			}
-			
+
 			%col.spawnBrick.oneUseItem = %col.getDatablock().getName();
 			%col.delete();
 
@@ -206,6 +207,23 @@ function Player::addItem(%this, %item) {
 			break;
 		}
 	}
+}
+
+registerOutputEvent("Player", "equipImage", "string 200 156" TAB "list 0 0 1 1 2 2 3 3", 0);
+registerOutputEvent("Bot", "equipImage", "string 200 156" TAB "list 0 0 1 1 2 2 3 3", 0);
+
+function Player::equipImage(%obj, %db, %slot) {
+	if (!isObject(%obj) || !isObject(%db.getID())) {
+		return;
+	}
+	%obj.mountImage(%db, %slot);
+}
+
+function AIPlayer::equipImage(%obj, %db, %slot) {
+	if (!isObject(%obj) || !isObject(%db.getID())) {
+		return;
+	}
+	%obj.mountImage(%db, %slot);
 }
 
 function isOneUseItem (%db) {

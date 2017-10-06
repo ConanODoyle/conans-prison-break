@@ -3,7 +3,9 @@ $CPB::Classes::Stun = 1;			$CPB::Classes[1] = "Stun";
 $CPB::Classes::Shrapnel = 2;		$CPB::Classes[2] = "Shrapnel";
 $CPB::Classes::LMG = 3;				$CPB::Classes[3] = "LMG";
 $CPB::Classes::TearGas = 4;			$CPB::Classes[4] = "Tear Gas";
-$CPB::Classes::List = "Stun Shrapnel LMG TearGas";
+$CPB::Classes::Lawson = 5;			$CPB::Classes[5] = "Lawson";
+$CPB::Classes::List = "Stun Shrapnel LMG TearGas Lawson";
+$CPB::OneUseClass = "Lawson";
 
 $CPB::Equipment = "NONE";			$CPB::Equipment0 = "NONE";
 $CPB::Equipment::Shotgun = 1;		$CPB::Equipment[1] = "Shotgun";
@@ -86,6 +88,15 @@ registerOutputEvent(GameConnection, "setGuardEquipment", "string 200 156", 1);
 
 function GameConnection::setGuardClass(%cl, %name) {
 	if (containsWord($CPB::Classes::List, %name)) {
+		if (containsWord($CPB::OneUseClass, %name)) {
+			for (%i = 0; %i < getWordCount($CPB::SelectedGuards); %i++) {
+				%t = findClientByBL_ID(getWord($CPB::SelectedGuards, %i));
+				if ($CPB::Classes[%t.guardClass] $= %name) {
+					messageClient(%cl, '', "You cannot select this class - " @ %t.name @ " is already using it!");
+					return;
+				}
+			}
+		}
 		%cl.guardClass = $CPB::Classes["::" @ %name];
 	}
 
@@ -96,6 +107,7 @@ function GameConnection::setGuardClass(%cl, %name) {
 	if (isObject(%cl.tower)) {
 		%cl.tower.guardOption = %cl.guardClass;
 	}
+	messageClient(%cl, '', "\c6Your class has been set to \c3" @ $CPB::Classes[%cl.guardClass]);
 }
 
 function GameConnection::setGuardEquipment(%cl, %name) {
@@ -110,6 +122,8 @@ function GameConnection::setGuardEquipment(%cl, %name) {
 	if (isObject(%cl.tower)) {
 		%cl.tower.guardEquipment = %cl.guardEquipment;
 	}
+
+	messageClient(%cl, '', "\c6Your equipment has been set to \c3" @ $CPB::Eqip[%cl.guardClass]);
 }
 
 function giveGuardItems(%pl) {
@@ -128,11 +142,13 @@ function giveGuardItems(%pl) {
 	switch (%cl.tower.guardOption) {
 		case $CPB::Classes::LMG: %pl.addItem(LightMachineGunItem);
 		case $CPB::Classes::TearGas: %pl.addItem(TearGasGrenadeItem);
+		case $CPB::Classes::Lawson: %pl.setDatablock(BuffArmor); %pl.mountImage(LawsonJacketImage, 1); 
+			if (!isObject(%pl.getMountedImage(2))) %pl.mountImage(LawsonHatImage, 2);
 	}
 
 	switch (%cl.tower.guardEquipment) {
 		case $CPB::Equipment::Shotgun: %pl.addItem(PumpShotgunItem);
-		case $CPB::Equipment::Flash: %pl.addItem(tierFragGrenadeItem); %pl.addItem(tierFragGrenadeItem); %pl.addItem(tierFragGrenadeItem);
+		case $CPB::Equipment::Flash: %pl.addItem(tierFragGrenadeItem); %pl.addItem(tierFragGrenadeItem);
 		case $CPB::Equipment::Heli: %pl.addItem(SniperControlItem);
 	}
 }
