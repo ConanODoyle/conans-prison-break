@@ -58,7 +58,10 @@ package CPB_Support_Messaging {
 				}
 			}
 
-			echo(getDateTime() SPC %cl.getTeam() SPC %cl.name @ ": " @  %msg);
+			if (%cl.isMuted = 1) {
+				%mute = " [Muted]";
+			}
+			echo(getDateTime() SPC %cl.getTeam() @ %mute @ SPC %cl.name @ ": " @  %msg);
 			%cl.lastMessageTime = getRealTime();
 			%cl.lastMessage = %msg;
 		} else {
@@ -223,13 +226,16 @@ function GameConnection::getTeam(%cl) {
 ////////////////////
 
 
-function serverCmdAC(%cl, %a, %b, %c, %d, %e, %f, %g, %h, %i, %j) {
-	messageAdmins("\c4" @ %cl.name @ "\c5: " @ trim(%a SPC %b SPC %c SPC %d SPC %e SPC %f SPC %g SPC %h SPC %i SPC %j));
+function serverCmdAC(%cl, %a, %b, %c, %d, %e, %f, %g, %h, %i, %j, %k, %l, %m, %n, %o, %p, %q, %r, %s, %t, %u, %v) {
+	serverCmdMessageAdmins(%cl, %a, %b, %c, %d, %e, %f, %g, %h, %i, %j, %k, %l, %m, %n, %o, %p, %q, %r, %s, %t, %u, %v);
 }
 
-function serverCmdMessageAdmins(%cl, %msg) {
+function serverCmdMessageAdmins(%cl, %a, %b, %c, %d, %e, %f, %g, %h, %i, %j, %k, %l, %m, %n, %o, %p, %q, %r, %s, %t, %u, %v) {
+	%msg = trim(stripMLControlChars(%a SPC %b SPC %c SPC %d SPC %e SPC %f SPC %g SPC %h SPC %i SPC %j SPC %k SPC %l SPC %m SPC %n SPC %o SPC %p SPC %q SPC %r SPC %s SPC %t SPC %u SPC %v));
 	messageAdmins("\c6[\c0ADMIN\c6] \c2" @ %cl.name @ "\c6: " @ %msg);
-	messageClient(%cl, '', "\c6[\c0ADMIN\c6] \c2" @ %cl.name @ "\c6: " @ %msg);
+	if (!%cl.isAdmin) {
+		messageClient(%cl, '', "\c6[\c0ADMIN\c6] \c2" @ %cl.name @ "\c6: " @ %msg);
+	}
 }
 
 function messageAdmins(%msg, %level) {

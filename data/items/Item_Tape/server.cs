@@ -82,7 +82,7 @@ datablock ShapeBaseImageData(TapeImage)
 
 package CPB_TapeItem {
 	function serverCmdDropTool(%cl, %i) {
-		if (isObject(%pl = %cl.player) && %pl.tool[%i].getID() == TapeItem.getID()) {
+		if (isObject(%pl = %cl.player) && isObject(%pl.tool[%i]) && %pl.tool[%i].getID() == TapeItem.getID()) {
 			%pl.hasTape = 0;
 		}
 		return parent::serverCmdDropTool(%cl, %i);

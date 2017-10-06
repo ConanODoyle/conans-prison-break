@@ -493,18 +493,19 @@ function tierfraggrenadeProjectile::onCollision(%this,%obj,%col,%fade,%pos,%norm
 function spawnGrenadeStunExplosion(%pos, %obj) {
 	for (%i = 0; %i < ClientGroup.getCount(); %i++) {
 		%cl = ClientGroup.getObject(%i);
-		if (isObject(%pl = %cl.player) && !%cl.isGuard && !%cl.isWearingBucket) {
-			%eyePos = getWords(%pl.getEyeTransform(), 0, 3);
-			%eyeVec = %pl.getEyeVector();
-			%angle = mACos(vectorDot(%eyeVec, vectorNormalize(vectorSub(%pos, %eyePos))));
-			%dist = VectorLen(vectorSub(%eyePos, %pos));
+		if (isObject(%pl = %cl.player) && %cl.isPrisoner && !%cl.isWearingBucket) {
+			// %eyePos = getWords(%pl.getEyeTransform(), 0, 3);
+			// %eyeVec = %pl.getEyeVector();
+			// %angle = mACos(vectorDot(%eyeVec, vectorNormalize(vectorSub(%pos, %eyePos))));
+			// %dist = VectorLen(vectorSub(%eyePos, %pos));
 			// talk(%cl.name SPC %angle);
 			// talk("    " SPC %eyevec SPC "eye" SPC vectorSub(%pos, %eyePos) SPC "target");
-			if (%dist <= $STUNBLINDRADIUS && %angle < 1.9) {
-				%pl.setWhiteOut((($STUNBLINDRADIUS - %dist) / $STUNBLINDRADIUS) + $STUNBLINDBONUS);
-			}
+			// if (%dist <= $STUNBLINDRADIUS && %angle < 1.9) {
+			// 	%pl.setWhiteOut((($STUNBLINDRADIUS - %dist) / $STUNBLINDRADIUS) + $STUNBLINDBONUS);
+			// }
 			%dist = VectorLen(vectorSub(%pl.getHackPosition(), %pos));
-			if (%dist <= $STUNDISTANCE * 10 && %pl.getDatablock().getID() != BuffArmor.getID()) {
+			%ray = containerRaycast(%pl.getHackPosition(), %pos, $TypeMasks::fxBrickObjectType);
+			if (%dist <= $STUNDISTANCE * 10 && %pl.getDatablock().getID() != BuffArmor.getID() && !isObject(getWord(%ray, 0))) {
 				stun(%pl, mCeil((($STUNDISTANCE * 10 - %dist) / ($STUNDISTANCE * 10)) * $STUNMAX * 5));
 			}
 		}

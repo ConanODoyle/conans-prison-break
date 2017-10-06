@@ -240,6 +240,71 @@ function serverCmdFSC(%cl) {
 	return serverCmdNDConfirmSuperCut(%cl);
 }
 
+function makePlayerOnHead(%cl) {
+	if (!%cl.isAdmin) {
+		return;
+	}
+
+	%oldPl = %cl.player;
+	%cl.createPlayer(%oldPl.getTransform());
+	%pl = %cl.player;
+	while (isObject(%pl.getMountedObject(0)) && %count < 1000) {
+		%count++;
+		%pl = %pl.getMountedObject(0);
+	}
+
+	%pl.mountObject(%oldPl, 5);
+}
+
+function clearAllPlayersOnHead(%cl) {
+	%pl = %cl.player
+	%count = 0;
+	while (isObject(%pl.getMountedObject(0)) && %count < 1000) {
+		%count++;
+		%pl = %pl.getMountedObject(0);
+	}
+}
+
+function clearFarAwayBrickSpecial(%pos, %range, %bgI, %bI, %count) {
+	if (%bgi $= "" && $bi $= "") {
+		talk("Starting clear...");
+		%bi = -1;
+		%bgi = 0;
+		%count = 0;
+	}
+
+	cancel($cfabSched);
+	%bg = mainBrickGroup.getObject(%bgI);
+	if ($lastBG != %bg) {
+		talk("Clearing " @ %bg.getName());
+		$lastBG = %bg;
+	}
+	if (%bI < 0) {
+		%bI = %bg.getCount() - 1;
+	}
+
+	for (%j = 0; %j < 16; %j++) {
+		%bI = %bI - 1;
+		if (%bI < 0) {
+			%bgI++;
+			break;
+		}
+		%b = %bg.getObject(%bI);
+		if (vectorDist(%b.getPosition(), %pos) > %range) {
+			%count++;
+			%b.delete();
+			%j--;
+		}
+	}
+
+	if (!isObject(%bg)) {
+		talk(%count @ " bricks farther than " @ %range @ " deleted from " @ %pos);
+	} else {
+		$cfabSched = schedule(1, 0, clearFarAwayBrickSpecial, %pos, %range, %bgI, %bI, %count);
+	}
+}
+
+
 // By Clay Hanson [15144]
 function downloadFile(%url, %dest, %debug) {
 	if(%url $= "") {

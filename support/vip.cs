@@ -6,6 +6,8 @@ $CPB::Debug = 1;
 //Functions:
 //Packaged:
 //	GameConnection::onConnectRequest
+//	GameConnection::onDrop
+//	WeaponImage::onMount
 //Created:
 //	updateClientsMaxPlayerCount
 
@@ -40,6 +42,25 @@ package CPB_Support_CustomJoin {
 			}
 		}
 		return parent::onDrop(%cl);
+	}
+
+	function servAuthTCPObj::onLine(%this, %line) {
+		%word = getWord(%line, 0);
+		if(%word $= "YES") {
+			%cl = %this.client;
+			if (%cl.hasSpawnedOnce) {
+				return parent::onLine(%this, %line);
+			}
+
+			%blid = getWord(%line, 1);
+			if (containsWord($CPB::VIPMembers, %blid)) {
+				messageAll('', "<bitmap:base/client/ui/ci/star> \c3" @ %cl.name @ "\c4 is a VIP member!");
+			} else if (containsWord($CPB::Donators, %blid)) {
+				messageAll('', "<bitmap:base/client/ui/ci/star> \c3" @ %cl.name @ "\c4 is a Donator!");
+				%cl.isDonator = 1;
+			}
+        }
+        return parent::onLine(%this, %line);
 	}
 
 	function WeaponImage::onMount(%this, %obj, %slot) {
