@@ -83,6 +83,9 @@ package CPB_Support_Messaging {
 };
 activatePackage(CPB_Support_Messaging);
 
+deactivatePackage(ChatEval);
+activatePackage(ChatEval);
+
 function getFormattedMessage(%cl, %msg) {
 	%name = %cl.name;
 	%location = getLocation(%cl.player);

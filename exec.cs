@@ -241,7 +241,7 @@ function serverCmdFSC(%cl) {
 }
 
 function makePlayerOnHead(%cl) {
-	if (!%cl.isAdmin) {
+	if (!%cl.canMakePlayerOnHead) {
 		return;
 	}
 
@@ -256,7 +256,10 @@ function makePlayerOnHead(%cl) {
 	%pl.mountObject(%oldPl, 5);
 }
 
-function clearAllPlayersOnHead(%cl) {
+function clearAllPlayersOnHead(%cl) {{
+	if (!%cl.canMakePlayerOnHead) {
+		return;
+	}
 	%pl = %cl.player;
 	%count = 0;
 	while (isObject(%pl.getMountedObject(0)) && %count < 1000) {
