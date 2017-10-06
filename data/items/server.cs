@@ -127,6 +127,7 @@ datablock ParticleEmitterData(projectileGoldenEmitter)
 
 
 exec("./Hat_Croc/server.cs"); //needs golden emitter datablocks
+exec("./Hat_Lawson/server.cs");
 exec("./Item_Tray/golden/server.cs");
 exec("./Item_Bucket/golden/server.cs");
 exec("./Item_Soap/golden/server.cs");

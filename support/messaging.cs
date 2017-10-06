@@ -58,7 +58,7 @@ package CPB_Support_Messaging {
 				}
 			}
 
-			if (%cl.isMuted = 1) {
+			if (%cl.isMuted == 1) {
 				%mute = " [Muted]";
 			}
 			echo(getDateTime() SPC %cl.getTeam() @ %mute SPC %cl.name @ ": " @  %msg);
