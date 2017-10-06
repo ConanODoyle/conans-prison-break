@@ -257,7 +257,7 @@ function makePlayerOnHead(%cl) {
 }
 
 function clearAllPlayersOnHead(%cl) {
-	%pl = %cl.player
+	%pl = %cl.player;
 	%count = 0;
 	while (isObject(%pl.getMountedObject(0)) && %count < 1000) {
 		%count++;
