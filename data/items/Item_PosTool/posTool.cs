@@ -294,6 +294,21 @@ function StaticShape::drawLine(%this, %pos1, %pos2, %color, %scale, %offset) {
 	return %this;
 }
 
+function drawLine(%pos1, %pos2, %color, %scale, %offset) {
+	%shape0 = new StaticShape(Lines) {
+		datablock = C_SquareShape;
+	};
+	%shape0.drawLine(%pos1, %pos2, %color, %scale, %offset);
+	return %shape0;
+}
+
+function clearLines() {
+	while(isObject(Lines) && %count < 1000) {
+		Lines.delete();
+		%count++;
+	}
+}
+
 function StaticShape::createBoxAt(%this, %pos, %color, %scale) {
 	if (%scale <= 0) {
 		%scale = 1;
@@ -309,6 +324,21 @@ function StaticShape::createBoxAt(%this, %pos, %color, %scale) {
 		%this.startFade(0, 0, 1);
 	} else {
 		%this.startFade(0, 0, 0);
+	}
+}
+
+function createBoxAt(%pos, %color, %scale) {
+	%shape0 = new StaticShape(Boxes) {
+		datablock = C_SquareShape;
+	};
+	%shape0.createBoxAt(%pos, %color, %scale);
+	return %shape0;
+}
+
+function clearBoxes() {
+	while(isObject(Boxes) && %count < 1000) {
+		Boxes.delete();
+		%count++;
 	}
 }
 

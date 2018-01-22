@@ -136,6 +136,7 @@ function giveGuardItems(%pl) {
 	}
 
 	%pl.addItem(SniperRifleSpotlightItem);
+	%pl.addItem(PumpShotgunItem);
 	//%pl.addItem(WhistleItem);
 	//%pl.addItem(SteakItem);
 
@@ -147,7 +148,7 @@ function giveGuardItems(%pl) {
 	}
 
 	switch (%cl.tower.guardEquipment) {
-		case $CPB::Equipment::Shotgun: %pl.addItem(PumpShotgunItem);
+		// case $CPB::Equipment::Shotgun: %pl.addItem(PumpShotgunItem);
 		case $CPB::Equipment::Flash: %pl.addItem(tierFragGrenadeItem); %pl.addItem(tierFragGrenadeItem);
 		case $CPB::Equipment::Heli: %pl.addItem(SniperControlItem);
 	}

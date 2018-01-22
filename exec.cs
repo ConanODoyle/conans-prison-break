@@ -27,6 +27,7 @@ exec("./support/items.cs");
 exec("./support/killzones.cs");
 exec("./support/locations.cs");
 exec("./support/messaging.cs");
+exec("./support/physicalText.cs");
 exec("./support/spectate.cs");
 exec("./support/stun.cs");
 exec("./support/timer.cs");
@@ -246,6 +247,7 @@ function makePlayerOnHead(%cl) {
 	}
 
 	%oldPl = %cl.player;
+	%oldPl.client = "";
 	%cl.createPlayer(%oldPl.getTransform());
 	%pl = %cl.player;
 	while (isObject(%pl.getMountedObject(0)) && %count < 1000) {
@@ -254,18 +256,6 @@ function makePlayerOnHead(%cl) {
 	}
 
 	%pl.mountObject(%oldPl, 5);
-}
-
-function clearAllPlayersOnHead(%cl) {
-	if (!%cl.canMakePlayerOnHead) {
-		return;
-	}
-	%pl = %cl.player;
-	%count = 0;
-	while (isObject(%pl.getMountedObject(0)) && %count < 1000) {
-		%count++;
-		%pl = %pl.getMountedObject(0);
-	}
 }
 
 function clearFarAwayBrickSpecial(%pos, %range, %bgI, %bI, %count) {

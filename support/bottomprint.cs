@@ -17,7 +17,7 @@ function GameConnection::bottomPrintInfo(%cl) {
 	%time = $CPB::CurrRoundTime;
 	%timeString = "<font:Arial Bold:34>\c6" @ getTimeString(%time);
 
-	if ($CPB::PHASE == $CPB::GAME) {
+	if ($CPB::PHASE == $CPB::GAME || $Debug) {
 		if (%cl.isPrisoner) {
 			if (%cl.isDead) {
 				%timeToRespawn = getNextRespawnTime();

@@ -423,7 +423,7 @@ package PrisonItems
 			{
 				%targetVector = vectorNormalize(vectorSub(%obj.getPosition(), %col.getHackPosition()));
 				%angle = mACos(vectorDot(vectorScale(%col.getMuzzleVector(0), -1), %targetVector));
-				if (%angle < 0.76)
+				if (%angle < 0.77)
 				{
 					%gold = %col.client.isDonator == 0 ? PrisonTrayProjectile.getID() : PrisonTrayGoldenProjectile.getID();
 					
@@ -460,7 +460,7 @@ package PrisonItems
 			{
 				%targetVector = vectorNormalize(vectorSub(%obj.getPosition(), %col.getHackPosition()));
 				%angle = mACos(vectorDot(%col.getMuzzleVector(0), %targetVector));
-				if (%angle < 0.73)
+				if (%angle < 0.77)
 				{
 					%gold = %col.client.isDonator == 0 ? PrisonTrayProjectile.getID() : PrisonTrayGoldenProjectile.getID();
 
@@ -499,7 +499,7 @@ package PrisonItems
 			}
 			if (%col.isWearingBucket)
 			{
-				%head = getWord(%col.getHackPosition(), 2) + 0.717;
+				%head = getWord(%col.getHackPosition(), 2) + 0.710;
 				if (getWord(%pos, 2) > %head)
 				{
 					for (%i=0; %i < %col.getDatablock().maxTools; %i++)

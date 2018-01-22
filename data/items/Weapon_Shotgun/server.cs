@@ -294,7 +294,7 @@ datablock ShapeBaseImageData(PumpShotgunImage)
 
    // Initial start up state
 	stateName[0]					= "Activate";
-	stateTimeoutValue[0]			= 0.15;
+	stateTimeoutValue[0]			= 0.01;
 	stateSequence[0]				= "Activate";
 	stateTransitionOnTimeout[0]		= "Eject";
 	stateSound[0]					= weaponSwitchSound;
@@ -308,14 +308,14 @@ datablock ShapeBaseImageData(PumpShotgunImage)
 
 	stateName[2]					= "Fire";
 	stateTransitionOnTimeout[2]		= "Smoke";
-	stateTimeoutValue[2]			= 0.1;
+	stateTimeoutValue[2]			= 0.05;
 	stateFire[2]					= true;
 	stateAllowImageChange[2]		= false;
 	stateScript[2]					= "onFire";
 	stateWaitForTimeout[2]			= true;
 
 	stateName[3]					= "Smoke";
-	stateTimeoutValue[3]			= 0.3;
+	stateTimeoutValue[3]			= 0.1;
 	stateTransitionOnTimeout[3]		= "Eject";
 
 	stateName[4]					= "Eject";
@@ -332,34 +332,34 @@ datablock ShapeBaseImageData(PumpShotgunImage)
 	stateTransitionOnTriggerUp[5]	= "LoadCheckB";
 						
 	stateName[6]					= "LoadCheckB";
-	stateTimeoutValue[6]			= 0.55;
+	stateTimeoutValue[6]			= 0.05;
 	stateWaitForTimeout[6]			= true;
 	stateTransitionOnAmmo[6]		= "Ready";
 	stateTransitionOnNoAmmo[6]		= "Reload";
 	
 	stateName[7]					= "ReloadCheckA";
-	stateTransitionOnTriggerDown[7]	= "Fire";
+	stateTransitionOnTriggerDown[7]	= "Eject";
 	stateScript[7]					= "onReloadCheck";
-	stateTimeoutValue[7]			= 0.55;
+	stateTimeoutValue[7]			= 0.35;
 	stateTransitionOnTimeout[7]		= "ReloadCheckB";
 						
 	stateName[8]					= "ReloadCheckB";
-	stateTransitionOnTriggerDown[8]	= "Fire";
+	stateTransitionOnTriggerDown[8]	= "Eject";
 	stateTransitionOnAmmo[8]		= "CompleteReload";
 	stateTransitionOnNoAmmo[8]		= "Reload";
 
 	stateName[9]					= "Reload";
 	stateTransitionOnTimeout[9]		= "Reloaded";
 	stateWaitForTimeout[9]			= false;
-	stateTimeoutValue[9]			= 0.45;
+	stateTimeoutValue[9]			= 0.35;
 	stateSequence[9]				= "Reload";
 	stateScript[9]					= "onReloadStart";
 	
 	stateName[10]					= "Reloaded";
-	stateTransitionOnTriggerDown[10]= "Fire";
+	stateTransitionOnTriggerDown[10]= "Eject";
 	stateTransitionOnTimeout[10]	= "ReloadCheckA";
 	stateWaitForTimeout[10]			= false;
-	stateTimeoutValue[10]			= 0.2;
+	stateTimeoutValue[10]			= 0.1;
 	stateScript[10]					= "onReloaded";
 
 	stateName[11]					= "CompleteReload";

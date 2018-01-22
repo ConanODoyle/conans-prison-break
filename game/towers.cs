@@ -326,6 +326,7 @@ function fxDTSBrick::setTower(%b, %tower, %cl) {
 }
 
 function fxDTSBrick::clearTower(%b, %cl) {
+	%b = %cl.pickedTowerBrick;
 	%b.item.setShapeName("");
 	%b.onClearTower(%cl.player, %cl);
 	%cl.pickedTowerBrick = "";
